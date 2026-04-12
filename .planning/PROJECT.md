@@ -37,7 +37,9 @@ Teach practitioners how to take AI systems (LLMs + agents) from prototype to pro
 - [ ] Ensure all content is 2026-relevant (current AI landscape, modern frameworks, latest K8s features)
 - [ ] Design for dual delivery: instructor-led workshop + Udemy self-paced course
 - [ ] Evaluate and integrate LLM evaluation/testing practices (evals, guardrails)
-- [ ] Research modern agent frameworks (LangGraph, CrewAI, Claude Agent SDK, OpenAI Agents SDK) for the agentic modules
+- [ ] Use native LLM tool-calling (no heavy frameworks) — agent must be compatible with K8s Agent Sandbox deployment
+- [ ] Two-phase LLM: local SmolLM2 for LLMOps labs, free-tier API (Gemini/Groq) for agentic labs
+- [ ] Agent observability — traces, tool-call visibility, cost tracking for API-based agents
 
 ### Out of Scope
 
@@ -68,10 +70,13 @@ Teach practitioners how to take AI systems (LLMs + agents) from prototype to pro
 
 - **Duration**: ~24 hours of content fitting a 3-day workshop format (12-15 labs)
 - **Hardware**: Must run on laptops with 16GB RAM, CPU-only (KIND clusters)
+- **Platform**: Must work on both Windows AND macOS (Docker Desktop + KIND)
 - **Code delivery**: Companion Git repo with starter/ and solution/ per module — no copy-paste walls
 - **Site platform**: Docusaurus (replacing MkDocs)
 - **Naming**: "Smile Dental" (not "Atharva") — globally accessible branding
-- **Model size**: Small models (SmolLM2-135M or similar) that work on CPU
+- **Model size**: Small models (SmolLM2-135M or similar) that work on CPU for LLMOps labs
+- **LLM API for agents**: Free-tier API access required (Google Gemini or Groq) — students must not need to pay
+- **No heavy frameworks**: Avoid LangGraph/CrewAI — prefer native LLM tool-calling or lightweight approach
 
 ## Key Decisions
 
@@ -82,7 +87,10 @@ Teach practitioners how to take AI systems (LLMs + agents) from prototype to pro
 | Docusaurus over MkDocs | Modern React-based doc framework, better for course sites with interactive elements, versioning, search | Pending |
 | Starter + solution code structure | Eliminates copy-paste walls; students get working starter code and can reference solutions | Pending |
 | Kubernetes Agent Sandbox for agentic module | First-class K8s primitive for agent workloads — new, differentiated, production-relevant | Pending |
-| Agent framework choice | Need to research which framework best fits the course (LangGraph vs CrewAI vs Anthropic SDK vs OpenAI SDK) | Pending research |
+| Agent framework choice | Avoid heavy frameworks (LangGraph/CrewAI are over-abstracted). Use native LLM function-calling + thin Python layer, or lightweight SDK. Research best fit during planning. | Pending — lean native |
+| Two-phase LLM strategy | Labs 00-05 use local SmolLM2-135M (LLMOps focus). Labs 06+ switch to free-tier API (Gemini/Groq) for agentic capabilities — local 135M model can't do tool-calling reliably. | Decided |
+| Support both Gemini and Groq | Abstract behind OpenAI-compatible API so students can use either free-tier provider | Decided |
+| Windows + macOS support | All labs must work on both platforms via Docker Desktop + KIND | Decided |
 | Dual delivery format | Workshop (3-day) + Udemy maximizes reach and revenue | Pending |
 
 ## Evolution
@@ -103,4 +111,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-12 after initialization*
+*Last updated: 2026-04-12 after research + user feedback on agent strategy*
