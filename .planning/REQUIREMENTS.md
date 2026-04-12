@@ -10,7 +10,7 @@ Requirements for initial course release. Each maps to roadmap phases.
 ### Course Infrastructure
 
 - [x] **INFRA-01**: Companion code repo with starter/ and solution/ directories per lab module
-- [ ] **INFRA-02**: Docusaurus site supporting dual delivery (workshop schedule + Udemy self-paced)
+- [x] **INFRA-02**: Docusaurus site supporting dual delivery (workshop schedule + Udemy self-paced)
 - [ ] **INFRA-03**: Cross-platform preflight validation script (Windows + macOS Docker Desktop checks)
 - [ ] **INFRA-04**: Version pinning strategy (COURSE_VERSIONS.md) for all dependencies
 - [ ] **INFRA-05**: Lab phase resource management — cleanup scripts between resource-heavy sections
@@ -142,7 +142,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | INFRA-01 | Phase 1 | Complete |
-| INFRA-02 | Phase 1 | Pending |
+| INFRA-02 | Phase 1 | Complete |
 | INFRA-03 | Phase 1 | Pending |
 | INFRA-04 | Phase 1 | Pending |
 | INFRA-05 | Phase 1 | Pending |

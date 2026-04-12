@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 01-course-infrastructure/01-01-PLAN.md
-last_updated: "2026-04-12T06:13:20.320Z"
+stopped_at: Completed 01-course-infrastructure/01-02-PLAN.md
+last_updated: "2026-04-12T06:30:50.111Z"
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 5
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-04-12)
 ## Current Position
 
 Phase: 01 (course-infrastructure) — EXECUTING
-Plan: 2 of 5
+Plan: 3 of 5
 
 ## Performance Metrics
 
@@ -47,6 +47,7 @@ Plan: 2 of 5
 
 *Updated after each plan completion*
 | Phase 01-course-infrastructure P01 | 2min | 2 tasks | 32 files |
+| Phase 01-course-infrastructure P02 | 16min | 2 tasks | 40 files |
 
 ## Accumulated Context
 
@@ -62,6 +63,8 @@ Recent decisions affecting current work:
 - [Pre-phase]: Docusaurus replaces MkDocs; Chainlit for web UI
 - [Phase 01-course-infrastructure]: D-02: lab-NN zero-padded two-digit naming (lab-00 through lab-13)
 - [Phase 01-course-infrastructure]: D-10/D-12: Generic namespace names and no domain branding in infrastructure (llm-serving, llm-app, monitoring, argocd, argo-workflows)
+- [Phase 01-course-infrastructure]: Redirect Docusaurus homepage to /docs instead of landing page — keeps learners on docs immediately
+- [Phase 01-course-infrastructure]: Docusaurus Tabs pattern (groupId=operating-systems) established for all OS-specific commands in lab pages
 
 ### Pending Todos
 
@@ -73,6 +76,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-12T06:13:20.318Z
-Stopped at: Completed 01-course-infrastructure/01-01-PLAN.md
+Last session: 2026-04-12T06:30:50.108Z
+Stopped at: Completed 01-course-infrastructure/01-02-PLAN.md
 Resume file: None

@@ -33,7 +33,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md — Code repo skeleton (14 lab dirs with starter/solution, shared/, config.env)
-- [ ] 01-02-PLAN.md — Docusaurus 3.10.0 site scaffold with sidebar, dark theme, 14 lab placeholder pages
+- [x] 01-02-PLAN.md — Docusaurus 3.10.0 site scaffold with sidebar, dark theme, 14 lab placeholder pages
 - [ ] 01-03-PLAN.md — Cross-platform preflight scripts (bash + PowerShell, Docker/tools/port/cluster checks)
 - [ ] 01-04-PLAN.md — KIND cluster config (dual ImageVolume gates), bootstrap-kind.sh, namespaces.yaml, COURSE_VERSIONS.md
 - [ ] 01-05-PLAN.md — Cleanup scripts for phase transitions (cleanup-phase1/2/3.sh)
