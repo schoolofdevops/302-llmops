@@ -1,0 +1,83 @@
+# kind-config.yaml — LLMOps Course KIND Cluster Configuration
+#
+# This is the SOLUTION file showing a working reference configuration.
+# The bootstrap script handles path substitution automatically.
+# See Lab 00 instructions for full setup steps.
+#
+# If running the bootstrap script manually, replace the hostPath below
+# with the absolute path to your project directory.
+# Example (macOS):  /Users/yourname/llmops-project
+# Example (Linux):  /home/yourname/llmops-project
+# Example (Windows Git Bash):  /c/Users/yourname/llmops-project
+
+# ImageVolume feature gate is enabled in TWO places (both required):
+# 1. kubeadmConfigPatches — API server, controller-manager, scheduler
+# 2. KubeletConfiguration — kubelet on each node
+# Enabling only one place silently fails (pods run but volume is empty).
+kubeadmConfigPatches:
+  - |
+    apiVersion: kubeadm.k8s.io/v1beta3
+    kind: ClusterConfiguration
+    apiServer:
+      extraArgs:
+        feature-gates: "ImageVolume=true"
+    controllerManager:
+      extraArgs:
+        feature-gates: "ImageVolume=true"
+    scheduler:
+      extraArgs:
+        feature-gates: "ImageVolume=true"
+  - |
+    apiVersion: kubelet.config.k8s.io/v1beta1
+    kind: KubeletConfiguration
+    featureGates:
+      ImageVolume: true
+
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: llmops-kind
+nodes:
+- role: control-plane
+  image: kindest/node:v1.34.0
+  extraMounts:
+    - hostPath: ./llmops-project  # relative path — works on macOS and Windows Git Bash; change to absolute if needed
+      containerPath: /mnt/project
+  extraPortMappings:
+  - containerPort: 30000
+    hostPort: 30000
+    listenAddress: "0.0.0.0"
+    protocol: tcp
+  - containerPort: 32000
+    hostPort: 32000
+    listenAddress: "0.0.0.0"
+    protocol: tcp
+  - containerPort: 8000
+    hostPort: 8000
+    listenAddress: "0.0.0.0"
+    protocol: tcp
+  - containerPort: 80
+    hostPort: 80
+    listenAddress: "0.0.0.0"
+    protocol: tcp
+  - containerPort: 443
+    hostPort: 443
+    listenAddress: "0.0.0.0"
+    protocol: tcp
+  - containerPort: 30080
+    hostPort: 30080
+    listenAddress: "0.0.0.0"
+    protocol: tcp
+  - containerPort: 30090
+    hostPort: 30090
+    listenAddress: "0.0.0.0"
+    protocol: tcp
+- role: worker
+  image: kindest/node:v1.34.0
+  extraMounts:
+    - hostPath: ./llmops-project  # relative path — works on macOS and Windows Git Bash; change to absolute if needed
+      containerPath: /mnt/project
+- role: worker
+  image: kindest/node:v1.34.0
+  extraMounts:
+    - hostPath: ./llmops-project  # relative path — works on macOS and Windows Git Bash; change to absolute if needed
+      containerPath: /mnt/project
