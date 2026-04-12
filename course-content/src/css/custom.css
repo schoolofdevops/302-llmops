@@ -1,0 +1,27 @@
+/* Kubernetes.io-inspired theme overrides */
+:root {
+  --ifm-color-primary: #326ce5;
+  --ifm-color-primary-dark: #1e5fd4;
+  --ifm-color-primary-darker: #1a58c8;
+  --ifm-color-primary-darkest: #1448a5;
+  --ifm-color-primary-light: #4a7de8;
+  --ifm-color-primary-lighter: #5888eb;
+  --ifm-color-primary-lightest: #7ea2f0;
+  --ifm-code-font-size: 90%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 255, 0.1);
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #4a86e8;
+  --ifm-color-primary-dark: #2d72e4;
+  --ifm-color-primary-darker: #2069e0;
+  --ifm-color-primary-darkest: #1453c0;
+  --ifm-color-primary-light: #679bec;
+  --ifm-color-primary-lighter: #74a4ee;
+  --ifm-color-primary-lightest: #9bbdf3;
+}
+
+/* Clean sidebar */
+.navbar {
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
