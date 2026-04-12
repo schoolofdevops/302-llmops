@@ -1,0 +1,42 @@
+# namespaces.yaml — LLMOps Course Kubernetes Namespaces
+# Apply: kubectl apply -f shared/k8s/namespaces.yaml
+# Generic functional names per course convention (D-10)
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: llm-serving
+  labels:
+    course: llmops
+    purpose: model-serving
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: llm-app
+  labels:
+    course: llmops
+    purpose: application
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+  labels:
+    course: llmops
+    purpose: observability
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: argocd
+  labels:
+    course: llmops
+    purpose: gitops
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: argo-workflows
+  labels:
+    course: llmops
+    purpose: pipelines
