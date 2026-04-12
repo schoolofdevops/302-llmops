@@ -2,16 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
-stopped_at: Phase 1 context gathered
-last_updated: "2026-04-12T05:03:45.537Z"
-last_activity: 2026-04-12 — Roadmap created, requirements mapped to 4 phases
+status: Ready to execute
+stopped_at: Completed 01-course-infrastructure/01-01-PLAN.md
+last_updated: "2026-04-12T06:13:20.320Z"
 progress:
   total_phases: 4
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_plans: 5
+  completed_plans: 1
 ---
 
 # Project State
@@ -21,16 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-12)
 
 **Core value:** Teach practitioners how to take AI systems (LLMs + agents) from prototype to production on Kubernetes — the only course covering the full journey from RAG to agentic deployments with K8s Agent Sandbox.
-**Current focus:** Phase 1 — Course Infrastructure
+**Current focus:** Phase 01 — course-infrastructure
 
 ## Current Position
 
-Phase: 1 of 4 (Course Infrastructure)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-04-12 — Roadmap created, requirements mapped to 4 phases
-
-Progress: [░░░░░░░░░░] 0%
+Phase: 01 (course-infrastructure) — EXECUTING
+Plan: 2 of 5
 
 ## Performance Metrics
 
@@ -52,6 +46,7 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: -
 
 *Updated after each plan completion*
+| Phase 01-course-infrastructure P01 | 2min | 2 tasks | 32 files |
 
 ## Accumulated Context
 
@@ -65,6 +60,8 @@ Recent decisions affecting current work:
 - [Pre-phase]: No LangGraph/CrewAI — Hermes is the modern approach
 - [Pre-phase]: FAISS in-process (zero overhead) over Qdrant/Milvus
 - [Pre-phase]: Docusaurus replaces MkDocs; Chainlit for web UI
+- [Phase 01-course-infrastructure]: D-02: lab-NN zero-padded two-digit naming (lab-00 through lab-13)
+- [Phase 01-course-infrastructure]: D-10/D-12: Generic namespace names and no domain branding in infrastructure (llm-serving, llm-app, monitoring, argocd, argo-workflows)
 
 ### Pending Todos
 
@@ -76,6 +73,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-12T05:03:45.530Z
-Stopped at: Phase 1 context gathered
-Resume file: .planning/phases/01-course-infrastructure/01-CONTEXT.md
+Last session: 2026-04-12T06:13:20.318Z
+Stopped at: Completed 01-course-infrastructure/01-01-PLAN.md
+Resume file: None
