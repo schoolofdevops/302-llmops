@@ -140,13 +140,62 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated by roadmapper) | | |
+| INFRA-01 | Phase 1 | Pending |
+| INFRA-02 | Phase 1 | Pending |
+| INFRA-03 | Phase 1 | Pending |
+| INFRA-04 | Phase 1 | Pending |
+| INFRA-05 | Phase 1 | Pending |
+| K8S-01 | Phase 1 | Pending |
+| K8S-02 | Phase 1 | Pending |
+| K8S-03 | Phase 1 | Pending |
+| RAG-01 | Phase 2 | Pending |
+| RAG-02 | Phase 2 | Pending |
+| RAG-03 | Phase 2 | Pending |
+| RAG-04 | Phase 2 | Pending |
+| TUNE-01 | Phase 2 | Pending |
+| TUNE-02 | Phase 2 | Pending |
+| TUNE-03 | Phase 2 | Pending |
+| PKG-01 | Phase 2 | Pending |
+| PKG-02 | Phase 2 | Pending |
+| SERVE-01 | Phase 2 | Pending |
+| SERVE-02 | Phase 2 | Pending |
+| SERVE-03 | Phase 2 | Pending |
+| UI-01 | Phase 2 | Pending |
+| UI-02 | Phase 2 | Pending |
+| UI-03 | Phase 2 | Pending |
+| OBS-01 | Phase 2 | Pending |
+| OBS-02 | Phase 2 | Pending |
+| OBS-03 | Phase 2 | Pending |
+| OBS-04 | Phase 2 | Pending |
+| AGENT-01 | Phase 3 | Pending |
+| AGENT-02 | Phase 3 | Pending |
+| AGENT-03 | Phase 3 | Pending |
+| AGENT-04 | Phase 3 | Pending |
+| SANDBOX-01 | Phase 3 | Pending |
+| SANDBOX-02 | Phase 3 | Pending |
+| SANDBOX-03 | Phase 3 | Pending |
+| SANDBOX-04 | Phase 3 | Pending |
+| OBS-05 | Phase 3 | Pending |
+| OBS-06 | Phase 3 | Pending |
+| OBS-07 | Phase 3 | Pending |
+| SCALE-01 | Phase 4 | Pending |
+| SCALE-02 | Phase 4 | Pending |
+| SCALE-03 | Phase 4 | Pending |
+| GITOPS-01 | Phase 4 | Pending |
+| GITOPS-02 | Phase 4 | Pending |
+| GITOPS-03 | Phase 4 | Pending |
+| EVAL-01 | Phase 4 | Pending |
+| EVAL-02 | Phase 4 | Pending |
+| GUARD-01 | Phase 4 | Pending |
+| GUARD-02 | Phase 4 | Pending |
+| GUARD-03 | Phase 4 | Pending |
+| CAP-01 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 40 total
-- Mapped to phases: 0
-- Unmapped: 40
+- Mapped to phases: 40
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-12*
-*Last updated: 2026-04-12 after initial definition*
+*Last updated: 2026-04-12 after roadmap creation — all 40 requirements mapped*

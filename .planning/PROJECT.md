@@ -93,6 +93,9 @@ Teach practitioners how to take AI systems (LLMs + agents) from prototype to pro
 | Support both Gemini and Groq | Abstract behind OpenAI-compatible API so students can use either free-tier provider | Decided |
 | Windows + macOS support | All labs must work on both platforms via Docker Desktop + KIND | Decided |
 | Dual delivery format | Workshop (3-day) + Udemy maximizes reach and revenue | Pending |
+| Live cluster verification | Every phase verified against a real KIND cluster on this machine — create, run labs step-by-step, tear down. Mandatory. | Decided |
+| Web UI: Chainlit | Chat-native, streaming, agent step traces, zero CSS, Docker-friendly | Decided |
+| FAISS over Qdrant | Zero resource overhead (in-process). Qdrant adds ~100-500MB for no learning benefit at demo scale. | Decided |
 
 ## Evolution
 
