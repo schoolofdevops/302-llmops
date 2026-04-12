@@ -29,7 +29,14 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Preflight script runs on Windows and macOS and validates Docker Desktop memory, disk, and K8s version
   4. COURSE_VERSIONS.md pins all dependency versions and KIND cluster setup succeeds with ImageVolume feature gates
   5. Cleanup scripts exist for each resource-heavy lab section and reduce cluster load when executed
-**Plans**: TBD
+**Plans**: 5 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Code repo skeleton (14 lab dirs with starter/solution, shared/, config.env)
+- [ ] 01-02-PLAN.md — Docusaurus 3.10.0 site scaffold with sidebar, dark theme, 14 lab placeholder pages
+- [ ] 01-03-PLAN.md — Cross-platform preflight scripts (bash + PowerShell, Docker/tools/port/cluster checks)
+- [ ] 01-04-PLAN.md — KIND cluster config (dual ImageVolume gates), bootstrap-kind.sh, namespaces.yaml, COURSE_VERSIONS.md
+- [ ] 01-05-PLAN.md — Cleanup scripts for phase transitions (cleanup-phase1/2/3.sh)
 
 ### Phase 2: LLMOps Labs (Day 1)
 **Goal**: Students complete Day 1 labs and have a running dental assistant — synthetic data generated, model fine-tuned on CPU, packaged as OCI image, served via vLLM/KServe, accessible through a chat UI, with Prometheus/Grafana dashboards showing LLM metrics
@@ -75,7 +82,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Course Infrastructure | 0/TBD | Not started | - |
+| 1. Course Infrastructure | 0/5 | Not started | - |
 | 2. LLMOps Labs (Day 1) | 0/TBD | Not started | - |
 | 3. AgentOps Labs (Day 2) | 0/TBD | Not started | - |
 | 4. Production Ops + Capstone (Day 3) | 0/TBD | Not started | - |
