@@ -50,6 +50,7 @@ Requirements for initial course release. Each maps to roadmap phases.
 - [ ] **UI-01**: Chainlit chat interface connected to the RAG + LLM pipeline
 - [ ] **UI-02**: Chat UI deployed as Kubernetes Deployment with NodePort access
 - [ ] **UI-03**: Streaming responses displayed in real-time
+- [ ] **UI-04**: "Glass box" learning mode — UI shows RAG retrieval context, LLM prompt/response, agent tool-call steps, and per-step timing visually (educational, not just production)
 
 ### Agentic System
 
