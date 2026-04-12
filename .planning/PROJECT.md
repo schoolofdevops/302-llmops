@@ -37,7 +37,7 @@ Teach practitioners how to take AI systems (LLMs + agents) from prototype to pro
 - [ ] Ensure all content is 2026-relevant (current AI landscape, modern frameworks, latest K8s features)
 - [ ] Design for dual delivery: instructor-led workshop + Udemy self-paced course
 - [ ] Evaluate and integrate LLM evaluation/testing practices (evals, guardrails)
-- [ ] Use native LLM tool-calling (no heavy frameworks) — agent must be compatible with K8s Agent Sandbox deployment
+- [ ] Hermes Agent (NousResearch) for agentic module — configure, customize tools, deploy on K8s Agent Sandbox
 - [ ] Two-phase LLM: local SmolLM2 for LLMOps labs, free-tier API (Gemini/Groq) for agentic labs
 - [ ] Agent observability — traces, tool-call visibility, cost tracking for API-based agents
 
@@ -87,7 +87,8 @@ Teach practitioners how to take AI systems (LLMs + agents) from prototype to pro
 | Docusaurus over MkDocs | Modern React-based doc framework, better for course sites with interactive elements, versioning, search | Pending |
 | Starter + solution code structure | Eliminates copy-paste walls; students get working starter code and can reference solutions | Pending |
 | Kubernetes Agent Sandbox for agentic module | First-class K8s primitive for agent workloads — new, differentiated, production-relevant | Pending |
-| Agent framework choice | Avoid heavy frameworks (LangGraph/CrewAI are over-abstracted). Use native LLM function-calling + thin Python layer, or lightweight SDK. Research best fit during planning. | Pending — lean native |
+| Agent framework: Hermes Agent | NousResearch/hermes-agent — model-agnostic, lightweight ($5 VPS), 40+ tools, MCP support, Docker sandbox built-in, MIT licensed, 47k stars. Configure and deploy, don't build from scratch. | Decided |
+| No LangGraph/CrewAI | Over-abstracted Pythonic frameworks are dated. Hermes is the modern approach — self-improving, persistent memory, multi-platform. | Decided |
 | Two-phase LLM strategy | Labs 00-05 use local SmolLM2-135M (LLMOps focus). Labs 06+ switch to free-tier API (Gemini/Groq) for agentic capabilities — local 135M model can't do tool-calling reliably. | Decided |
 | Support both Gemini and Groq | Abstract behind OpenAI-compatible API so students can use either free-tier provider | Decided |
 | Windows + macOS support | All labs must work on both platforms via Docker Desktop + KIND | Decided |
