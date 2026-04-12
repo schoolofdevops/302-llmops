@@ -13,7 +13,7 @@ Requirements for initial course release. Each maps to roadmap phases.
 - [x] **INFRA-02**: Docusaurus site supporting dual delivery (workshop schedule + Udemy self-paced)
 - [x] **INFRA-03**: Cross-platform preflight validation script (Windows + macOS Docker Desktop checks)
 - [x] **INFRA-04**: Version pinning strategy (COURSE_VERSIONS.md) for all dependencies
-- [ ] **INFRA-05**: Lab phase resource management — cleanup scripts between resource-heavy sections
+- [x] **INFRA-05**: Lab phase resource management — cleanup scripts between resource-heavy sections
 
 ### Kubernetes Setup
 
@@ -145,7 +145,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INFRA-02 | Phase 1 | Complete |
 | INFRA-03 | Phase 1 | Complete |
 | INFRA-04 | Phase 1 | Complete |
-| INFRA-05 | Phase 1 | Pending |
+| INFRA-05 | Phase 1 | Complete |
 | K8S-01 | Phase 1 | Complete |
 | K8S-02 | Phase 1 | Complete |
 | K8S-03 | Phase 1 | Complete |

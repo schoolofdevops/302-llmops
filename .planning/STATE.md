@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Completed 01-course-infrastructure/01-04-PLAN.md
-last_updated: "2026-04-12T06:40:54.206Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 01-course-infrastructure/01-05-PLAN.md
+last_updated: "2026-04-12T06:44:24.807Z"
 progress:
   total_phases: 4
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 5
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # Project State
@@ -50,6 +50,7 @@ Plan: 5 of 5
 | Phase 01-course-infrastructure P02 | 16min | 2 tasks | 40 files |
 | Phase 01-course-infrastructure P03 | 2min | 2 tasks | 5 files |
 | Phase 01-course-infrastructure P04 | 4min | 2 tasks | 6 files |
+| Phase 01-course-infrastructure P05 | 2min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -71,6 +72,8 @@ Recent decisions affecting current work:
 - [Phase 01-course-infrastructure]: Dual ImageVolume gate pattern (kubeadmConfigPatches + KubeletConfiguration) required for KIND cluster — single location silently fails
 - [Phase 01-course-infrastructure]: bootstrap-kind.sh uses mktemp+sed substitution for REPLACE_HOST_PATH — preserves placeholder in tracked config
 - [Phase 01-course-infrastructure]: Solution KIND config uses ./llmops-project relative path (not absolute) — works on macOS and Windows Git Bash from repo root
+- [Phase 01-course-infrastructure]: cleanup-phase3.sh uses per-CRD kubectl delete lines for --ignore-not-found on each CRD individually
+- [Phase 01-course-infrastructure]: helm status guard pattern before helm uninstall prevents script failure when release was never installed
 
 ### Pending Todos
 
@@ -82,6 +85,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-12T06:40:54.204Z
-Stopped at: Completed 01-course-infrastructure/01-04-PLAN.md
+Last session: 2026-04-12T06:44:24.804Z
+Stopped at: Completed 01-course-infrastructure/01-05-PLAN.md
 Resume file: None

@@ -36,7 +36,7 @@ Plans:
 - [x] 01-02-PLAN.md — Docusaurus 3.10.0 site scaffold with sidebar, dark theme, 14 lab placeholder pages
 - [x] 01-03-PLAN.md — Cross-platform preflight scripts (bash + PowerShell, Docker/tools/port/cluster checks)
 - [x] 01-04-PLAN.md — KIND cluster config (dual ImageVolume gates), bootstrap-kind.sh, namespaces.yaml, COURSE_VERSIONS.md
-- [ ] 01-05-PLAN.md — Cleanup scripts for phase transitions (cleanup-phase1/2/3.sh)
+- [x] 01-05-PLAN.md — Cleanup scripts for phase transitions (cleanup-phase1/2/3.sh)
 
 ### Phase 2: LLMOps Labs (Day 1)
 **Goal**: Students complete Day 1 labs and have a running dental assistant — synthetic data generated, model fine-tuned on CPU, packaged as OCI image, served via vLLM/KServe, accessible through a chat UI, with Prometheus/Grafana dashboards showing LLM metrics
