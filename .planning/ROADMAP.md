@@ -35,7 +35,7 @@ Plans:
 - [x] 01-01-PLAN.md — Code repo skeleton (14 lab dirs with starter/solution, shared/, config.env)
 - [x] 01-02-PLAN.md — Docusaurus 3.10.0 site scaffold with sidebar, dark theme, 14 lab placeholder pages
 - [x] 01-03-PLAN.md — Cross-platform preflight scripts (bash + PowerShell, Docker/tools/port/cluster checks)
-- [ ] 01-04-PLAN.md — KIND cluster config (dual ImageVolume gates), bootstrap-kind.sh, namespaces.yaml, COURSE_VERSIONS.md
+- [x] 01-04-PLAN.md — KIND cluster config (dual ImageVolume gates), bootstrap-kind.sh, namespaces.yaml, COURSE_VERSIONS.md
 - [ ] 01-05-PLAN.md — Cleanup scripts for phase transitions (cleanup-phase1/2/3.sh)
 
 ### Phase 2: LLMOps Labs (Day 1)
@@ -82,7 +82,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Course Infrastructure | 3/5 | In Progress|  |
+| 1. Course Infrastructure | 4/5 | In Progress|  |
 | 2. LLMOps Labs (Day 1) | 0/TBD | Not started | - |
 | 3. AgentOps Labs (Day 2) | 0/TBD | Not started | - |
 | 4. Production Ops + Capstone (Day 3) | 0/TBD | Not started | - |

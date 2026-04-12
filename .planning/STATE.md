@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 01-course-infrastructure/01-03-PLAN.md
-last_updated: "2026-04-12T06:35:26.398Z"
+stopped_at: Completed 01-course-infrastructure/01-04-PLAN.md
+last_updated: "2026-04-12T06:40:54.206Z"
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 5
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-04-12)
 ## Current Position
 
 Phase: 01 (course-infrastructure) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 
 ## Performance Metrics
 
@@ -49,6 +49,7 @@ Plan: 4 of 5
 | Phase 01-course-infrastructure P01 | 2min | 2 tasks | 32 files |
 | Phase 01-course-infrastructure P02 | 16min | 2 tasks | 40 files |
 | Phase 01-course-infrastructure P03 | 2min | 2 tasks | 5 files |
+| Phase 01-course-infrastructure P04 | 4min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -67,6 +68,9 @@ Recent decisions affecting current work:
 - [Phase 01-course-infrastructure]: Redirect Docusaurus homepage to /docs instead of landing page — keeps learners on docs immediately
 - [Phase 01-course-infrastructure]: Docusaurus Tabs pattern (groupId=operating-systems) established for all OS-specific commands in lab pages
 - [Phase 01-course-infrastructure]: Preflight scripts: starter and solution identical (no REPLACE placeholders in scripts); memory warn 8-12GB not fail; TDD bash test suite with 14 tests
+- [Phase 01-course-infrastructure]: Dual ImageVolume gate pattern (kubeadmConfigPatches + KubeletConfiguration) required for KIND cluster — single location silently fails
+- [Phase 01-course-infrastructure]: bootstrap-kind.sh uses mktemp+sed substitution for REPLACE_HOST_PATH — preserves placeholder in tracked config
+- [Phase 01-course-infrastructure]: Solution KIND config uses ./llmops-project relative path (not absolute) — works on macOS and Windows Git Bash from repo root
 
 ### Pending Todos
 
@@ -78,6 +82,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-12T06:35:26.396Z
-Stopped at: Completed 01-course-infrastructure/01-03-PLAN.md
+Last session: 2026-04-12T06:40:54.204Z
+Stopped at: Completed 01-course-infrastructure/01-04-PLAN.md
 Resume file: None
