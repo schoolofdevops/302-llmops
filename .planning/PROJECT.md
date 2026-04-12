@@ -12,7 +12,7 @@ Teach practitioners how to take AI systems (LLMs + agents) from prototype to pro
 
 ### Validated
 
-(Existing course covers these topics — being rewritten from scratch with modernized content)
+(Existing course topics — being rewritten from scratch with modernized content)
 
 - Kubernetes cluster setup (KIND) with ImageVolumes — existing (Lab 00)
 - Synthetic data generation + FAISS RAG retriever — existing (Lab 01)
@@ -23,6 +23,10 @@ Teach practitioners how to take AI systems (LLMs + agents) from prototype to pro
 - Autoscaling with HPA/KEDA/VPA — existing (Lab 06)
 - GitOps with ArgoCD — existing (Lab 07)
 - Argo Workflows for LLM pipelines — existing (Lab 08)
+
+(Validated in Phase 1: Course Infrastructure)
+
+- Course infrastructure scaffold — Docusaurus site, companion code repo, preflight scripts, KIND config, cleanup scripts
 
 ### Active
 
@@ -115,4 +119,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-12 after research + user feedback on agent strategy*
+*Last updated: 2026-04-12 after Phase 1 completion*
