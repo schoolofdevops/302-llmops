@@ -1,0 +1,53 @@
+# Lab 04: vLLM Deployment — TODO: Complete following the lab guide
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm-smollm2
+  namespace: llm-serving  # TODO: Verify this matches NS_SERVING in config.env
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vllm
+  template:
+    metadata:
+      labels:
+        app: vllm
+    spec:
+      nodeName: llmops-kind-worker  # TODO: Verify your KIND worker node name
+      containers:
+      - name: vllm
+        image: # TODO: Set to schoolofdevops/vllm-cpu-nonuma:0.9.1
+        args:
+          - /models/model
+          - --host=0.0.0.0
+          - --port=8000
+          - --max-model-len=4096
+          - --served-model-name=smollm2-135m-finetuned
+          # TODO: Add --dtype, --disable-frontend-multiprocessing, --max-num-seqs, --enable-metrics
+        env:
+          - name: VLLM_TARGET_DEVICE
+            value: "cpu"
+          - name: VLLM_CPU_KVCACHE_SPACE
+            value: "2"    # WARNING: Use 2, NOT 4 (OOM on KIND nodes)
+          # TODO: Add OMP_NUM_THREADS and VLLM_CPU_OMP_THREADS_BIND
+        ports:
+          - containerPort: 8000
+        resources:
+          requests:
+            cpu: "4"
+            memory: "4Gi"
+          limits:
+            cpu: "4"
+            memory: "5Gi"
+        # TODO: Add readinessProbe (initialDelaySeconds: 120, path: /health)
+        # TODO: Add livenessProbe (initialDelaySeconds: 180)
+        volumeMounts:
+          - name: model
+            mountPath: /models
+            readOnly: true
+      volumes:
+        - name: model
+          image:
+            reference: # TODO: kind-registry:5001/smollm2-135m-finetuned:v1.0.0
+            pullPolicy: IfNotPresent
