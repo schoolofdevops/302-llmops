@@ -1,0 +1,144 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vllm-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"    # kube-prometheus-stack auto-discovers this
+data:
+  vllm-dashboard.json: |
+    {
+      "__inputs": [],
+      "__requires": [],
+      "annotations": {"list": []},
+      "description": "Smile Dental LLM Pipeline — vLLM v0.19.x metrics",
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 1,
+      "id": null,
+      "links": [],
+      "panels": [
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {
+            "defaults": {"unit": "s"},
+            "overrides": []
+          },
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+          "id": 1,
+          "options": {"tooltip": {"mode": "single"}},
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.95, rate(vllm:time_to_first_token_seconds_bucket[5m]))",
+              "legendFormat": "P95 TTFT",
+              "refId": "A"
+            }
+          ],
+          "title": "Time to First Token (P95)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+          "id": 2,
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.95, rate(vllm:e2e_request_latency_seconds_bucket[5m]))",
+              "legendFormat": "P95 E2E Latency",
+              "refId": "A"
+            }
+          ],
+          "title": "End-to-End Request Latency (P95)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {"defaults": {"unit": "reqps"}, "overrides": []},
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+          "id": 3,
+          "targets": [
+            {
+              "expr": "rate(vllm:generation_tokens_total[1m])",
+              "legendFormat": "Tokens/sec",
+              "refId": "A"
+            }
+          ],
+          "title": "Token Throughput (generation tokens/sec)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []},
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+          "id": 4,
+          "targets": [
+            {
+              "expr": "vllm:num_requests_running",
+              "legendFormat": "Running",
+              "refId": "A"
+            },
+            {
+              "expr": "vllm:num_requests_waiting",
+              "legendFormat": "Waiting",
+              "refId": "B"
+            }
+          ],
+          "title": "Active & Queued Requests",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {"defaults": {"unit": "percentunit", "max": 1}, "overrides": []},
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+          "id": 5,
+          "targets": [
+            {
+              "expr": "vllm:kv_cache_usage_perc",
+              "legendFormat": "KV Cache %",
+              "refId": "A"
+            }
+          ],
+          "title": "KV Cache Utilization",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {"defaults": {"unit": "reqps"}, "overrides": []},
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+          "id": 6,
+          "targets": [
+            {
+              "expr": "rate(search_requests_total[1m])",
+              "legendFormat": "Retriever Queries/sec",
+              "refId": "A"
+            }
+          ],
+          "title": "RAG Retriever Query Rate",
+          "type": "timeseries"
+        }
+      ],
+      "refresh": "30s",
+      "schemaVersion": 38,
+      "tags": ["llmops", "vllm", "smollm2"],
+      "templating": {
+        "list": [
+          {
+            "current": {},
+            "hide": 0,
+            "includeAll": false,
+            "name": "DS_PROMETHEUS",
+            "options": [],
+            "query": "prometheus",
+            "refresh": 1,
+            "type": "datasource"
+          }
+        ]
+      },
+      "time": {"from": "now-1h", "to": "now"},
+      "timepicker": {},
+      "timezone": "browser",
+      "title": "Smile Dental — LLM Pipeline",
+      "uid": "smile-dental-llm",
+      "version": 1
+    }
