@@ -1,15 +1,15 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
+milestone: v0.19.0
 milestone_name: milestone
-status: Ready to plan
-stopped_at: Phase 2 context gathered
-last_updated: "2026-04-15T03:06:00.946Z"
+status: Ready to execute
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-04-23T09:04:19.852Z"
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 5
-  completed_plans: 5
+  total_plans: 12
+  completed_plans: 6
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-12)
 
 **Core value:** Teach practitioners how to take AI systems (LLMs + agents) from prototype to production on Kubernetes — the only course covering the full journey from RAG to agentic deployments with K8s Agent Sandbox.
-**Current focus:** Phase 01 — course-infrastructure
+**Current focus:** Phase 02 — llmops-labs-day-1
 
 ## Current Position
 
-Phase: 2
-Plan: Not started
+Phase: 02 (llmops-labs-day-1) — EXECUTING
+Plan: 2 of 7
 
 ## Performance Metrics
 
@@ -51,6 +51,7 @@ Plan: Not started
 | Phase 01-course-infrastructure P03 | 2min | 2 tasks | 5 files |
 | Phase 01-course-infrastructure P04 | 4min | 2 tasks | 6 files |
 | Phase 01-course-infrastructure P05 | 2min | 2 tasks | 3 files |
+| Phase 02-llmops-labs-day-1 P01 | 1min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,8 @@ Recent decisions affecting current work:
 - [Phase 01-course-infrastructure]: Solution KIND config uses ./llmops-project relative path (not absolute) — works on macOS and Windows Git Bash from repo root
 - [Phase 01-course-infrastructure]: cleanup-phase3.sh uses per-CRD kubectl delete lines for --ignore-not-found on each CRD individually
 - [Phase 01-course-infrastructure]: helm status guard pattern before helm uninstall prevents script failure when release was never installed
+- [Phase 02-llmops-labs-day-1]: Use official vllm/vllm-openai-cpu:v0.19.0-x86_64 image — abandoned schoolofdevops/vllm-cpu-nonuma:0.9.1 removed
+- [Phase 02-llmops-labs-day-1]: KServe marked N/A for Phase 2 labs — plain K8s Deployment used per D-10
 
 ### Pending Todos
 
@@ -85,6 +88,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-15T03:06:00.939Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-llmops-labs-day-1/02-CONTEXT.md
+Last session: 2026-04-23T09:04:19.849Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: None

@@ -39,17 +39,25 @@ Plans:
 - [x] 01-05-PLAN.md — Cleanup scripts for phase transitions (cleanup-phase1/2/3.sh)
 
 ### Phase 2: LLMOps Labs (Day 1)
-**Goal**: Students complete Day 1 labs and have a running dental assistant — synthetic data generated, model fine-tuned on CPU, packaged as OCI image, served via vLLM/KServe, accessible through a chat UI, with Prometheus/Grafana dashboards showing LLM metrics
+**Goal**: Students complete Day 1 labs and have a running Smile Dental assistant — synthetic data generated, model fine-tuned on CPU, packaged as OCI image, served via vLLM (plain K8s Deployment), accessible through a Chainlit glass-box chat UI, with Prometheus/Grafana dashboards showing LLM metrics
 **Depends on**: Phase 1
 **Requirements**: RAG-01, RAG-02, RAG-03, RAG-04, TUNE-01, TUNE-02, TUNE-03, PKG-01, PKG-02, SERVE-01, SERVE-02, SERVE-03, UI-01, UI-02, UI-03, OBS-01, OBS-02, OBS-03, OBS-04
 **Success Criteria** (what must be TRUE):
   1. Student can query the FAISS retriever and see relevant Smile Dental clinic documents returned
   2. LoRA fine-tuning job completes as a Kubernetes Job and produces a merged model artifact
-  3. Fine-tuned model is packaged as an OCI image, mounted via ImageVolumes, and served by vLLM behind KServe
-  4. Chainlit chat UI is accessible via NodePort, shows streaming responses, and is connected to the full RAG + LLM pipeline
-  5. Grafana dashboard shows vLLM TTFT, latency, and token throughput scraped from Prometheus
-**Plans**: TBD
-**UI hint**: yes
+  3. Fine-tuned model is packaged as an OCI image, mounted via ImageVolumes, and served by vLLM (plain K8s Deployment, no KServe)
+  4. Chainlit chat UI is accessible via NodePort, shows streaming responses with glass-box Steps, and is connected to the full RAG + LLM pipeline
+  5. Grafana dashboard shows vLLM TTFT, latency, and token throughput scraped from Prometheus (using vllm: metric prefix)
+**Plans**: 7 plans
+
+Plans:
+- [x] 02-01-PLAN.md — Fix config.env + COURSE_VERSIONS.md vLLM image (schoolofdevops → official vllm/vllm-openai-cpu:v0.19.0-x86_64)
+- [ ] 02-02-PLAN.md — Lab 01 code: Smile Dental synthetic dataset (5 JSON files) + FAISS RAG retriever (build_index.py, retriever.py, K8s manifests)
+- [ ] 02-03-PLAN.md — Lab 02 code: CPU LoRA fine-tuning (train_lora.py, merge_lora.py, Dockerfile, K8s Job YAML)
+- [ ] 02-04-PLAN.md — Lab 03+04 code: OCI model packaging (Dockerfile.model-asset, build script) + vLLM K8s Deployment (plain Deployment, no KServe)
+- [ ] 02-05-PLAN.md — Lab 05 code: Chainlit web UI with glass-box Steps (app.py, config.toml, CSS, K8s Deployment)
+- [ ] 02-06-PLAN.md — Lab 06 code: Prometheus + Grafana observability (3 ServiceMonitors, Grafana dashboard ConfigMap with vllm: metrics)
+- [ ] 02-07-PLAN.md — Docusaurus lab guide pages for all 6 Day 1 labs (rewrites placeholder pages with complete instructions)
 
 ### Phase 3: AgentOps Labs (Day 2)
 **Goal**: Students deploy Hermes Agent configured for Smile Dental, demonstrate a multi-step agent workflow using a free-tier LLM API, run it inside Kubernetes Agent Sandbox with isolation, and observe tool-call traces end-to-end via OTEL
@@ -82,7 +90,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Course Infrastructure | 4/5 | In Progress|  |
-| 2. LLMOps Labs (Day 1) | 0/TBD | Not started | - |
+| 1. Course Infrastructure | 5/5 | Complete |  |
+| 2. LLMOps Labs (Day 1) | 1/7 | In Progress|  |
 | 3. AgentOps Labs (Day 2) | 0/TBD | Not started | - |
 | 4. Production Ops + Capstone (Day 3) | 0/TBD | Not started | - |

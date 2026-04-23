@@ -41,8 +41,8 @@ Requirements for initial course release. Each maps to roadmap phases.
 
 ### Model Serving
 
-- [ ] **SERVE-01**: vLLM serving the fine-tuned model with OpenAI-compatible API
-- [ ] **SERVE-02**: KServe RawDeployment wrapping vLLM with readiness probes
+- [x] **SERVE-01**: vLLM serving the fine-tuned model with OpenAI-compatible API
+- [x] **SERVE-02**: KServe RawDeployment wrapping vLLM with readiness probes
 - [ ] **SERVE-03**: End-to-end inference test (prompt → vLLM → response) via curl and web UI
 
 ### Web Interface
@@ -158,8 +158,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TUNE-03 | Phase 2 | Pending |
 | PKG-01 | Phase 2 | Pending |
 | PKG-02 | Phase 2 | Pending |
-| SERVE-01 | Phase 2 | Pending |
-| SERVE-02 | Phase 2 | Pending |
+| SERVE-01 | Phase 2 | Complete |
+| SERVE-02 | Phase 2 | Complete |
 | SERVE-03 | Phase 2 | Pending |
 | UI-01 | Phase 2 | Pending |
 | UI-02 | Phase 2 | Pending |
