@@ -13,7 +13,7 @@ Four phases build a complete hands-on course from scaffolding to production oper
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Course Infrastructure** - Repo scaffold, Docusaurus site, preflight validation, version pinning, K8s setup lab
-- [ ] **Phase 2: LLMOps Labs (Day 1)** - RAG, fine-tuning, packaging, serving, web UI, and LLM observability labs using local SmolLM2
+- [x] **Phase 2: LLMOps Labs (Day 1)** - RAG, fine-tuning, packaging, serving, web UI, and LLM observability labs using local SmolLM2 (completed 2026-04-23)
 - [ ] **Phase 3: AgentOps Labs (Day 2)** - Hermes Agent with custom tools, K8s Agent Sandbox deployment, and agent observability with OTEL
 - [ ] **Phase 4: Production Ops + Capstone (Day 3)** - Autoscaling, GitOps, Argo Workflows pipelines, eval gate, guardrails, and capstone exercise
 
@@ -57,7 +57,7 @@ Plans:
 - [x] 02-04-PLAN.md — Lab 03+04 code: OCI model packaging (Dockerfile.model-asset, build script) + vLLM K8s Deployment (plain Deployment, no KServe)
 - [x] 02-05-PLAN.md — Lab 05 code: Chainlit web UI with glass-box Steps (app.py, config.toml, CSS, K8s Deployment)
 - [x] 02-06-PLAN.md — Lab 06 code: Prometheus + Grafana observability (3 ServiceMonitors, Grafana dashboard ConfigMap with vllm: metrics)
-- [ ] 02-07-PLAN.md — Docusaurus lab guide pages for all 6 Day 1 labs (rewrites placeholder pages with complete instructions)
+- [x] 02-07-PLAN.md — Docusaurus lab guide pages for all 6 Day 1 labs (rewrites placeholder pages with complete instructions)
 
 ### Phase 3: AgentOps Labs (Day 2)
 **Goal**: Students deploy Hermes Agent configured for Smile Dental, demonstrate a multi-step agent workflow using a free-tier LLM API, run it inside Kubernetes Agent Sandbox with isolation, and observe tool-call traces end-to-end via OTEL
@@ -91,6 +91,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Course Infrastructure | 5/5 | Complete |  |
-| 2. LLMOps Labs (Day 1) | 6/7 | In Progress|  |
+| 2. LLMOps Labs (Day 1) | 7/7 | Complete   | 2026-04-23 |
 | 3. AgentOps Labs (Day 2) | 0/TBD | Not started | - |
 | 4. Production Ops + Capstone (Day 3) | 0/TBD | Not started | - |
