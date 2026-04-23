@@ -1,0 +1,20 @@
+[project]
+enable_telemetry = false
+# Session timeout in seconds (30 minutes for lab)
+session_timeout = 1800
+
+[features]
+multi_modal = false
+# Show all chain-of-thought steps in the UI
+spontaneous_file_creation = false
+
+[UI]
+name = "Smile Dental Assistant"
+description = "Your AI-powered dental clinic assistant — powered by Smile Dental Clinic, Pune"
+default_theme = "dark"
+layout = "default"
+cot = "full"
+custom_css = "/public/smile-dental.css"
+
+[meta]
+generated_by = "1.0.0"

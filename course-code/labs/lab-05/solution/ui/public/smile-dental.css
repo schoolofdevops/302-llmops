@@ -1,0 +1,23 @@
+/* Smile Dental Clinic — Chainlit UI theme overrides */
+
+:root {
+  --chainlit-primary: #2563eb;       /* Dental blue */
+  --chainlit-primary-light: #3b82f6;
+  --chainlit-accent: #10b981;        /* Health green */
+}
+
+/* Step containers — subtle teal left border for glass-box mode */
+.step-container {
+  border-left: 3px solid var(--chainlit-accent);
+  margin-bottom: 8px;
+}
+
+/* Welcome message branding */
+.welcome-message {
+  font-size: 1.1rem;
+}
+
+/* Smile Dental header color accent */
+.cl-header {
+  border-bottom: 2px solid var(--chainlit-accent);
+}
