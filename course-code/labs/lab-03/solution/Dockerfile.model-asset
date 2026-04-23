@@ -1,0 +1,12 @@
+# Dockerfile.model-asset — Minimal OCI image for SmolLM2-135M model weights
+# Base: alpine:3.20 (~5MB) — no Python, no entrypoint, just model files
+# Usage: docker build -f Dockerfile.model-asset -t smollm2-135m-finetuned:v1 .
+# Context: run from directory containing merged-model/
+
+FROM alpine:3.20
+
+# Model files will be mounted by vLLM via ImageVolume at /models/model
+COPY merged-model/ /model/
+
+# No CMD or ENTRYPOINT — this image is a data volume, not a runnable service
+# vLLM reads from /models (mounted via ImageVolume, see lab-04 Deployment YAML)

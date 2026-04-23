@@ -1,0 +1,12 @@
+# Dockerfile.model-asset — TODO: Complete following the lab guide
+#
+# Goal: Create a minimal OCI image that contains ONLY the model weights.
+# This image will be mounted by vLLM via ImageVolume (no Python runtime needed).
+#
+# Hint: Use alpine:3.20 as the base image for minimal size (~5MB)
+
+# TODO: Add FROM instruction with alpine:3.20 base
+
+# TODO: Add COPY instruction to copy merged-model/ directory into /model/ in the image
+
+# No CMD needed — this image is a data volume, not a service
