@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v0.19.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-04-23T09:04:19.852Z"
+stopped_at: Completed 02-03-PLAN.md
+last_updated: "2026-04-23T09:11:22.134Z"
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 12
-  completed_plans: 6
+  completed_plans: 7
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-04-12)
 ## Current Position
 
 Phase: 02 (llmops-labs-day-1) — EXECUTING
-Plan: 2 of 7
+Plan: 3 of 7
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ Plan: 2 of 7
 | Phase 01-course-infrastructure P04 | 4min | 2 tasks | 6 files |
 | Phase 01-course-infrastructure P05 | 2min | 2 tasks | 3 files |
 | Phase 02-llmops-labs-day-1 P01 | 1min | 2 tasks | 2 files |
+| Phase 02-llmops-labs-day-1 P03 | 3min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -77,6 +78,9 @@ Recent decisions affecting current work:
 - [Phase 01-course-infrastructure]: helm status guard pattern before helm uninstall prevents script failure when release was never installed
 - [Phase 02-llmops-labs-day-1]: Use official vllm/vllm-openai-cpu:v0.19.0-x86_64 image — abandoned schoolofdevops/vllm-cpu-nonuma:0.9.1 removed
 - [Phase 02-llmops-labs-day-1]: KServe marked N/A for Phase 2 labs — plain K8s Deployment used per D-10
+- [Phase 02-llmops-labs-day-1]: MAX_STEPS=50 enforced in both train_lora.py default and K8s Job YAML — prevents accidental long CPU runs (Pitfall 4)
+- [Phase 02-llmops-labs-day-1]: PEFT 0.19.0 stable params: r, lora_alpha, target_modules, lora_dropout, bias, task_type — avoids deprecated 0.12 patterns
+- [Phase 02-llmops-labs-day-1]: torch.float32 for CPU training (not bfloat16) — CPU stability for workshop laptops
 
 ### Pending Todos
 
@@ -88,6 +92,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-23T09:04:19.849Z
-Stopped at: Completed 02-01-PLAN.md
+Last session: 2026-04-23T09:11:22.130Z
+Stopped at: Completed 02-03-PLAN.md
 Resume file: None

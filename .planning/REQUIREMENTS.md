@@ -30,9 +30,9 @@ Requirements for initial course release. Each maps to roadmap phases.
 
 ### Fine-Tuning
 
-- [ ] **TUNE-01**: CPU LoRA fine-tuning of SmolLM2-135M on synthetic dental clinic chat data
-- [ ] **TUNE-02**: LoRA adapter merge into base model producing a single model folder
-- [ ] **TUNE-03**: Training job runs as Kubernetes Job with resource limits
+- [x] **TUNE-01**: CPU LoRA fine-tuning of SmolLM2-135M on synthetic dental clinic chat data
+- [x] **TUNE-02**: LoRA adapter merge into base model producing a single model folder
+- [x] **TUNE-03**: Training job runs as Kubernetes Job with resource limits
 
 ### Model Packaging
 
@@ -153,9 +153,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RAG-02 | Phase 2 | Pending |
 | RAG-03 | Phase 2 | Pending |
 | RAG-04 | Phase 2 | Pending |
-| TUNE-01 | Phase 2 | Pending |
-| TUNE-02 | Phase 2 | Pending |
-| TUNE-03 | Phase 2 | Pending |
+| TUNE-01 | Phase 2 | Complete |
+| TUNE-02 | Phase 2 | Complete |
+| TUNE-03 | Phase 2 | Complete |
 | PKG-01 | Phase 2 | Pending |
 | PKG-02 | Phase 2 | Pending |
 | SERVE-01 | Phase 2 | Complete |
