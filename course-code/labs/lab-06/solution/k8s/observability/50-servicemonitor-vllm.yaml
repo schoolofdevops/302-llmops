@@ -1,0 +1,23 @@
+# Lab 06: Prometheus ServiceMonitor for vLLM
+# IMPORTANT: vLLM v0.19.x uses 'vllm:' prefix in metric names (colon, not underscore)
+# Correct: vllm:time_to_first_token_seconds, vllm:e2e_request_latency_seconds
+# Wrong (old vLLM < 0.15): vllm_request_ttft_seconds
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: vllm-monitor
+  namespace: monitoring
+  labels:
+    release: kps   # Must match kube-prometheus-stack release name
+spec:
+  namespaceSelector:
+    matchNames:
+      - llm-serving
+  selector:
+    matchLabels:
+      app: vllm
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s

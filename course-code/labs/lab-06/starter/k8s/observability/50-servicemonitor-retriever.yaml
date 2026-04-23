@@ -1,0 +1,22 @@
+# Lab 06: Prometheus ServiceMonitor for RAG Retriever
+# Retriever exposes prometheus-client metrics at /metrics (port 8001)
+# Metric prefix: retriever_ (application metrics, underscore naming)
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: retriever-monitor
+  namespace: monitoring
+  labels:
+    release: kps
+spec:
+  namespaceSelector:
+    matchNames:
+      - llm-app
+  selector:
+    matchLabels:
+      app: rag-retriever
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s

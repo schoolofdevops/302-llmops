@@ -1,0 +1,24 @@
+# Lab 06: Prometheus ServiceMonitor for Chainlit UI
+# Chainlit itself doesn't expose /metrics by default.
+# This ServiceMonitor is a placeholder — in Lab 05 solution, the Chainlit
+# app can be extended with prometheus-client to expose custom metrics.
+# For the base lab, this file shows the pattern but Chainlit may not respond on /metrics.
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: chainlit-monitor
+  namespace: monitoring
+  labels:
+    release: kps
+spec:
+  namespaceSelector:
+    matchNames:
+      - llm-app
+  selector:
+    matchLabels:
+      app: chainlit-ui
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 60s
+      scrapeTimeout: 10s
