@@ -1,0 +1,17 @@
+# Lab 04: vLLM NodePort Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: vllm-smollm2
+  namespace: llm-serving
+  labels:
+    app: vllm
+spec:
+  type: NodePort
+  selector:
+    app: vllm
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 8000
+    nodePort: 30200
