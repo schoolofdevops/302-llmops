@@ -1,0 +1,43 @@
+# Lab 05: Chainlit Web UI Deployment
+# Namespace: llm-app
+# Requires: RAG retriever (Lab 01) and vLLM (Lab 04) running
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chainlit-ui
+  namespace: llm-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chainlit-ui
+  template:
+    metadata:
+      labels:
+        app: chainlit-ui
+    spec:
+      containers:
+      - name: chainlit
+        image: kind-registry:5001/smile-dental-ui:v1.0.0
+        env:
+        - name: RETRIEVER_URL
+          value: "http://rag-retriever.llm-app.svc.cluster.local:8001"
+        - name: VLLM_URL
+          value: "http://vllm-smollm2.llm-serving.svc.cluster.local:8000"
+        - name: MODEL_NAME
+          value: "smollm2-135m-finetuned"
+        ports:
+        - containerPort: 8000
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
