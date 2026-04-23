@@ -33,8 +33,8 @@ All versions verified on macOS Apple Silicon and x86-64 Windows.
 
 | Component | Pinned Version | Compatibility Reason |
 |-----------|---------------|----------------------|
-| vLLM | v0.19.0 | Official CPU image: schoolofdevops/vllm-cpu-nonuma:0.9.1; use this image tag |
-| KServe | 0.14+ | RawDeployment mode for KIND (no Knative required); 0.14 adds stable ImageVolume support |
+| vLLM | v0.19.0 | Official CPU image: `vllm/vllm-openai-cpu:v0.19.0-x86_64` (x86_64) or `v0.19.0-arm64` (Apple Silicon); Ubuntu 22.04, Python 3.12, torch 2.11.0 |
+| KServe | N/A (Phase 2) | Not used in Day 1 labs; plain K8s Deployment used for vLLM serving (Phase 3+ only) |
 | kube-prometheus-stack | latest Helm chart | Pin chart version at workshop delivery time |
 
 ## Web UI & Agent
@@ -53,6 +53,6 @@ All versions verified on macOS Apple Silicon and x86-64 Windows.
 
 ## Notes
 
-- vLLM CPU image: use `schoolofdevops/vllm-cpu-nonuma:0.9.1` — the official `vllm/vllm-openai-cpu` variant requires NUMA-capable hardware
+- vLLM CPU image: use `vllm/vllm-openai-cpu:v0.19.0-x86_64` (Intel/AMD) or `vllm/vllm-openai-cpu:v0.19.0-arm64` (Apple Silicon) — these are the official CPU images
 - KIND node image: always pin to `v1.34.0` — `latest` is not a valid KIND image tag
 - For Hermes Agent (Lab 07): requires free-tier API key for Gemini (https://aistudio.google.com) or Groq (https://console.groq.com)
