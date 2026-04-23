@@ -1,0 +1,5 @@
+# Install torch CPU wheel separately (see Dockerfile)
+transformers==5.5.4
+peft==0.19.0
+accelerate==1.13.0
+datasets==4.8.4
