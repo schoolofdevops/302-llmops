@@ -47,9 +47,9 @@ Requirements for initial course release. Each maps to roadmap phases.
 
 ### Web Interface
 
-- [ ] **UI-01**: Chainlit chat interface connected to the RAG + LLM pipeline
-- [ ] **UI-02**: Chat UI deployed as Kubernetes Deployment with NodePort access
-- [ ] **UI-03**: Streaming responses displayed in real-time
+- [x] **UI-01**: Chainlit chat interface connected to the RAG + LLM pipeline
+- [x] **UI-02**: Chat UI deployed as Kubernetes Deployment with NodePort access
+- [x] **UI-03**: Streaming responses displayed in real-time
 - [ ] **UI-04**: "Glass box" learning mode — UI shows RAG retrieval context, LLM prompt/response, agent tool-call steps, and per-step timing visually (educational, not just production)
 
 ### Agentic System
@@ -161,9 +161,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SERVE-01 | Phase 2 | Complete |
 | SERVE-02 | Phase 2 | Complete |
 | SERVE-03 | Phase 2 | Complete |
-| UI-01 | Phase 2 | Pending |
-| UI-02 | Phase 2 | Pending |
-| UI-03 | Phase 2 | Pending |
+| UI-01 | Phase 2 | Complete |
+| UI-02 | Phase 2 | Complete |
+| UI-03 | Phase 2 | Complete |
 | OBS-01 | Phase 2 | Complete |
 | OBS-02 | Phase 2 | Complete |
 | OBS-03 | Phase 2 | Complete |

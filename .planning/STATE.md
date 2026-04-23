@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v0.19.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 02-06-PLAN.md
-last_updated: "2026-04-23T09:23:22.722Z"
+stopped_at: Completed 02-05-PLAN.md
+last_updated: "2026-04-23T09:24:39.659Z"
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 12
-  completed_plans: 10
+  completed_plans: 11
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-04-12)
 ## Current Position
 
 Phase: 02 (llmops-labs-day-1) — EXECUTING
-Plan: 6 of 7
+Plan: 7 of 7
 
 ## Performance Metrics
 
@@ -56,6 +56,7 @@ Plan: 6 of 7
 | Phase 02-llmops-labs-day-1 P02 | 6min | 2 tasks | 20 files |
 | Phase 02-llmops-labs-day-1 P04 | 4min | 2 tasks | 10 files |
 | Phase 02-llmops-labs-day-1 P06 | 2min | 2 tasks | 10 files |
+| Phase 02-llmops-labs-day-1 P05 | 7min | 2 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -90,6 +91,8 @@ Recent decisions affecting current work:
 - [Phase 02-llmops-labs-day-1]: vLLM v0.19.x uses colon prefix vllm: in all metric names — PromQL must use vllm:time_to_first_token_seconds not vllm_request_ttft_seconds
 - [Phase 02-llmops-labs-day-1]: serviceMonitorSelectorNilUsesHelmValues=false required for cross-namespace ServiceMonitor discovery in kube-prometheus-stack
 - [Phase 02-llmops-labs-day-1]: Grafana auto-discovery via grafana_dashboard: '1' ConfigMap label — no manual dashboard import needed
+- [Phase 02-llmops-labs-day-1]: Chainlit streaming message created before cl.Step context to stream tokens to main chat thread, not step output
+- [Phase 02-llmops-labs-day-1]: Pitfall 5 enforced: --host 0.0.0.0 in Chainlit CMD is mandatory for NodePort WebSocket (without it: 403)
 
 ### Pending Todos
 
@@ -101,6 +104,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-23T09:23:22.718Z
-Stopped at: Completed 02-06-PLAN.md
+Last session: 2026-04-23T09:24:39.657Z
+Stopped at: Completed 02-05-PLAN.md
 Resume file: None

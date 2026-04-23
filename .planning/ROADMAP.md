@@ -55,7 +55,7 @@ Plans:
 - [x] 02-02-PLAN.md — Lab 01 code: Smile Dental synthetic dataset (5 JSON files) + FAISS RAG retriever (build_index.py, retriever.py, K8s manifests)
 - [x] 02-03-PLAN.md — Lab 02 code: CPU LoRA fine-tuning (train_lora.py, merge_lora.py, Dockerfile, K8s Job YAML)
 - [x] 02-04-PLAN.md — Lab 03+04 code: OCI model packaging (Dockerfile.model-asset, build script) + vLLM K8s Deployment (plain Deployment, no KServe)
-- [ ] 02-05-PLAN.md — Lab 05 code: Chainlit web UI with glass-box Steps (app.py, config.toml, CSS, K8s Deployment)
+- [x] 02-05-PLAN.md — Lab 05 code: Chainlit web UI with glass-box Steps (app.py, config.toml, CSS, K8s Deployment)
 - [x] 02-06-PLAN.md — Lab 06 code: Prometheus + Grafana observability (3 ServiceMonitors, Grafana dashboard ConfigMap with vllm: metrics)
 - [ ] 02-07-PLAN.md — Docusaurus lab guide pages for all 6 Day 1 labs (rewrites placeholder pages with complete instructions)
 
@@ -91,6 +91,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Course Infrastructure | 5/5 | Complete |  |
-| 2. LLMOps Labs (Day 1) | 5/7 | In Progress|  |
+| 2. LLMOps Labs (Day 1) | 6/7 | In Progress|  |
 | 3. AgentOps Labs (Day 2) | 0/TBD | Not started | - |
 | 4. Production Ops + Capstone (Day 3) | 0/TBD | Not started | - |
