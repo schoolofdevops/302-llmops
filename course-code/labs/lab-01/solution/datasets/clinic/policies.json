@@ -1,0 +1,50 @@
+[
+  {
+    "id": "POL-01",
+    "category": "Appointment",
+    "title": "Appointment Booking Policy",
+    "details": "Smile Dental Clinic, Pune requires a minimum 48-hour advance notice for booking general appointments. Appointments can be scheduled by calling our reception at +91-20-2612-XXXX, via our website, or in person at Koregaon Park, Pune 411001. Same-day appointments may be available for dental emergencies at the discretion of the attending dentist. We recommend calling before visiting to confirm slot availability for emergency cases."
+  },
+  {
+    "id": "POL-02",
+    "category": "Payment",
+    "title": "Payment Policy",
+    "details": "Smile Dental Clinic accepts payments in cash, debit/credit card, and UPI (PhonePe, Google Pay, Paytm). For major procedures costing more than ₹10,000 — such as dental implants, braces, and crowns — a 50% advance payment is required at the time of booking to confirm the appointment. EMI options are available for procedures above ₹10,000 through select banks. All payments must be settled before leaving the clinic."
+  },
+  {
+    "id": "POL-03",
+    "category": "Cancellation",
+    "title": "Cancellation and No-Show Policy",
+    "details": "We request a minimum of 24 hours' notice for appointment cancellation or rescheduling. Cancellations with less than 24 hours' notice may be subject to a ₹200 administrative fee. No-show appointments (where the patient does not arrive and does not cancel) will be charged a ₹200 no-show fee. Repeated no-shows may result in pre-payment being required for future bookings. Please call us promptly if you cannot attend your appointment."
+  },
+  {
+    "id": "POL-04",
+    "category": "Insurance",
+    "title": "Insurance and Cashless Claims",
+    "details": "Smile Dental Clinic is empanelled with major health insurance providers including Star Health, Niva Bupa, HDFC Ergo, and ICICI Lombard for eligible dental procedures. Patients must bring their insurance card and a valid photo ID for cashless treatment. Claim forms are available at the reception desk and must be submitted before treatment begins. Non-empanelled insurance claims can be processed as reimbursement — we provide itemised invoices and treatment certificates for this purpose."
+  },
+  {
+    "id": "POL-05",
+    "category": "Emergency",
+    "title": "Emergency Walk-In Policy",
+    "details": "Smile Dental Clinic, Pune accepts emergency walk-in patients during clinic hours (Monday–Saturday 9:00 AM – 7:00 PM, Sunday 10:00 AM – 2:00 PM). Emergency cases are triaged by the receptionist and seen as soon as a dentist is available. After clinic hours, patients should call our helpline for guidance or visit the nearest hospital casualty. We prioritise acute pain, dental trauma, and severe swelling for immediate attention."
+  },
+  {
+    "id": "POL-06",
+    "category": "Children",
+    "title": "Paediatric Patient Policy",
+    "details": "All patients under 18 years of age must be accompanied by a parent or legal guardian during dental consultations and treatment. A parent or guardian must sign the consent form before any procedure is performed. Smile Dental Clinic provides a child-friendly environment with trained paediatric dentists to help children feel comfortable. We recommend bringing children for their first dental visit by age 1 or when the first tooth erupts."
+  },
+  {
+    "id": "POL-07",
+    "category": "Records",
+    "title": "Patient Records and Confidentiality",
+    "details": "Smile Dental Clinic maintains secure digital dental records for all registered patients. Your records include treatment history, X-rays, and prescriptions, stored in compliance with applicable Indian health data regulations. Patients may request copies of their dental records at the reception desk with valid ID proof. Records are released only to the patient or their authorised representative. We do not share patient information with third parties without explicit consent."
+  },
+  {
+    "id": "POL-08",
+    "category": "Covid Safety",
+    "title": "Infection Control and Safety Protocol",
+    "details": "Smile Dental Clinic follows strict infection control protocols including sterilisation of all instruments, use of single-use disposable items where applicable, and regular sanitisation of treatment rooms. Masks are recommended for immunocompromised or vulnerable patients. All clinical staff are trained in standard precautions and wear appropriate PPE during treatment. Hand sanitiser is available at the entrance and throughout the clinic. Patients with active respiratory infections are requested to inform us before their visit so we can take appropriate precautions."
+  }
+]
