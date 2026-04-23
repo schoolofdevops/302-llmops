@@ -14,6 +14,16 @@ Environment:
 import os, time, json
 import chainlit as cl
 import httpx
+from prometheus_client import Counter, Histogram, make_asgi_app
+
+# ---- Prometheus metrics ---------------------------------------------------
+
+chat_requests_total = Counter(
+    "chat_requests_total", "Total chat messages processed", ["status"]
+)
+chat_latency_seconds = Histogram(
+    "chat_latency_seconds", "End-to-end chat response latency"
+)
 
 # ---- Configuration -------------------------------------------------------
 
@@ -104,6 +114,7 @@ async def on_message(message: cl.Message):
     the steps to see exactly what data flowed through each stage.
     """
     hits = []
+    t_start = time.monotonic()
 
     # ---- Step 1: RAG Retrieval -------------------------------------------
     try:
@@ -124,6 +135,7 @@ async def on_message(message: cl.Message):
             elapsed = time.monotonic() - t0
             s.output = f"Found {len(hits)} relevant chunks in {elapsed:.2f}s"
     except Exception as exc:
+        chat_requests_total.labels(status="retriever_error").inc()
         await cl.Message(
             content=f"Retriever error: {exc}\n\nMake sure the RAG retriever service is running."
         ).send()
@@ -168,9 +180,12 @@ async def on_message(message: cl.Message):
                             await response_msg.stream_token(token)
             s.output = "Generation complete"
     except Exception as exc:
+        chat_requests_total.labels(status="llm_error").inc()
         await cl.Message(
             content=f"LLM generation error: {exc}\n\nMake sure the vLLM service is running."
         ).send()
         return
 
     await response_msg.update()
+    chat_requests_total.labels(status="ok").inc()
+    chat_latency_seconds.observe(time.monotonic() - t_start)
