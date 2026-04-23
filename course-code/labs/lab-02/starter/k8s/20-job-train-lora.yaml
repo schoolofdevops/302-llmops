@@ -1,0 +1,49 @@
+# Lab 02: CPU LoRA Fine-tuning Job
+# Namespace: llm-app
+# Before running: docker build + push to kind-registry:5001/smollm2-trainer:latest
+# Runtime: ~15 minutes on CPU (max_steps=50)
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: smollm2-lora-train
+  namespace: llm-app
+spec:
+  ttlSecondsAfterFinished: 600
+  backoffLimit: 1
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: trainer
+        image: kind-registry:5001/smollm2-trainer:latest
+        command: ["python", "train_lora.py"]
+        env:
+        - name: BASE_MODEL
+          value: "HuggingFaceTB/SmolLM2-135M-Instruct"
+        - name: DATA_PATH
+          value: "/mnt/project/datasets/train/dental_chat.jsonl"
+        - name: OUTPUT_ROOT
+          value: "/mnt/project/training/runs"
+        - name: MAX_STEPS
+          value: "50"
+        - name: BATCH_SIZE
+          value: "1"
+        - name: GRAD_ACCUM
+          value: "4"
+        - name: HF_HUB_OFFLINE
+          value: "0"
+        resources:
+          requests:
+            cpu: "4"
+            memory: "6Gi"
+          limits:
+            cpu: "4"
+            memory: "8Gi"
+        volumeMounts:
+        - name: project
+          mountPath: /mnt/project
+      volumes:
+      - name: project
+        hostPath:
+          path: /mnt/project      # KIND mounts ./llmops-project here
+          type: Directory
