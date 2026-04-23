@@ -23,10 +23,10 @@ Requirements for initial course release. Each maps to roadmap phases.
 
 ### RAG System
 
-- [ ] **RAG-01**: Synthetic data generation for Smile Dental clinic domain (treatments, policies, FAQs)
-- [ ] **RAG-02**: FAISS vector index built from clinic data using sentence-transformers embeddings
-- [ ] **RAG-03**: FastAPI retriever service deployed on Kubernetes with health checks
-- [ ] **RAG-04**: End-to-end RAG query demonstrating retrieval + LLM generation
+- [x] **RAG-01**: Synthetic data generation for Smile Dental clinic domain (treatments, policies, FAQs)
+- [x] **RAG-02**: FAISS vector index built from clinic data using sentence-transformers embeddings
+- [x] **RAG-03**: FastAPI retriever service deployed on Kubernetes with health checks
+- [x] **RAG-04**: End-to-end RAG query demonstrating retrieval + LLM generation
 
 ### Fine-Tuning
 
@@ -149,10 +149,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | K8S-01 | Phase 1 | Complete |
 | K8S-02 | Phase 1 | Complete |
 | K8S-03 | Phase 1 | Complete |
-| RAG-01 | Phase 2 | Pending |
-| RAG-02 | Phase 2 | Pending |
-| RAG-03 | Phase 2 | Pending |
-| RAG-04 | Phase 2 | Pending |
+| RAG-01 | Phase 2 | Complete |
+| RAG-02 | Phase 2 | Complete |
+| RAG-03 | Phase 2 | Complete |
+| RAG-04 | Phase 2 | Complete |
 | TUNE-01 | Phase 2 | Complete |
 | TUNE-02 | Phase 2 | Complete |
 | TUNE-03 | Phase 2 | Complete |
