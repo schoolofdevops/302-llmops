@@ -36,14 +36,14 @@ Requirements for initial course release. Each maps to roadmap phases.
 
 ### Model Packaging
 
-- [ ] **PKG-01**: Merged model packaged as OCI image
-- [ ] **PKG-02**: Model mounted in Kubernetes via ImageVolumes
+- [x] **PKG-01**: Merged model packaged as OCI image
+- [x] **PKG-02**: Model mounted in Kubernetes via ImageVolumes
 
 ### Model Serving
 
 - [x] **SERVE-01**: vLLM serving the fine-tuned model with OpenAI-compatible API
 - [x] **SERVE-02**: KServe RawDeployment wrapping vLLM with readiness probes
-- [ ] **SERVE-03**: End-to-end inference test (prompt → vLLM → response) via curl and web UI
+- [x] **SERVE-03**: End-to-end inference test (prompt → vLLM → response) via curl and web UI
 
 ### Web Interface
 
@@ -156,11 +156,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TUNE-01 | Phase 2 | Complete |
 | TUNE-02 | Phase 2 | Complete |
 | TUNE-03 | Phase 2 | Complete |
-| PKG-01 | Phase 2 | Pending |
-| PKG-02 | Phase 2 | Pending |
+| PKG-01 | Phase 2 | Complete |
+| PKG-02 | Phase 2 | Complete |
 | SERVE-01 | Phase 2 | Complete |
 | SERVE-02 | Phase 2 | Complete |
-| SERVE-03 | Phase 2 | Pending |
+| SERVE-03 | Phase 2 | Complete |
 | UI-01 | Phase 2 | Pending |
 | UI-02 | Phase 2 | Pending |
 | UI-03 | Phase 2 | Pending |
