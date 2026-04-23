@@ -28,15 +28,22 @@ Teach practitioners how to take AI systems (LLMs + agents) from prototype to pro
 
 - Course infrastructure scaffold — Docusaurus site, companion code repo, preflight scripts, KIND config, cleanup scripts
 
+(Validated in Phase 2: LLMOps Labs Day 1)
+
+- Synthetic data generation + FAISS RAG retriever — rewritten with Smile Dental Pune data (Lab 01)
+- CPU LoRA fine-tuning of SmolLM2-135M — rewritten with PEFT 0.19.0, max_steps=50 (Lab 02)
+- OCI model packaging with alpine:3.20 — rewritten (Lab 03)
+- Model serving with vLLM plain K8s Deployment — rewritten, no KServe (Lab 04)
+- Chainlit web UI with glass-box learning mode — new (Lab 05)
+- Prometheus + Grafana observability with correct vllm: metrics — rewritten (Lab 06)
+- Companion code with starter/solution per lab — validated
+- Domain renamed to Smile Dental globally — validated
+- Docusaurus lab pages with concept explanations — 6 pages written
+
 ### Active
 
-- [ ] Rewrite all labs from scratch with fresh structure and modern tooling
-- [ ] Rename domain from "Atharva Dental Clinic" to "Smile Dental" globally
-- [ ] Replace CLI-based API interactions with a web UI (e.g., chat interface)
 - [ ] Add agentic capabilities — extend dental assistant into a multi-tool agent (appointment booking, treatment lookup, triage workflows)
 - [ ] Add Kubernetes Agent Sandbox module — deploy agents using the new Sandbox CRD, SandboxWarmPool, and Python SDK
-- [ ] Create companion code repository with starter/ and solution/ directories per module
-- [ ] Convert documentation site from MkDocs (readthedocs theme) to Docusaurus
 - [ ] Structure for 3-day workshop format (~24 hours, 12-15 labs)
 - [ ] Ensure all content is 2026-relevant (current AI landscape, modern frameworks, latest K8s features)
 - [ ] Design for dual delivery: instructor-led workshop + Udemy self-paced course
@@ -119,4 +126,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-12 after Phase 1 completion*
+*Last updated: 2026-04-23 after Phase 2 completion*
