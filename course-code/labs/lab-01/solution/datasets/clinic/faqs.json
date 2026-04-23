@@ -1,0 +1,74 @@
+[
+  {
+    "id": "FAQ-01",
+    "question": "Is root canal treatment painful?",
+    "answer": "Modern root canal treatment at Smile Dental Clinic is performed under local anaesthesia, which means you should feel little to no pain during the procedure. Most patients report that the discomfort is similar to having a tooth filling done. You may experience mild soreness for 2-3 days after the procedure, which can be managed with over-the-counter painkillers.",
+    "category": "Treatments"
+  },
+  {
+    "id": "FAQ-02",
+    "question": "How long does orthodontic treatment (braces) take?",
+    "answer": "The duration of orthodontic treatment at Smile Dental Clinic depends on the complexity of your case. Most patients wear braces for 12 to 24 months. Minor corrections can sometimes be completed in 6-9 months, while severe misalignment may require up to 3 years. Your orthodontist will give you a personalised estimate during your initial consultation.",
+    "category": "Treatments"
+  },
+  {
+    "id": "FAQ-03",
+    "question": "How long does teeth whitening last?",
+    "answer": "Professional teeth whitening at Smile Dental Clinic typically lasts 1 to 3 years, depending on your diet and oral hygiene habits. Avoiding staining substances like coffee, tea, and tobacco helps maintain results longer. We also offer take-home whitening kits to help you maintain your bright smile between professional treatments.",
+    "category": "Treatments"
+  },
+  {
+    "id": "FAQ-04",
+    "question": "Am I a candidate for dental implants?",
+    "answer": "Good candidates for dental implants at Smile Dental Clinic are adults with healthy gums, sufficient jawbone density, and no uncontrolled systemic diseases. Smokers, patients with severe diabetes, or those on certain medications may need to take extra precautions. A thorough examination including X-rays or CT scans is needed to determine your suitability for implants.",
+    "category": "Treatments"
+  },
+  {
+    "id": "FAQ-05",
+    "question": "When should a child have their first dental visit?",
+    "answer": "Smile Dental Clinic recommends bringing your child for their first dental visit by the age of 1 or within 6 months of the first tooth erupting. Early visits help identify any developmental issues, establish good oral hygiene habits, and help children feel comfortable with dental care. Regular check-ups every 6 months are recommended for children.",
+    "category": "General"
+  },
+  {
+    "id": "FAQ-06",
+    "question": "How often should I brush and floss my teeth?",
+    "answer": "You should brush your teeth at least twice a day — once in the morning and once before bedtime — using a fluoride toothpaste. Flossing once a day helps remove plaque from between teeth where the brush cannot reach. At Smile Dental Clinic, our hygienists can demonstrate the correct brushing and flossing technique during your visit.",
+    "category": "General"
+  },
+  {
+    "id": "FAQ-07",
+    "question": "What are the clinic hours at Smile Dental Clinic?",
+    "answer": "Smile Dental Clinic, Koregaon Park, Pune is open Monday to Saturday from 9:00 AM to 7:00 PM, and on Sundays from 10:00 AM to 2:00 PM. We are closed on national public holidays. For appointments outside these hours, please call our helpline at +91-20-2612-XXXX.",
+    "category": "General"
+  },
+  {
+    "id": "FAQ-08",
+    "question": "What payment methods are accepted, and is EMI available?",
+    "answer": "Smile Dental Clinic accepts cash, debit/credit cards, and UPI payments (PhonePe, Google Pay, Paytm). EMI options are available for treatment costs above ₹10,000 through select partner banks. Please speak to our reception team for details on EMI eligibility and processing.",
+    "category": "Costs"
+  },
+  {
+    "id": "FAQ-09",
+    "question": "Is parking available at the clinic?",
+    "answer": "Yes, Smile Dental Clinic, Koregaon Park has two-wheeler parking available on premises. For four-wheelers, street parking and paid parking facilities are available nearby on North Main Road, Koregaon Park. We recommend using a parking app or arriving a few minutes early, especially on weekday mornings.",
+    "category": "General"
+  },
+  {
+    "id": "FAQ-10",
+    "question": "What should I do if I have a dental emergency after clinic hours?",
+    "answer": "If you experience a dental emergency after clinic hours, please call our helpline at +91-20-2612-XXXX for guidance. For severe pain, trauma, or swelling, we recommend visiting the nearest hospital casualty or emergency dental service. Smile Dental Clinic offers next-day priority appointments for after-hours emergencies — call first thing in the morning.",
+    "category": "Appointments"
+  },
+  {
+    "id": "FAQ-11",
+    "question": "Does Smile Dental Clinic accept insurance?",
+    "answer": "Yes, Smile Dental Clinic is empanelled with major health insurers including Star Health, Niva Bupa, HDFC Ergo, and ICICI Lombard. Cashless treatment is available for eligible procedures. Please bring your insurance card and photo ID. For non-empanelled insurers, we provide itemised bills and treatment summaries to support reimbursement claims.",
+    "category": "Costs"
+  },
+  {
+    "id": "FAQ-12",
+    "question": "How often should I get dental X-rays?",
+    "answer": "The frequency of dental X-rays depends on your individual oral health. For most adults, bitewing X-rays are recommended every 1-2 years, while a full-mouth series may be taken every 3-5 years. Children and patients with a high risk of decay or gum disease may need X-rays more frequently. At Smile Dental Clinic, we follow evidence-based guidelines to ensure X-rays are clinically necessary.",
+    "category": "Treatments"
+  }
+]

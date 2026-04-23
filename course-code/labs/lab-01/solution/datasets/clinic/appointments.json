@@ -1,0 +1,92 @@
+[
+  {
+    "slot_id": "SLOT-20260427-0930-DR-001",
+    "doctor_id": "DR-001",
+    "date": "2026-04-27",
+    "time": "09:30",
+    "duration_minutes": 30,
+    "status": "available",
+    "treatment_types": ["TX-CONSULT-01", "TX-CLEAN-01", "TX-FILL-01"]
+  },
+  {
+    "slot_id": "SLOT-20260427-1030-DR-001",
+    "doctor_id": "DR-001",
+    "date": "2026-04-27",
+    "time": "10:30",
+    "duration_minutes": 60,
+    "status": "available",
+    "treatment_types": ["TX-CONSULT-01", "TX-CLEAN-01", "TX-FILL-01", "TX-CROWN-01"]
+  },
+  {
+    "slot_id": "SLOT-20260427-0930-DR-003",
+    "doctor_id": "DR-003",
+    "date": "2026-04-27",
+    "time": "09:30",
+    "duration_minutes": 90,
+    "status": "available",
+    "treatment_types": ["TX-RCT-01"]
+  },
+  {
+    "slot_id": "SLOT-20260427-1100-DR-003",
+    "doctor_id": "DR-003",
+    "date": "2026-04-27",
+    "time": "11:00",
+    "duration_minutes": 60,
+    "status": "available",
+    "treatment_types": ["TX-RCT-01", "TX-CONSULT-01"]
+  },
+  {
+    "slot_id": "SLOT-20260428-1000-DR-002",
+    "doctor_id": "DR-002",
+    "date": "2026-04-28",
+    "time": "10:00",
+    "duration_minutes": 60,
+    "status": "available",
+    "treatment_types": ["TX-ORTHO-01", "TX-CONSULT-01"]
+  },
+  {
+    "slot_id": "SLOT-20260428-1130-DR-002",
+    "doctor_id": "DR-002",
+    "date": "2026-04-28",
+    "time": "11:30",
+    "duration_minutes": 60,
+    "status": "available",
+    "treatment_types": ["TX-ORTHO-01"]
+  },
+  {
+    "slot_id": "SLOT-20260429-0900-DR-004",
+    "doctor_id": "DR-004",
+    "date": "2026-04-29",
+    "time": "09:00",
+    "duration_minutes": 60,
+    "status": "available",
+    "treatment_types": ["TX-EXT-01", "TX-WISE-01", "TX-IMP-01"]
+  },
+  {
+    "slot_id": "SLOT-20260429-1100-DR-004",
+    "doctor_id": "DR-004",
+    "date": "2026-04-29",
+    "time": "11:00",
+    "duration_minutes": 90,
+    "status": "available",
+    "treatment_types": ["TX-IMP-01", "TX-EXT-01"]
+  },
+  {
+    "slot_id": "SLOT-20260430-0930-DR-001",
+    "doctor_id": "DR-001",
+    "date": "2026-04-30",
+    "time": "09:30",
+    "duration_minutes": 30,
+    "status": "available",
+    "treatment_types": ["TX-CONSULT-01", "TX-PED-01", "TX-WHITE-01"]
+  },
+  {
+    "slot_id": "SLOT-20260430-1400-DR-001",
+    "doctor_id": "DR-001",
+    "date": "2026-04-30",
+    "time": "14:00",
+    "duration_minutes": 60,
+    "status": "available",
+    "treatment_types": ["TX-CONSULT-01", "TX-CLEAN-01", "TX-FILL-01", "TX-WHITE-01"]
+  }
+]

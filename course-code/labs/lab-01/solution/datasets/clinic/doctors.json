@@ -1,0 +1,56 @@
+[
+  {
+    "id": "DR-001",
+    "name": "Dr. Priya Sharma",
+    "specialization": "General Dentistry",
+    "qualification": "BDS, MDS",
+    "experience_years": 8,
+    "languages": ["English", "Hindi", "Marathi"],
+    "availability": {
+      "monday": ["09:30", "10:30", "11:30", "14:00"],
+      "wednesday": ["09:30", "10:30", "11:30", "14:00"],
+      "friday": ["09:30", "10:30", "11:30", "14:00"],
+      "saturday": ["09:30", "10:30", "11:30", "14:00"]
+    }
+  },
+  {
+    "id": "DR-002",
+    "name": "Dr. Rahul Mehta",
+    "specialization": "Orthodontics",
+    "qualification": "BDS, MDS (Orthodontics)",
+    "experience_years": 12,
+    "languages": ["English", "Hindi", "Marathi", "Gujarati"],
+    "availability": {
+      "tuesday": ["10:00", "11:30", "15:00"],
+      "thursday": ["10:00", "11:30", "15:00"],
+      "saturday": ["10:00", "12:00", "14:30"]
+    }
+  },
+  {
+    "id": "DR-003",
+    "name": "Dr. Anita Desai",
+    "specialization": "Endodontics",
+    "qualification": "BDS, MDS (Endodontics)",
+    "experience_years": 6,
+    "languages": ["English", "Hindi", "Marathi"],
+    "availability": {
+      "monday": ["09:30", "11:00", "13:00"],
+      "tuesday": ["09:30", "11:00", "13:00"],
+      "wednesday": ["09:30", "11:00", "13:00"],
+      "thursday": ["09:30", "11:00", "13:00"]
+    }
+  },
+  {
+    "id": "DR-004",
+    "name": "Dr. Suresh Patil",
+    "specialization": "Oral Surgery",
+    "qualification": "BDS, MDS (Oral Surgery)",
+    "experience_years": 15,
+    "languages": ["English", "Hindi", "Marathi", "Kannada"],
+    "availability": {
+      "wednesday": ["09:00", "11:00"],
+      "friday": ["09:00", "11:00"],
+      "saturday": ["09:00", "11:00"]
+    }
+  }
+]

@@ -1,0 +1,243 @@
+[
+  {
+    "code": "TX-CONSULT-01",
+    "name": "General Consultation",
+    "category": "General Dentistry",
+    "specialist": "General Dentist",
+    "indications": [
+      "First dental visit",
+      "Routine checkup",
+      "Tooth pain or sensitivity",
+      "Second opinion"
+    ],
+    "duration_minutes": 30,
+    "visits": "1",
+    "price_band_inr": [300, 500],
+    "aftercare": [
+      "Follow recommendations from dentist",
+      "Schedule follow-up if advised"
+    ]
+  },
+  {
+    "code": "TX-CLEAN-01",
+    "name": "Teeth Cleaning / Scaling",
+    "category": "General Dentistry",
+    "specialist": "General Dentist",
+    "indications": [
+      "Tartar buildup",
+      "Plaque accumulation",
+      "Bad breath",
+      "Bleeding gums"
+    ],
+    "duration_minutes": 45,
+    "visits": "1-2",
+    "price_band_inr": [800, 2000],
+    "aftercare": [
+      "Avoid hard or sticky foods for 24 hours",
+      "Use sensitive toothpaste if needed",
+      "Repeat every 6 months"
+    ]
+  },
+  {
+    "code": "TX-FILL-01",
+    "name": "Tooth Filling (Composite)",
+    "category": "General Dentistry",
+    "specialist": "General Dentist",
+    "indications": [
+      "Tooth decay / cavity",
+      "Chipped or cracked tooth",
+      "Worn enamel",
+      "Replacing old amalgam fillings"
+    ],
+    "duration_minutes": 45,
+    "visits": "1",
+    "price_band_inr": [1500, 3500],
+    "aftercare": [
+      "Avoid chewing on filled side for 2 hours",
+      "Avoid extremely hot or cold foods for 24 hours",
+      "Maintain good oral hygiene"
+    ]
+  },
+  {
+    "code": "TX-RCT-01",
+    "name": "Root Canal Treatment",
+    "category": "Endodontics",
+    "specialist": "Endodontist",
+    "indications": [
+      "Severe tooth pain",
+      "Infected or abscessed tooth",
+      "Deep decay reaching the pulp",
+      "Cracked tooth with pulp exposure"
+    ],
+    "duration_minutes": 90,
+    "visits": "2-3",
+    "price_band_inr": [3000, 8000],
+    "aftercare": [
+      "Take prescribed antibiotics and painkillers",
+      "Avoid chewing on treated side until crown is placed",
+      "Crown placement recommended within 2-4 weeks"
+    ]
+  },
+  {
+    "code": "TX-EXT-01",
+    "name": "Tooth Extraction",
+    "category": "Oral Surgery",
+    "specialist": "Oral Surgeon",
+    "indications": [
+      "Severely decayed tooth beyond repair",
+      "Impacted tooth",
+      "Overcrowding for orthodontic preparation",
+      "Infection that cannot be treated"
+    ],
+    "duration_minutes": 30,
+    "visits": "1",
+    "price_band_inr": [500, 5000],
+    "aftercare": [
+      "Bite on gauze for 30-45 minutes post-extraction",
+      "No smoking or alcohol for 48 hours",
+      "Avoid spitting or using straws for 24 hours",
+      "Soft diet for 2-3 days"
+    ]
+  },
+  {
+    "code": "TX-ORTHO-01",
+    "name": "Braces / Orthodontic Treatment",
+    "category": "Orthodontics",
+    "specialist": "Orthodontist",
+    "indications": [
+      "Crooked or misaligned teeth",
+      "Overbite or underbite",
+      "Gaps between teeth",
+      "Overcrowded teeth"
+    ],
+    "duration_minutes": 60,
+    "visits": "12-24 (monthly adjustments)",
+    "price_band_inr": [25000, 80000],
+    "aftercare": [
+      "Wear retainers as prescribed after braces removal",
+      "Avoid sticky and hard foods",
+      "Maintain thorough oral hygiene around brackets"
+    ]
+  },
+  {
+    "code": "TX-CROWN-01",
+    "name": "Dental Crown",
+    "category": "General Dentistry",
+    "specialist": "Prosthodontist",
+    "indications": [
+      "Severely damaged or decayed tooth",
+      "Post root canal protection",
+      "Cracked or fractured tooth",
+      "Cosmetic improvement of discoloured tooth"
+    ],
+    "duration_minutes": 60,
+    "visits": "2",
+    "price_band_inr": [5000, 15000],
+    "aftercare": [
+      "Avoid extremely hard or sticky foods",
+      "Temporary crown: no chewing hard items",
+      "Maintain good brushing and flossing around crown"
+    ]
+  },
+  {
+    "code": "TX-WHITE-01",
+    "name": "Teeth Whitening",
+    "category": "Cosmetic Dentistry",
+    "specialist": "Cosmetic Dentist",
+    "indications": [
+      "Stained or discoloured teeth",
+      "Pre-wedding or special event preparation",
+      "Confidence improvement",
+      "Coffee, tea, or tobacco staining"
+    ],
+    "duration_minutes": 60,
+    "visits": "1-2",
+    "price_band_inr": [6000, 15000],
+    "aftercare": [
+      "Avoid staining foods and drinks for 48 hours",
+      "No smoking for 72 hours post-treatment",
+      "Use whitening toothpaste to maintain results"
+    ]
+  },
+  {
+    "code": "TX-IMP-01",
+    "name": "Dental Implant",
+    "category": "Oral Surgery",
+    "specialist": "Oral Surgeon",
+    "indications": [
+      "Missing tooth or teeth",
+      "Failed bridge or denture",
+      "Adequate jawbone density",
+      "Non-smoker or willing to quit"
+    ],
+    "duration_minutes": 90,
+    "visits": "3-5 (over 3-6 months)",
+    "price_band_inr": [25000, 60000],
+    "aftercare": [
+      "Soft diet for 4-6 weeks after implant surgery",
+      "No smoking — impairs osseointegration",
+      "Regular check-ups every 3 months for first year"
+    ]
+  },
+  {
+    "code": "TX-PERIO-01",
+    "name": "Gum Treatment (Periodontics)",
+    "category": "Periodontics",
+    "specialist": "Periodontist",
+    "indications": [
+      "Bleeding or swollen gums",
+      "Gum recession",
+      "Loose teeth",
+      "Chronic bad breath despite good hygiene"
+    ],
+    "duration_minutes": 60,
+    "visits": "2-4",
+    "price_band_inr": [2000, 8000],
+    "aftercare": [
+      "Use chlorhexidine mouthwash as prescribed",
+      "Avoid smoking — worsens gum disease",
+      "Follow up every 3 months for first year"
+    ]
+  },
+  {
+    "code": "TX-WISE-01",
+    "name": "Wisdom Tooth Removal",
+    "category": "Oral Surgery",
+    "specialist": "Oral Surgeon",
+    "indications": [
+      "Impacted wisdom tooth causing pain",
+      "Infection around partially erupted wisdom tooth",
+      "Damage to adjacent second molar",
+      "Cyst or tumour formation around wisdom tooth"
+    ],
+    "duration_minutes": 45,
+    "visits": "1-2",
+    "price_band_inr": [2000, 8000],
+    "aftercare": [
+      "Ice pack on cheek for 20 minutes on/off for first 24 hours",
+      "Take prescribed antibiotics and analgesics",
+      "Soft diet for 5-7 days",
+      "Rinse with warm salt water from day 2"
+    ]
+  },
+  {
+    "code": "TX-PED-01",
+    "name": "Pediatric Dental Care",
+    "category": "Pediatric Dentistry",
+    "specialist": "Pediatric Dentist",
+    "indications": [
+      "Child's first dental visit (recommended by age 1)",
+      "Milk tooth decay",
+      "Fluoride treatment for cavity prevention",
+      "Dental anxiety management in children"
+    ],
+    "duration_minutes": 30,
+    "visits": "1-2",
+    "price_band_inr": [500, 3000],
+    "aftercare": [
+      "Establish twice-daily brushing routine",
+      "Limit sugary snacks and drinks",
+      "Schedule next visit in 6 months"
+    ]
+  }
+]
