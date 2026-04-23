@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v0.19.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 02-04-PLAN.md
-last_updated: "2026-04-23T09:19:02.278Z"
+stopped_at: Completed 02-06-PLAN.md
+last_updated: "2026-04-23T09:23:22.722Z"
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 12
-  completed_plans: 9
+  completed_plans: 10
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-04-12)
 ## Current Position
 
 Phase: 02 (llmops-labs-day-1) — EXECUTING
-Plan: 5 of 7
+Plan: 6 of 7
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Plan: 5 of 7
 | Phase 02-llmops-labs-day-1 P03 | 3min | 2 tasks | 10 files |
 | Phase 02-llmops-labs-day-1 P02 | 6min | 2 tasks | 20 files |
 | Phase 02-llmops-labs-day-1 P04 | 4min | 2 tasks | 10 files |
+| Phase 02-llmops-labs-day-1 P06 | 2min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -86,6 +87,9 @@ Recent decisions affecting current work:
 - [Phase 02-llmops-labs-day-1]: FAISS IndexFlatIP(384) with normalize_embeddings=True — inner product equals cosine on L2-normalised vectors
 - [Phase 02-llmops-labs-day-1]: K8s initContainer builds FAISS index before retriever container starts — avoids 30s+ startup delay in serving container
 - [Phase 02-llmops-labs-day-1]: VLLM_CPU_KVCACHE_SPACE=2 (not 4) for OOM protection on 5Gi KIND nodes; ImageVolume mounts model OCI image at /models; readinessProbe initialDelaySeconds=120 for 60-180s CPU model load time
+- [Phase 02-llmops-labs-day-1]: vLLM v0.19.x uses colon prefix vllm: in all metric names — PromQL must use vllm:time_to_first_token_seconds not vllm_request_ttft_seconds
+- [Phase 02-llmops-labs-day-1]: serviceMonitorSelectorNilUsesHelmValues=false required for cross-namespace ServiceMonitor discovery in kube-prometheus-stack
+- [Phase 02-llmops-labs-day-1]: Grafana auto-discovery via grafana_dashboard: '1' ConfigMap label — no manual dashboard import needed
 
 ### Pending Todos
 
@@ -97,6 +101,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-23T09:19:02.275Z
-Stopped at: Completed 02-04-PLAN.md
+Last session: 2026-04-23T09:23:22.718Z
+Stopped at: Completed 02-06-PLAN.md
 Resume file: None

@@ -68,10 +68,10 @@ Requirements for initial course release. Each maps to roadmap phases.
 
 ### Observability
 
-- [ ] **OBS-01**: Prometheus + Grafana stack deployed via Helm (kube-prometheus-stack)
-- [ ] **OBS-02**: vLLM metrics scraped (TTFT, latency, tokens/sec, request counts)
-- [ ] **OBS-03**: Chat API and Retriever instrumented with Prometheus metrics
-- [ ] **OBS-04**: Grafana dashboard for LLM workload visibility
+- [x] **OBS-01**: Prometheus + Grafana stack deployed via Helm (kube-prometheus-stack)
+- [x] **OBS-02**: vLLM metrics scraped (TTFT, latency, tokens/sec, request counts)
+- [x] **OBS-03**: Chat API and Retriever instrumented with Prometheus metrics
+- [x] **OBS-04**: Grafana dashboard for LLM workload visibility
 - [ ] **OBS-05**: Agent observability — tool-call traces, API cost tracking, latency per tool
 - [ ] **OBS-06**: OpenTelemetry (OTEL) instrumentation for distributed tracing across agent → retriever → LLM
 - [ ] **OBS-07**: OTEL collector deployed on K8s, traces visualized in Grafana Tempo or Jaeger
@@ -164,10 +164,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-01 | Phase 2 | Pending |
 | UI-02 | Phase 2 | Pending |
 | UI-03 | Phase 2 | Pending |
-| OBS-01 | Phase 2 | Pending |
-| OBS-02 | Phase 2 | Pending |
-| OBS-03 | Phase 2 | Pending |
-| OBS-04 | Phase 2 | Pending |
+| OBS-01 | Phase 2 | Complete |
+| OBS-02 | Phase 2 | Complete |
+| OBS-03 | Phase 2 | Complete |
+| OBS-04 | Phase 2 | Complete |
 | AGENT-01 | Phase 3 | Pending |
 | AGENT-02 | Phase 3 | Pending |
 | AGENT-03 | Phase 3 | Pending |
