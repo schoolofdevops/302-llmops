@@ -36,7 +36,7 @@ The solution code is in `course-code/labs/lab-01/solution/`. Review the key file
 | `datasets/clinic/treatments.json` | 12 dental treatments with INR pricing and aftercare |
 | `datasets/clinic/policies.json` | 8 clinic policies (booking, payment, cancellation) |
 | `datasets/clinic/faqs.json` | 12 patient FAQs with detailed answers |
-| `datasets/clinic/doctors.json` | 4 doctors with specializations and weekly availability |
+| `datasets/clinic/doctors.json` | 4 doctors with specializations and weekly availability (used in agent labs) |
 | `datasets/clinic/appointments.json` | Mock appointment slots (used in Phase 3 agent labs) |
 
 ## Understanding the Clinic Data
@@ -145,7 +145,7 @@ python tools/synth_data.py
 You should see output like:
 
 ```
-Generated 312 examples → datasets/train/dental_chat.jsonl
+Generated 164 examples → datasets/train/dental_chat.jsonl
 ```
 
 The script reads from `datasets/clinic/` and writes to `datasets/train/dental_chat.jsonl`.
@@ -177,14 +177,14 @@ You should see a well-formed messages object. Count total examples:
 wc -l datasets/train/dental_chat.jsonl
 ```
 
-Expected: **300+ lines** (one JSON object per line).
+Expected: **164 lines** (one JSON object per line).
 
 ## Verification
 
 Run these checks to confirm the dataset is correct:
 
 ```bash
-# 1. Count lines (should be 300+)
+# 1. Count lines (should be 164)
 wc -l datasets/train/dental_chat.jsonl
 
 # 2. Confirm first message role is "system"
@@ -209,7 +209,7 @@ print(f'Examples mentioning Smile Dental: {dental_count}/{len(lines)}')
 ```
 
 Expected output:
-- 300+ lines
+- 164 lines
 - Roles: `['system', 'user', 'assistant']`
 - Most examples (treatment and policy QAs) mention Smile Dental
 
