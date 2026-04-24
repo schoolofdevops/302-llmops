@@ -90,16 +90,9 @@ This pattern is used widely in production for one-time setup steps (database mig
 
 ## Lab Steps
 
-### Step 1: Files are already in your workspace
+### Step 1: Copy the RAG code into your workspace
 
-If you ran Lab 01, the clinic data files are in `llmops-project/lab-01/datasets/clinic/`. The RAG code comes from the same solution directory:
-
-```bash
-ls llmops-project/lab-01/rag/
-# Should show: build_index.py  retriever.py  requirements.txt
-```
-
-If the `rag/` directory is missing, copy it:
+The clinic data files from Lab 01 are already in `llmops-project/lab-01/datasets/clinic/`. Now copy the RAG code into your workspace:
 
 <Tabs groupId="operating-systems">
   <TabItem value="mac" label="macOS / Linux">
@@ -113,6 +106,13 @@ If the `rag/` directory is missing, copy it:
   ```
   </TabItem>
 </Tabs>
+
+Verify the files are in place:
+
+```bash
+ls llmops-project/lab-01/rag/
+# Should show: build_index.py  retriever.py  requirements.txt
+```
 
 ### Step 2: Build the FAISS index locally (optional — for understanding)
 
