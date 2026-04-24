@@ -5,7 +5,7 @@ set -euo pipefail
 
 CLUSTER_NAME="llmops-kind"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../../../.." && pwd)"
 KIND_CONFIG="${SCRIPT_DIR}/../setup/kind-config.yaml"
 
 echo "============================================="

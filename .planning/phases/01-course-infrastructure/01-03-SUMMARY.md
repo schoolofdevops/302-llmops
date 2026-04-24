@@ -80,7 +80,7 @@ Each task was committed atomically:
 1. **Task 1: Create bash preflight script (preflight-check.sh)** - `263bddd` (feat + test — TDD RED/GREEN)
 2. **Task 2: Create PowerShell preflight script (preflight-check.ps1)** - `74c542c` (feat)
 
-**Plan metadata:** _(to be added after final commit)_
+**Plan metadata:** `3657c21` (docs: complete preflight scripts plan)
 
 _Note: Task 1 used TDD — test-preflight-check.sh written first (RED), then preflight-check.sh written to make tests pass (GREEN)._
 

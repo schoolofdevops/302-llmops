@@ -20,7 +20,7 @@ import TabItem from '@theme/TabItem';
 
 vLLM is a high-performance LLM inference engine originally designed for GPU serving. Its key innovation is **PagedAttention** — a memory management technique that treats the KV cache (the attention memory that grows as generation progresses) like virtual memory pages, eliminating memory fragmentation and enabling higher throughput.
 
-For this course, we use the CPU version (`schoolofdevops/vllm-cpu-nonuma:0.9.1`) — a custom-built CPU-only image that works without any GPU hardware. CPU inference is slower than GPU (2-10 seconds per response instead of <1 second), but it runs on any laptop with 16 GB RAM.
+For this course, we use the CPU version (`schoolofdevops/vllm-cpu-nonuma:0.9.1`) — a custom-built CPU-only image that works without any GPU hardware. CPU inference is slower than GPU (2-10 seconds per response instead of &lt;1 second), but it runs on any laptop with 16 GB RAM.
 
 The critical property of vLLM for this course is its **OpenAI-compatible API**. The `/v1/chat/completions` endpoint accepts the same JSON format as OpenAI's API — the Chainlit UI in Lab 06 can connect to vLLM using the same code it would use for GPT-4o.
 
