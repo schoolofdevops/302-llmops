@@ -106,7 +106,7 @@ First build downloads PyTorch (~1GB). Subsequent builds use cache and take under
 The training Job mounts `./llmops-project` from your host into the pod at `/mnt/project`. The training data must exist before submitting the job:
 
 ```bash
-ls llmops-project/lab-01/datasets/train/dental_chat.jsonl
+ls llmops-project/datasets/train/dental_chat.jsonl
 # Expected: file exists, size ~500KB
 ```
 
