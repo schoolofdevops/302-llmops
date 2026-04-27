@@ -59,6 +59,22 @@ Plans:
 - [x] 02-06-PLAN.md — Lab 06 code: Prometheus + Grafana observability (3 ServiceMonitors, Grafana dashboard ConfigMap with vllm: metrics)
 - [x] 02-07-PLAN.md — Docusaurus lab guide pages for all 6 Day 1 labs (rewrites placeholder pages with complete instructions)
 
+### Phase 02.1: Flatten workspace and switch to uv (INSERTED)
+
+**Goal:** Lab guides use a flat `llmops-project/` workspace (no per-lab sub-directories) consistent with K8s mount paths, and student-facing pip commands are replaced with uv for faster installs
+**Requirements**: FLAT-01, FLAT-02, FLAT-03
+**Depends on:** Phase 2
+**Success Criteria** (what must be TRUE):
+  1. All lab guide workspace paths use flat `llmops-project/` with no `lab-01/` sub-directory nesting
+  2. Student-facing pip install commands replaced with `uv pip install --system` in labs 01 and 02
+  3. Lab 01 includes uv installation instructions before the first uv command
+  4. K8s manifest pip commands inside YAML code blocks and course-code/ files are untouched
+  5. Cross-lab data dependency paths are consistent (lab-03 references `llmops-project/datasets/train/`)
+**Plans:** 1 plan
+
+Plans:
+- [ ] 02.1-01-PLAN.md — Flatten workspace paths in labs 01-03 + switch pip to uv in labs 01-02
+
 ### Phase 3: AgentOps Labs (Day 2)
 **Goal**: Students deploy Hermes Agent configured for Smile Dental, demonstrate a multi-step agent workflow using a free-tier LLM API, run it inside Kubernetes Agent Sandbox with isolation, and observe tool-call traces end-to-end via OTEL
 **Depends on**: Phase 2
@@ -92,5 +108,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Course Infrastructure | 5/5 | Complete |  |
 | 2. LLMOps Labs (Day 1) | 7/7 | Complete   | 2026-04-23 |
+| 2.1 Flatten workspace + uv | 0/1 | Not started | - |
 | 3. AgentOps Labs (Day 2) | 0/TBD | Not started | - |
 | 4. Production Ops + Capstone (Day 3) | 0/TBD | Not started | - |
