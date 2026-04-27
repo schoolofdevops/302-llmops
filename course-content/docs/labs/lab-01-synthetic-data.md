@@ -99,24 +99,43 @@ This three-message format (system → user → assistant) matches the chat templ
   <TabItem value="mac" label="macOS / Linux">
   ```bash
   # From the repository root
-  mkdir -p llmops-project/lab-01
-  cp -r course-code/labs/lab-01/solution/* llmops-project/lab-01/
+  mkdir -p llmops-project
+  cp -r course-code/labs/lab-01/solution/* llmops-project/
   ```
   </TabItem>
   <TabItem value="win" label="Windows">
   ```powershell
   # From the repository root (PowerShell)
-  New-Item -ItemType Directory -Force -Path llmops-project\lab-01
-  xcopy /E /I course-code\labs\lab-01\solution\* llmops-project\lab-01\
+  New-Item -ItemType Directory -Force -Path llmops-project
+  xcopy /E /I course-code\labs\lab-01\solution\* llmops-project\
   ```
   </TabItem>
 </Tabs>
 
+:::info Install uv (one-time setup)
+uv is a fast Python package manager (10-100x faster than pip). Install it once before proceeding:
+
+<Tabs groupId="operating-systems">
+  <TabItem value="mac" label="macOS / Linux">
+  ```bash
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  ```
+  </TabItem>
+  <TabItem value="win" label="Windows">
+  ```powershell
+  powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+  ```
+  </TabItem>
+</Tabs>
+
+The `--system` flag used below tells uv to install into your system Python (no virtual environment needed for this workshop).
+:::
+
 ### Step 2: Install Python dependencies
 
 ```bash
-cd llmops-project/lab-01
-pip install -r tools/requirements.txt
+cd llmops-project
+uv pip install --system -r tools/requirements.txt
 ```
 
 The requirements file pins: `sentence-transformers==5.4.1` (used by Lab 02 RAG), `faiss-cpu==1.13.2`, and `numpy==1.26.4`. Installing them now avoids version conflicts later.
@@ -138,7 +157,7 @@ This prompt is prepended to every training example. After fine-tuning, the model
 ### Step 4: Generate the training dataset
 
 ```bash
-cd llmops-project/lab-01
+cd llmops-project
 python tools/synth_data.py
 ```
 
@@ -215,7 +234,7 @@ Expected output:
 
 ## After This Lab
 
-Artifacts created in `llmops-project/lab-01/`:
+Artifacts created in `llmops-project/`:
 
 | Artifact | Used By |
 |----------|---------|

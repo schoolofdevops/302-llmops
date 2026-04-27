@@ -84,7 +84,7 @@ Pod startup:
   main container: retriever   →  starts AFTER init    →  reads /data/index/
 ```
 
-The `emptyDir` volume is shared between both containers. The initContainer runs `pip install` + `python build_index.py`, writing `faiss.index` and `metadata.json` to `/data/index/`. Only then does Kubernetes start the `retriever` container, which reads the ready index at startup.
+The `emptyDir` volume is shared between both containers. The initContainer uses `pip install` directly (it runs inside a pod — `uv` is not installed there) + `python build_index.py`, writing `faiss.index` and `metadata.json` to `/data/index/`. Only then does Kubernetes start the `retriever` container, which reads the ready index at startup.
 
 This pattern is used widely in production for one-time setup steps (database migrations, data downloads) that must complete before the main service starts.
 
@@ -92,17 +92,17 @@ This pattern is used widely in production for one-time setup steps (database mig
 
 ### Step 1: Copy the RAG code into your workspace
 
-The clinic data files from Lab 01 are already in `llmops-project/lab-01/datasets/clinic/`. Now copy the RAG code into your workspace:
+The clinic data files from Lab 01 are already in `llmops-project/datasets/clinic/`. Now copy the RAG code into your workspace:
 
 <Tabs groupId="operating-systems">
   <TabItem value="mac" label="macOS / Linux">
   ```bash
-  cp -r course-code/labs/lab-01/solution/rag/ llmops-project/lab-01/rag/
+  cp -r course-code/labs/lab-01/solution/rag/ llmops-project/rag/
   ```
   </TabItem>
   <TabItem value="win" label="Windows">
   ```powershell
-  xcopy /E /I course-code\labs\lab-01\solution\rag\ llmops-project\lab-01\rag\
+  xcopy /E /I course-code\labs\lab-01\solution\rag\ llmops-project\rag\
   ```
   </TabItem>
 </Tabs>
@@ -110,7 +110,7 @@ The clinic data files from Lab 01 are already in `llmops-project/lab-01/datasets
 Verify the files are in place:
 
 ```bash
-ls llmops-project/lab-01/rag/
+ls llmops-project/rag/
 # Should show: build_index.py  retriever.py  requirements.txt
 ```
 
@@ -119,8 +119,8 @@ ls llmops-project/lab-01/rag/
 You can run `build_index.py` locally to see how the index is built before deploying to Kubernetes. This is optional — the initContainer will also build it in-cluster.
 
 ```bash
-cd llmops-project/lab-01
-pip install -r rag/requirements.txt
+cd llmops-project
+uv pip install --system -r rag/requirements.txt
 
 python rag/build_index.py
 # Output:
