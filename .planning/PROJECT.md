@@ -40,6 +40,11 @@ Teach practitioners how to take AI systems (LLMs + agents) from prototype to pro
 - Domain renamed to Smile Dental globally — validated
 - Docusaurus lab pages with concept explanations — 6 pages written
 
+(Validated in Phase 02.1: Flatten workspace + uv)
+
+- Flat `llmops-project/` workspace replaces per-lab subdirs (`lab-01/`, `lab-02/`) across all lab guides
+- `uv` is primary package installer in student-facing commands (`pip` documented as fallback)
+
 ### Active
 
 - [ ] Add agentic capabilities — extend dental assistant into a multi-tool agent (appointment booking, treatment lookup, triage workflows)
@@ -126,4 +131,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-23 after Phase 2 completion*
+*Last updated: 2026-04-27 after Phase 02.1 completion*
