@@ -70,10 +70,10 @@ Plans:
   3. Lab 01 includes uv installation instructions before the first uv command
   4. K8s manifest pip commands inside YAML code blocks and course-code/ files are untouched
   5. Cross-lab data dependency paths are consistent (lab-03 references `llmops-project/datasets/train/`)
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
-- [ ] 02.1-01-PLAN.md — Flatten workspace paths in labs 01-03 + switch pip to uv in labs 01-02
+- [x] 02.1-01-PLAN.md — Flatten workspace paths in labs 01-03 + switch pip to uv in labs 01-02
 
 ### Phase 3: AgentOps Labs (Day 2)
 **Goal**: Students deploy Hermes Agent configured for Smile Dental, demonstrate a multi-step agent workflow using a free-tier LLM API, run it inside Kubernetes Agent Sandbox with isolation, and observe tool-call traces end-to-end via OTEL

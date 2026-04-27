@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v0.19.0
 milestone_name: milestone
-status: Ready to plan
-stopped_at: Completed 02-07-PLAN.md
-last_updated: "2026-04-23T09:48:01.888Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 02.1-01-PLAN.md
+last_updated: "2026-04-27T00:53:38.585Z"
 progress:
-  total_phases: 4
-  completed_phases: 2
-  total_plans: 12
-  completed_plans: 12
+  total_phases: 5
+  completed_phases: 3
+  total_plans: 13
+  completed_plans: 13
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-12)
 
 **Core value:** Teach practitioners how to take AI systems (LLMs + agents) from prototype to production on Kubernetes — the only course covering the full journey from RAG to agentic deployments with K8s Agent Sandbox.
-**Current focus:** Phase 02 — llmops-labs-day-1
+**Current focus:** Phase 02.1 — flatten-workspace-and-switch-to-uv
 
 ## Current Position
 
-Phase: 3
-Plan: Not started
+Phase: 02.1 (flatten-workspace-and-switch-to-uv) — EXECUTING
+Plan: 1 of 1
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Plan: Not started
 | Phase 02-llmops-labs-day-1 P06 | 2min | 2 tasks | 10 files |
 | Phase 02-llmops-labs-day-1 P05 | 7min | 2 tasks | 13 files |
 | Phase 02-llmops-labs-day-1 P07 | 8min | 2 tasks | 6 files |
+| Phase 02.1-flatten-workspace-and-switch-to-uv P01 | 15min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -95,10 +96,17 @@ Recent decisions affecting current work:
 - [Phase 02-llmops-labs-day-1]: Chainlit streaming message created before cl.Step context to stream tokens to main chat thread, not step output
 - [Phase 02-llmops-labs-day-1]: Pitfall 5 enforced: --host 0.0.0.0 in Chainlit CMD is mandatory for NodePort WebSocket (without it: 403)
 - [Phase 02-llmops-labs-day-1]: Lab guides read actual solution code before writing — ensures accurate file paths and commands
+- [Phase 02.1]: uv pip install --system for student-facing commands — avoids venv requirement in workshop context
+- [Phase 02.1]: Flat workspace pattern: all student files go directly into llmops-project/ — no per-lab sub-directories
+- [Phase 02.1]: K8s initContainer pip unchanged — uv not available inside pod images
 
 ### Pending Todos
 
 None yet.
+
+### Roadmap Evolution
+
+- Phase 02.1 inserted after Phase 2: Flatten workspace and switch to uv (URGENT)
 
 ### Blockers/Concerns
 
@@ -106,6 +114,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-23T09:33:55.394Z
-Stopped at: Completed 02-07-PLAN.md
+Last session: 2026-04-27T00:53:38.582Z
+Stopped at: Completed 02.1-01-PLAN.md
 Resume file: None
