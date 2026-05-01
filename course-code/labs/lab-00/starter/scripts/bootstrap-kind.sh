@@ -25,7 +25,8 @@ if /usr/bin/grep -q "REPLACE_HOST_PATH" "${KIND_CONFIG}"; then
     exit 1
   fi
   # Create a temporary config with the path substituted
-  TMP_CONFIG=$(mktemp /tmp/kind-config-XXXXX.yaml)
+  TMP_CONFIG=$(mktemp /tmp/kind-config-XXXXXXXX)
+  # Note: no .yaml suffix — macOS mktemp requires X's at end
   sed "s|REPLACE_HOST_PATH|${HOST_PATH}|g" "${KIND_CONFIG}" > "${TMP_CONFIG}"
   KIND_CONFIG="${TMP_CONFIG}"
   echo ""
