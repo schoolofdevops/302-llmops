@@ -82,6 +82,12 @@ The merged model is a standard HuggingFace model directory that any inference en
 
 ## Lab Steps
 
+All commands assume you are in the **repository root** (`llmops-course/`). If you are still inside `llmops-project/` from Lab 02:
+
+```bash
+cd ..
+```
+
 ### Step 1: Build the training Docker image
 
 The training Job runs inside a container that has PyTorch, transformers, and PEFT pre-installed.
