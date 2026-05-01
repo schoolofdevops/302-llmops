@@ -26,7 +26,7 @@ def main():
     # TODO: Load dataset from DATA_PATH (JSONL with messages format)
     # TODO: Configure LoraConfig (r=8, lora_alpha=16, target_modules=["q_proj", "v_proj"])
     # TODO: Apply LoRA to model with get_peft_model()
-    # TODO: Configure TrainingArguments (max_steps=MAX_STEPS, no_cuda=True)
+    # TODO: Configure TrainingArguments (max_steps=MAX_STEPS, use_cpu=True)
     # TODO: Train with Trainer and save
     pass
 

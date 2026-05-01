@@ -11,7 +11,7 @@ data:
       "__inputs": [],
       "__requires": [],
       "annotations": {"list": []},
-      "description": "Smile Dental LLM Pipeline — vLLM v0.19.x metrics",
+      "description": "Smile Dental LLM Pipeline — vLLM 0.9.1 metrics",
       "editable": true,
       "fiscalYearStartMonth": 0,
       "graphTooltip": 1,
@@ -109,12 +109,47 @@ data:
           "id": 6,
           "targets": [
             {
-              "expr": "rate(search_requests_total[1m])",
+              "expr": "rate(retriever_search_requests_total[1m])",
               "legendFormat": "Retriever Queries/sec",
               "refId": "A"
             }
           ],
           "title": "RAG Retriever Query Rate",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {"defaults": {"unit": "reqps"}, "overrides": []},
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 24},
+          "id": 7,
+          "targets": [
+            {
+              "expr": "rate(chat_requests_total{status=\"ok\"}[1m])",
+              "legendFormat": "Chat Requests/sec (ok)",
+              "refId": "A"
+            },
+            {
+              "expr": "rate(chat_requests_total{status=~\".*error.*\"}[1m])",
+              "legendFormat": "Errors/sec",
+              "refId": "B"
+            }
+          ],
+          "title": "Chat Request Rate (Chainlit)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 24},
+          "id": 8,
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.95, rate(chat_latency_seconds_bucket[5m]))",
+              "legendFormat": "P95 Chat Latency",
+              "refId": "A"
+            }
+          ],
+          "title": "Chat End-to-End Latency (P95)",
           "type": "timeseries"
         }
       ],

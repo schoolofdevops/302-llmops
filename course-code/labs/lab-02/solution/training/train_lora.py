@@ -101,7 +101,7 @@ def main():
     # float32 for CPU stability (bfloat16 can cause issues on some CPU builds)
     model = AutoModelForCausalLM.from_pretrained(
         BASE_MODEL,
-        torch_dtype=torch.float32,
+        dtype=torch.float32,
     )
 
     # ---- LoRA configuration (PEFT 0.19.0 stable params) ----
@@ -127,8 +127,7 @@ def main():
         warmup_steps=5,
         logging_steps=10,
         save_steps=MAX_STEPS,      # Save once at the end
-        no_cuda=True,              # Force CPU — KIND cluster nodes have no GPU
-        use_cpu=True,
+        use_cpu=True,              # Force CPU — KIND cluster nodes have no GPU
         report_to="none",          # No wandb/tensorboard in workshop environment
     )
 

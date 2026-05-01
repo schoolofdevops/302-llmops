@@ -47,15 +47,15 @@ Open `course-code/labs/lab-04/solution/k8s/30-deploy-vllm.yaml`. Key sections ex
 **vLLM startup arguments:**
 ```yaml
 args:
-  - /models/model         # path to model weights (from ImageVolume mount)
+  - --model=/models/model   # path to model weights (from ImageVolume mount)
   - --host=0.0.0.0
   - --port=8000
   - --max-model-len=4096  # max total context length (prompt + response)
   - --served-model-name=smollm2-135m-finetuned  # name used in API calls
-  - --dtype=bfloat16      # bfloat16 is fine for CPU inference (not training)
+  - --dtype=float32       # float32 required for CPU — bfloat16 kernels not supported on CPU
   - --disable-frontend-multiprocessing  # required for CPU backend stability
   - --max-num-seqs=1      # only 1 concurrent request (CPU constraint)
-  - --enable-metrics      # expose /metrics endpoint for Prometheus (Lab 06)
+  # Note: /metrics endpoint is always enabled in vLLM 0.9.1 — no flag needed
 ```
 
 **Environment variables:**
@@ -147,12 +147,11 @@ kubectl logs -f deployment/vllm-smollm2 -n llm-serving
 Look for these lines indicating successful startup:
 
 ```
-INFO: Loading model weights from /models/model...
-INFO: Model weights loaded in 67.3s.
-INFO: Profiling the peak memory usage of the model...
-INFO: Starting Uvicorn with 1 workers
+INFO: vLLM API server version 0.9.1
+Loading safetensors checkpoint shards: 100% Completed | 1/1
+INFO: Loading weights took 0.81 seconds
 INFO: Application startup complete.
-INFO: Uvicorn running on http://0.0.0.0:8000
+INFO:     Uvicorn running on http://0.0.0.0:8000
 ```
 
 Press `Ctrl+C` to exit the log stream.
@@ -164,7 +163,7 @@ bash course-code/labs/lab-04/solution/scripts/test-vllm.sh localhost 30200
 ```
 
 The script runs three tests:
-1. **Health check** — `GET /health` returns `{"status":"healthy"}`
+1. **Health check** — `GET /health` returns HTTP 200 (empty body)
 2. **List models** — `GET /v1/models` confirms `smollm2-135m-finetuned` is loaded
 3. **Chat completion** — asks "How much does teeth whitening cost?" and prints the response
 
@@ -198,9 +197,9 @@ The response `choices[0].message.content` should reference Smile Dental's cancel
 Confirm the service is accessible and responding:
 
 ```bash
-# Health endpoint
-curl http://localhost:30200/health
-# {"status":"healthy"}
+# Health endpoint — returns HTTP 200 with empty body
+curl -w "%{http_code}" http://localhost:30200/health
+# 200
 
 # Model list
 curl http://localhost:30200/v1/models | python3 -c "

@@ -16,3 +16,6 @@ spec:
     port: 8000
     targetPort: 8000
     nodePort: 30300
+  - name: metrics
+    port: 9090
+    targetPort: 9090

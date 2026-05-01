@@ -27,7 +27,10 @@ spec:
         - name: MODEL_NAME
           value: "smollm2-135m-finetuned"
         ports:
-        - containerPort: 8000
+        - name: http
+          containerPort: 8000
+        - name: metrics
+          containerPort: 9090
         readinessProbe:
           httpGet:
             path: /

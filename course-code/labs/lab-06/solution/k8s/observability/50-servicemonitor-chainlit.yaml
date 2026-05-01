@@ -1,8 +1,7 @@
 # Lab 06: Prometheus ServiceMonitor for Chainlit UI
-# Chainlit itself doesn't expose /metrics by default.
-# This ServiceMonitor is a placeholder — in Lab 05 solution, the Chainlit
-# app can be extended with prometheus-client to expose custom metrics.
-# For the base lab, this file shows the pattern but Chainlit may not respond on /metrics.
+# Chainlit's catch-all route intercepts /metrics on port 8000, so the app
+# runs a separate prometheus_client HTTP server on port 9090.
+# Metrics: chat_requests_total, chat_latency_seconds
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
@@ -18,7 +17,7 @@ spec:
     matchLabels:
       app: chainlit-ui
   endpoints:
-    - port: http
+    - port: metrics
       path: /metrics
-      interval: 60s
+      interval: 30s
       scrapeTimeout: 10s

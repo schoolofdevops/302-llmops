@@ -4,6 +4,8 @@
 set -euo pipefail
 
 CLUSTER_NAME="llmops-kind"
+REGISTRY_NAME="kind-registry"
+REGISTRY_PORT=5001
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/../../../.." && pwd)"
 KIND_CONFIG="${SCRIPT_DIR}/../setup/kind-config.yaml"
@@ -11,6 +13,31 @@ KIND_CONFIG="${SCRIPT_DIR}/../setup/kind-config.yaml"
 echo "============================================="
 echo " LLMOps — Bootstrap KIND Cluster"
 echo "============================================="
+echo ""
+
+# --- /etc/hosts: make kind-registry resolvable on the host ---
+if ! /usr/bin/grep -q "kind-registry" /etc/hosts 2>/dev/null; then
+  echo "==> Adding 127.0.0.1 kind-registry to /etc/hosts (requires sudo)..."
+  echo "127.0.0.1 kind-registry" | sudo tee -a /etc/hosts > /dev/null
+  echo "Added 127.0.0.1 kind-registry to /etc/hosts"
+else
+  echo "==> kind-registry already in /etc/hosts"
+fi
+echo ""
+
+# --- Local Container Registry ---
+echo "==> Setting up local container registry (kind-registry:${REGISTRY_PORT})..."
+if docker ps --format '{{.Names}}' 2>/dev/null | /usr/bin/grep -q "^${REGISTRY_NAME}$"; then
+  echo "Registry already running: ${REGISTRY_NAME}"
+else
+  docker run -d \
+    --name "${REGISTRY_NAME}" \
+    --restart=always \
+    -p "${REGISTRY_PORT}:${REGISTRY_PORT}" \
+    -e "REGISTRY_HTTP_ADDR=0.0.0.0:${REGISTRY_PORT}" \
+    registry:2
+  echo "Registry started: ${REGISTRY_NAME} on port ${REGISTRY_PORT}"
+fi
 echo ""
 
 # Detect if running from starter (has REPLACE_HOST_PATH) or solution
@@ -51,6 +78,10 @@ fi
 echo ""
 echo "==> Creating KIND cluster: ${CLUSTER_NAME}"
 kind create cluster --config "${KIND_CONFIG}" --wait 5m
+
+echo ""
+echo "==> Connecting registry to KIND network..."
+docker network connect kind "${REGISTRY_NAME}" 2>/dev/null || echo "Registry already connected to KIND network"
 
 echo ""
 echo "==> Verifying cluster nodes..."

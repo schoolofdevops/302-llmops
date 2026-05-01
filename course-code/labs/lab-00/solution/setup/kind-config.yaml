@@ -14,6 +14,13 @@
 # 1. kubeadmConfigPatches — API server, controller-manager, scheduler
 # 2. KubeletConfiguration — kubelet on each node
 # Enabling only one place silently fails (pods run but volume is empty).
+# Local registry: kind-registry:5001 must be running before creating the cluster.
+# The bootstrap script handles starting and connecting it automatically.
+containerdConfigPatches:
+  - |-
+    [plugins."io.containerd.grpc.v1.cri".registry.mirrors."kind-registry:5001"]
+      endpoint = ["http://kind-registry:5001"]
+
 kubeadmConfigPatches:
   - |
     apiVersion: kubeadm.k8s.io/v1beta3
