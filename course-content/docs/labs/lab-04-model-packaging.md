@@ -75,6 +75,8 @@ When the pod starts, Kubernetes pulls `smollm2-135m-finetuned:v1.0.0` to the nod
 
 ## Lab Steps
 
+All commands assume you are in the **repository root** (`llmops-course/`).
+
 ### Step 1: Verify the merged model exists
 
 The model packaging step depends on the merge step completing successfully in Lab 03:

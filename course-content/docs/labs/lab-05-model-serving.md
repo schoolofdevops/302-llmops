@@ -95,6 +95,8 @@ Kubernetes pulls the model OCI image to the node and mounts its filesystem at `/
 
 ## Lab Steps
 
+All commands assume you are in the **repository root** (`llmops-course/`).
+
 ### Step 1: Verify the model image is in the registry
 
 ```bash
