@@ -29,7 +29,7 @@ In this lab, we build the retrieval half: a FAISS index backed by sentence embed
 
 ## How FAISS and Sentence Embeddings Work
 
-**Sentence-transformers** converts text to a 384-dimensional numeric vector (embedding). Semantically similar texts produce vectors that point in similar directions. We use `sentence-transformers/all-MiniLM-L6-v2`, a small but effective model that runs comfortably on CPU.
+**fastembed** converts text to a 384-dimensional numeric vector (embedding) using ONNX runtime — lightweight, no PyTorch needed. Semantically similar texts produce vectors that point in similar directions. We use `sentence-transformers/all-MiniLM-L6-v2`, a small but effective model that runs comfortably on CPU.
 
 **FAISS IndexFlatIP** is an inner-product index. Since we normalize all embeddings to unit length (`normalize_embeddings=True`), the inner product equals the cosine similarity — 1.0 means identical, 0 means unrelated. FAISS can search hundreds of vectors in microseconds.
 
@@ -72,7 +72,7 @@ A FastAPI service with three endpoints:
 | `/search` | POST | Accepts `{"query": str, "k": int}` — returns top-k hits |
 | `/metrics` | GET | Prometheus text format — retrieval latency and request counts |
 
-The `/search` handler encodes the query using the same model and normalization as the index build step (critical — mismatched normalization gives wrong scores), then calls `index.search()` and returns the matching chunks with their cosine scores.
+The `/search` handler encodes the query using the same fastembed model as the index build step (critical — mismatched models give wrong scores), then calls `index.search()` and returns the matching chunks with their cosine scores.
 
 ## Kubernetes Deployment: initContainer Pattern
 
@@ -214,7 +214,7 @@ You'll see the pod go through these phases:
 2. `PodInitializing` — initContainer finished, main container starting
 3. `Running` — retriever is ready
 
-The initContainer takes about 2-3 minutes because it runs `pip install` and downloads the embedding model on first run.
+The initContainer takes about 1-2 minutes — it installs fastembed (lightweight ONNX-based embeddings) and downloads the embedding model on first run.
 
 Check initContainer logs to see index build progress:
 
