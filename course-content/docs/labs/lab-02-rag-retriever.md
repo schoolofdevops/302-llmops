@@ -90,19 +90,27 @@ This pattern is used widely in production for one-time setup steps (database mig
 
 ## Lab Steps
 
+All commands below assume you are in the **repository root** (where `course-code/` and `llmops-project/` directories are). If you're still inside `llmops-project/` from Lab 01:
+
+```bash
+cd ..
+```
+
 ### Step 1: Copy the RAG code into your workspace
 
-The clinic data files from Lab 01 are already in `llmops-project/datasets/clinic/`. Now copy the RAG code into your workspace:
+The clinic data files from Lab 01 are already in `llmops-project/datasets/clinic/`. Now copy the RAG code and K8s manifests:
 
 <Tabs groupId="operating-systems">
   <TabItem value="mac" label="macOS / Linux">
   ```bash
   cp -r course-code/labs/lab-01/solution/rag/ llmops-project/rag/
+  cp -r course-code/labs/lab-01/solution/k8s/ llmops-project/k8s/
   ```
   </TabItem>
   <TabItem value="win" label="Windows">
   ```powershell
   xcopy /E /I course-code\labs\lab-01\solution\rag\ llmops-project\rag\
+  xcopy /E /I course-code\labs\lab-01\solution\k8s\ llmops-project\k8s\
   ```
   </TabItem>
 </Tabs>
@@ -112,42 +120,87 @@ Verify the files are in place:
 ```bash
 ls llmops-project/rag/
 # Should show: build_index.py  retriever.py  requirements.txt
+
+ls llmops-project/k8s/
+# Should show: 10-retriever-deployment.yaml  10-retriever-service.yaml
 ```
 
 ### Step 2: Build the FAISS index locally (optional — for understanding)
 
 You can run `build_index.py` locally to see how the index is built before deploying to Kubernetes. This is optional — the initContainer will also build it in-cluster.
 
-```bash
-cd llmops-project
-uv pip install --system -r rag/requirements.txt
+<Tabs groupId="operating-systems">
+  <TabItem value="mac" label="macOS / Linux">
+  ```bash
+  cd llmops-project
+  source .venv/bin/activate
+  uv pip install -r rag/requirements.txt
 
-python rag/build_index.py
-# Output:
-# Loaded 32 chunks from datasets/clinic
-# Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
-# Encoding 32 chunks...
-# Built index: 32 chunks → datasets/index/faiss.index
-```
+  python rag/build_index.py
+  # Output:
+  # Loaded 32 chunks from datasets/clinic
+  # Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+  # Encoding 32 chunks...
+  # Built index: 32 chunks → datasets/index/faiss.index
+
+  cd ..   # back to repository root
+  ```
+  </TabItem>
+  <TabItem value="win" label="Windows">
+  ```powershell
+  cd llmops-project
+  .venv\Scripts\activate
+  uv pip install -r rag\requirements.txt
+
+  python rag\build_index.py
+  # Output:
+  # Loaded 32 chunks from datasets/clinic
+  # Loading embedding model: sentence-transformers/all-MiniLM-L6-v2
+  # Encoding 32 chunks...
+  # Built index: 32 chunks → datasets/index/faiss.index
+
+  cd ..   # back to repository root
+  ```
+  </TabItem>
+</Tabs>
 
 :::note Why 32 chunks?
 12 treatments + 8 policies + 12 FAQs = 32 documents. Each becomes one indexed chunk. Small enough to search instantly, large enough to cover the Smile Dental clinic corpus.
 :::
 
-### Step 3: Apply the Kubernetes manifests
+### Step 3: Create ConfigMaps and apply Kubernetes manifests
 
-The K8s manifests are in `course-code/labs/lab-01/solution/k8s/`. They use ConfigMaps to mount the Python code and clinic data directly into the pod:
+The Deployment mounts clinic data and Python code into the pod via ConfigMaps. Create them first from your workspace files:
 
 ```bash
-kubectl apply -f course-code/labs/lab-01/solution/k8s/
+# Create ConfigMap with clinic JSON data (3 files used by build_index.py)
+kubectl create configmap clinic-data -n llm-app \
+  --from-file=treatments.json=llmops-project/datasets/clinic/treatments.json \
+  --from-file=policies.json=llmops-project/datasets/clinic/policies.json \
+  --from-file=faqs.json=llmops-project/datasets/clinic/faqs.json
+
+# Create ConfigMap with Python source code (2 files: index builder + retriever)
+kubectl create configmap retriever-code -n llm-app \
+  --from-file=build_index.py=llmops-project/rag/build_index.py \
+  --from-file=retriever.py=llmops-project/rag/retriever.py
+```
+
+Expected output:
+```
+configmap/clinic-data created
+configmap/retriever-code created
+```
+
+Now apply the Deployment and Service:
+
+```bash
+kubectl apply -f llmops-project/k8s/
 ```
 
 Expected output:
 ```
 deployment.apps/rag-retriever created
 service/rag-retriever created
-configmap/clinic-data created
-configmap/retriever-code created
 ```
 
 ### Step 4: Watch the initContainer complete
