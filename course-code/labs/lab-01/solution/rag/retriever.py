@@ -10,7 +10,7 @@ Serves:
 Environment:
   INDEX_PATH      — path to faiss.index file (default: /data/faiss.index)
   META_PATH       — path to metadata.json file (default: /data/metadata.json)
-  EMBEDDING_MODEL — sentence-transformers model name
+  EMBEDDING_MODEL — fastembed model name
 """
 import json, os, time
 import faiss
@@ -18,7 +18,7 @@ import numpy as np
 from pathlib import Path
 from fastapi import FastAPI
 from pydantic import BaseModel
-from sentence_transformers import SentenceTransformer
+from fastembed import TextEmbedding
 from prometheus_client import Counter, Histogram, make_asgi_app
 
 # --- Configuration ---
@@ -35,7 +35,7 @@ with open(META_PATH, encoding="utf-8") as f:
     metadata: list[dict] = json.load(f)
 
 print(f"Loading embedding model: {EMBED_MODEL}")
-embed_model = SentenceTransformer(EMBED_MODEL)
+embed_model = TextEmbedding(EMBED_MODEL)
 
 # ---- Prometheus metrics ----
 search_requests_total = Counter(
@@ -73,19 +73,16 @@ def search(req: SearchRequest):
     """Encode query, search FAISS index, return top-k chunks with scores."""
     t0 = time.perf_counter()
     try:
-        # Encode with same normalisation used at index build time
-        query_vec = embed_model.encode(
-            [req.query],
-            convert_to_numpy=True,
-            normalize_embeddings=True,
-        ).astype(np.float32)
+        # Encode with same model used at index build time
+        query_vec = np.array(
+            list(embed_model.embed([req.query])), dtype=np.float32
+        )
 
         scores, indices = index.search(query_vec, req.k)
 
         hits = []
         for score, idx in zip(scores[0], indices[0]):
             if idx < 0 or idx >= len(metadata):
-                # Guard against out-of-range index results
                 continue
             chunk = metadata[idx]
             hits.append({

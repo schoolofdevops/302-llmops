@@ -3,18 +3,18 @@
 build_index.py — Build FAISS index from Smile Dental clinic data.
 
 Loads treatments, policies, and FAQs from DATA_DIR.
-Encodes with sentence-transformers/all-MiniLM-L6-v2 (384 dimensions).
+Encodes with fastembed (all-MiniLM-L6-v2, ONNX runtime — lightweight, no PyTorch).
 Saves faiss.index and metadata.json to INDEX_DIR.
 
 Usage:
     python build_index.py
-    INDEX_DIR=/data DATA_DIR=datasets/clinic python build_index.py
+    INDEX_DIR=/data INDEX_DIR=datasets/index python build_index.py
 """
 import json, os
 import faiss
 import numpy as np
 from pathlib import Path
-from sentence_transformers import SentenceTransformer
+from fastembed import TextEmbedding
 
 # --- Configuration ---
 DATA_DIR = Path(os.environ.get("DATA_DIR", "datasets/clinic"))
@@ -62,7 +62,6 @@ def load_chunks(data_dir: Path) -> list[dict]:
     with open(faqs_file, encoding="utf-8") as f:
         faqs = json.load(f)
     for faq in faqs:
-        # Combine question + answer so retrieval matches on both
         text = f"Q: {faq['question']} A: {faq['answer']}"
         chunks.append({"doc_id": faq["id"], "section": "faqs", "text": text})
 
@@ -70,25 +69,17 @@ def load_chunks(data_dir: Path) -> list[dict]:
 
 
 def build_and_save(chunks: list[dict], index_dir: Path, embed_model: str):
-    """Encode chunks, build FAISS IndexFlatIP, and persist to disk.
-
-    Uses normalize_embeddings=True so inner product equals cosine similarity.
-    """
+    """Encode chunks, build FAISS IndexFlatIP, and persist to disk."""
     print(f"Loading embedding model: {embed_model}")
-    model = SentenceTransformer(embed_model)
+    model = TextEmbedding(embed_model)
 
     texts = [c["text"] for c in chunks]
     print(f"Encoding {len(texts)} chunks...")
-    embeddings = model.encode(
-        texts,
-        convert_to_numpy=True,
-        normalize_embeddings=True,  # cosine via inner product on normalized vectors
-        show_progress_bar=False,
-    )
+    embeddings = np.array(list(model.embed(texts)), dtype=np.float32)
 
-    # Use IndexFlatIP: inner product = cosine when vectors are L2-normalised
+    # fastembed returns normalized vectors by default — inner product = cosine
     index = faiss.IndexFlatIP(EMBED_DIM)
-    index.add(embeddings.astype(np.float32))
+    index.add(embeddings)
 
     # Persist index and metadata
     index_dir.mkdir(parents=True, exist_ok=True)
