@@ -21,7 +21,18 @@ Companion code: `labs/lab-00/`
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Before creating the cluster, create the project workspace directory. The KIND cluster mounts this directory into all nodes at `/mnt/project` — it will be populated with code in subsequent labs.
+### Clone the course repository
+
+```bash
+git clone https://github.com/schoolofdevops/llmops-course.git
+cd llmops-course
+```
+
+All lab commands from this point forward assume you are inside the `llmops-course/` directory (the repository root).
+
+### Create the project workspace
+
+The KIND cluster mounts this directory into all nodes at `/mnt/project` — it will be populated with code in subsequent labs.
 
 ```bash
 mkdir -p llmops-project
