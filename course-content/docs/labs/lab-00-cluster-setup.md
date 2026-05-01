@@ -16,33 +16,51 @@ sidebar_position: 1
 
 Companion code: `labs/lab-00/`
 
-## Setup
+## Prerequisites
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+
+Before creating the cluster, create the project workspace directory. The KIND cluster mounts this directory into all nodes at `/mnt/project` — it will be populated with code in subsequent labs.
+
+```bash
+mkdir -p llmops-project
+```
+
+## Setup
 
 <Tabs groupId="operating-systems">
   <TabItem value="macos" label="macOS / Linux">
 
 ```bash
-bash scripts/preflight-check.sh
-bash scripts/bootstrap-kind.sh
+bash course-code/labs/lab-00/starter/scripts/preflight-check.sh
+bash course-code/labs/lab-00/starter/scripts/bootstrap-kind.sh
 ```
 
   </TabItem>
   <TabItem value="windows" label="Windows">
 
 ```powershell
-.\scripts\preflight-check.ps1
-bash scripts/bootstrap-kind.sh
+.\course-code\labs\lab-00\starter\scripts\preflight-check.ps1
+bash course-code/labs/lab-00/starter/scripts/bootstrap-kind.sh
 ```
 
   </TabItem>
 </Tabs>
 
-## Lab Content
+:::note
+The bootstrap script will ask for your project directory path. Enter the **absolute path** to the `llmops-project` directory you just created (e.g., `/Users/yourname/courses/llmops/llmops-project`).
+:::
 
-Full lab instructions coming in Phase 2 content authoring.
+## Verify
+
+```bash
+kubectl get nodes
+# Should show 3 nodes (1 control-plane, 2 workers) in Ready state
+
+kubectl get namespaces | grep -E "llm-serving|llm-app|monitoring"
+# Should show all 3 namespaces
+```
 
 ## Lab Summary
 

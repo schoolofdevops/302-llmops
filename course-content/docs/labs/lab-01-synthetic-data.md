@@ -93,27 +93,41 @@ This three-message format (system → user → assistant) matches the chat templ
 
 ## Lab Steps
 
-### Step 1: Copy solution files to your workspace
+### Step 1: Copy clinic data and tools to your workspace
+
+From the repository root, copy only what this lab needs — the clinic dataset and the data generation script:
 
 <Tabs groupId="operating-systems">
   <TabItem value="mac" label="macOS / Linux">
   ```bash
   # From the repository root
-  mkdir -p llmops-project
-  cp -r course-code/labs/lab-01/solution/* llmops-project/
+  cp -r course-code/labs/lab-01/solution/datasets llmops-project/
+  cp -r course-code/labs/lab-01/solution/tools llmops-project/
   ```
   </TabItem>
   <TabItem value="win" label="Windows">
   ```powershell
   # From the repository root (PowerShell)
-  New-Item -ItemType Directory -Force -Path llmops-project
-  xcopy /E /I course-code\labs\lab-01\solution\* llmops-project\
+  xcopy /E /I course-code\labs\lab-01\solution\datasets llmops-project\datasets\
+  xcopy /E /I course-code\labs\lab-01\solution\tools llmops-project\tools\
   ```
   </TabItem>
 </Tabs>
 
+Verify the files are in place:
+
+```bash
+ls llmops-project/datasets/clinic/
+# Should show: appointments.json  doctors.json  faqs.json  policies.json  treatments.json
+
+ls llmops-project/tools/
+# Should show: synth_data.py  requirements.txt
+```
+
+### Step 2: Set up Python environment
+
 :::info Install uv (one-time setup)
-uv is a fast Python package manager (10-100x faster than pip). Install it once before proceeding:
+uv is a fast Python package manager (10-100x faster than pip). Install it once:
 
 <Tabs groupId="operating-systems">
   <TabItem value="mac" label="macOS / Linux">
@@ -128,17 +142,31 @@ uv is a fast Python package manager (10-100x faster than pip). Install it once b
   </TabItem>
 </Tabs>
 
-The `--system` flag used below tells uv to install into your system Python (no virtual environment needed for this workshop).
+If you prefer pip, replace `uv pip install` with `pip install` and `uv venv` with `python -m venv .venv` in all commands below.
 :::
 
-### Step 2: Install Python dependencies
+Create a virtual environment and activate it:
 
-```bash
-cd llmops-project
-uv pip install --system -r tools/requirements.txt
-```
+<Tabs groupId="operating-systems">
+  <TabItem value="mac" label="macOS / Linux">
+  ```bash
+  cd llmops-project
+  uv venv
+  source .venv/bin/activate
+  ```
+  </TabItem>
+  <TabItem value="win" label="Windows">
+  ```powershell
+  cd llmops-project
+  uv venv
+  .venv\Scripts\activate
+  ```
+  </TabItem>
+</Tabs>
 
-The requirements file pins: `sentence-transformers==5.4.1` (used by Lab 02 RAG), `faiss-cpu==1.13.2`, and `numpy==1.26.4`. Installing them now avoids version conflicts later.
+:::note
+The `synth_data.py` script uses only the Python standard library — no extra packages needed for this lab. We'll install the RAG dependencies in Lab 02 when they're actually needed.
+:::
 
 ### Step 3: Review the system prompt
 
@@ -157,7 +185,6 @@ This prompt is prepended to every training example. After fine-tuning, the model
 ### Step 4: Generate the training dataset
 
 ```bash
-cd llmops-project
 python tools/synth_data.py
 ```
 
