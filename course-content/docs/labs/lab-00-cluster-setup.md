@@ -69,11 +69,16 @@ The bootstrap script will ask for your project directory path. Enter the **absol
 kubectl get nodes
 # Should show 3 nodes (1 control-plane, 2 workers) in Ready state
 
-kubectl get namespaces | grep -E "llm-serving|llm-app|monitoring"
-# Should show all 3 namespaces
+kubectl get namespaces | grep -E "llm-serving|llm-app|monitoring|argocd|argo-workflows"
+# Should show all 5 namespaces
+
+curl -s http://kind-registry:5001/v2/
+# Should return: {}
 ```
 
 ## Lab Summary
 
-After this lab: KIND cluster `llmops-kind` is running with 3 nodes, ImageVolume feature gates enabled,
-and five namespaces created (`llm-serving`, `llm-app`, `monitoring`, `argocd`, `argo-workflows`).
+After this lab:
+- KIND cluster `llmops-kind` running with 3 nodes, ImageVolume feature gates enabled
+- Five namespaces created: `llm-serving`, `llm-app`, `monitoring`, `argocd`, `argo-workflows`
+- Local container registry running at `kind-registry:5001` (used in Labs 03–05 to push/pull training and model images)

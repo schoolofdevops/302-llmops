@@ -26,8 +26,8 @@ Why does LoRA work? The original research showed that the "effective rank" of we
 
 ## Timing — Read This First
 
-:::warning Training takes 15-20 minutes on CPU
-`MAX_STEPS=50` is set deliberately conservative. At batch_size=1 on CPU, each step takes ~15-20 seconds. Total wall time: **15-20 minutes**.
+:::warning Training time varies by hardware
+`MAX_STEPS=50` is set deliberately conservative. At batch_size=1 on CPU, each step takes 6-20 seconds depending on your machine. Total wall time: **5-20 minutes**.
 
 **Instructor tip:** Start the training job, then continue with the slides for the concept section. Come back when the logs show "Training complete". Do not increase MAX_STEPS for the workshop — 50 steps gives a noticeably domain-adapted model with manageable wait time.
 :::
@@ -42,7 +42,7 @@ Key sections to understand:
 
 **Model loading** — `torch.float32` is used instead of `bfloat16`. Some CPU builds handle bfloat16 inconsistently, causing silent precision errors. `float32` is slightly slower but stable on all laptop CPUs:
 ```python
-model = AutoModelForCausalLM.from_pretrained(BASE_MODEL, torch_dtype=torch.float32)
+model = AutoModelForCausalLM.from_pretrained(BASE_MODEL, dtype=torch.float32)
 ```
 
 **LoRA configuration** — PEFT 0.19.0 stable parameters:
@@ -63,8 +63,7 @@ training_args = TrainingArguments(
     max_steps=50,              # conservative for workshop CPUs
     per_device_train_batch_size=1,
     gradient_accumulation_steps=4,  # effective batch = 4 samples
-    no_cuda=True,
-    use_cpu=True,
+    use_cpu=True,              # Force CPU — KIND nodes have no GPU
     report_to="none",          # no wandb/tensorboard
 )
 ```
@@ -142,16 +141,17 @@ You will see output like:
 ```
 Base model: HuggingFaceTB/SmolLM2-135M-Instruct
 Data path:  /mnt/project/datasets/train/dental_chat.jsonl
-Run dir:    /mnt/project/training/runs/run-20260423-143012
+Run dir:    /mnt/project/training/runs/run-20260501-143012
 Max steps:  50
-Loaded 312 training samples
-trainable params: 294,912 || all params: 134,809,344 || trainable%: 0.2188
-{'loss': 2.8234, 'learning_rate': 0.00020, 'epoch': 0.05, 'step': 10}
-{'loss': 2.3421, 'learning_rate': 0.00015, 'epoch': 0.10, 'step': 20}
-{'loss': 2.1102, 'learning_rate': 0.00009, 'epoch': 0.15, 'step': 30}
-...
-Training complete in 987s (16.5 min)
-Adapter saved to: /mnt/project/training/runs/run-20260423-143012/checkpoint-50
+Loaded 164 training samples
+trainable params: 460,800 || all params: 134,975,808 || trainable%: 0.3414
+{'loss': '2.883', 'grad_norm': '0.6483', 'learning_rate': '0.0001961', 'epoch': '0.2439'}
+{'loss': '2.740', 'grad_norm': '0.6086', 'learning_rate': '0.0001559', 'epoch': '0.4878'}
+{'loss': '2.508', 'grad_norm': '0.4254', 'learning_rate': '8.955e-05', 'epoch': '0.7317'}
+{'loss': '2.452', 'grad_norm': '0.4338', 'learning_rate': '2.436e-07', 'epoch': '1.22'}
+{'train_runtime': '303.9', 'train_loss': '2.617', 'epoch': '1.22'}
+Training complete in 304s (5.1 min)
+Training complete. Adapter saved to: /mnt/project/training/runs/run-20260501-143012/checkpoint-50
 ```
 
 Watch the loss decreasing with each log step — this is the model learning to associate dental questions with Smile Dental answers.
@@ -208,11 +208,11 @@ The merge takes 2-3 minutes. You'll see the merged model files listed at the end
 ```
 Merged model saved to: /mnt/project/training/merged-model
 Files in merged directory:
-  config.json                              0.01 MB
+  chat_template.jinja                      0.00 MB
+  config.json                              0.00 MB
   generation_config.json                   0.00 MB
-  model.safetensors                      514.65 MB
-  special_tokens_map.json                  0.00 MB
-  tokenizer.json                           2.29 MB
+  model.safetensors                      513.16 MB
+  tokenizer.json                           3.36 MB
   tokenizer_config.json                    0.00 MB
 ```
 

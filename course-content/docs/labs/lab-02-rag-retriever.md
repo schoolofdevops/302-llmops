@@ -259,16 +259,16 @@ Expected response structure:
 {
   "hits": [
     {
-      "doc_id": "TX-WH-01",
+      "doc_id": "TX-WHITE-01",
       "section": "treatments",
-      "text": "Treatment: Teeth Whitening (Code: TX-WH-01). Category: Cosmetic. ...",
-      "score": 0.82
+      "text": "Treatment: Teeth Whitening (Code: TX-WHITE-01). Category: Cosmetic Dentistry. ...",
+      "score": 0.72
     },
     {
-      "doc_id": "FAQ-005",
+      "doc_id": "FAQ-03",
       "section": "faqs",
-      "text": "Q: Is teeth whitening safe? A: Yes, professional whitening...",
-      "score": 0.71
+      "text": "Q: How long does teeth whitening last? A: Professional teeth whitening...",
+      "score": 0.59
     },
     ...
   ],

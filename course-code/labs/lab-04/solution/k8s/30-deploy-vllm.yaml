@@ -25,15 +25,14 @@ spec:
       - name: vllm
         image: schoolofdevops/vllm-cpu-nonuma:0.9.1
         args:
-          - /models/model
+          - --model=/models/model
           - --host=0.0.0.0
           - --port=8000
           - --max-model-len=4096
           - --served-model-name=smollm2-135m-finetuned
-          - --dtype=bfloat16
+          - --dtype=float32
           - --disable-frontend-multiprocessing
           - --max-num-seqs=1
-          - --enable-metrics
         env:
           - name: VLLM_TARGET_DEVICE
             value: "cpu"

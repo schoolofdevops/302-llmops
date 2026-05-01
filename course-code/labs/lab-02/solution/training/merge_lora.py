@@ -42,7 +42,7 @@ def main():
     print("Loading base model...")
     base_model = AutoModelForCausalLM.from_pretrained(
         BASE_MODEL,
-        torch_dtype=torch.float32,
+        dtype=torch.float32,
     )
 
     # ---- Wrap with PEFT adapter ----
@@ -61,6 +61,20 @@ def main():
     print("Saving tokenizer...")
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
     tokenizer.save_pretrained(MERGED_PATH)
+
+    # ---- Fix tokenizer_config.json for transformers >= 4.50 compatibility ----
+    # SmolLM2 saves extra_special_tokens as a list; newer transformers expects a dict.
+    # vLLM 0.9.1 uses transformers >= 4.50 and fails with AttributeError otherwise.
+    import json as _json
+    tc_path = Path(MERGED_PATH) / "tokenizer_config.json"
+    if tc_path.exists():
+        with open(tc_path) as _f:
+            tc = _json.load(_f)
+        if isinstance(tc.get("extra_special_tokens"), list):
+            tc["extra_special_tokens"] = {}
+            with open(tc_path, "w") as _f:
+                _json.dump(tc, _f, indent=2, ensure_ascii=False)
+            print("Fixed tokenizer_config.json: extra_special_tokens list → {}")
 
     print(f"Merged model saved to: {MERGED_PATH}")
     print("Files in merged directory:")

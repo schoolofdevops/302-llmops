@@ -129,7 +129,7 @@ Send a question such as:
 
 After the response appears:
 
-1. **Click on "Retrieving clinic documents"** — expand this step to see which dental documents scored highest in FAISS retrieval. Look for `TX-WH-01` (Teeth Whitening treatment) in the hits.
+1. **Click on "Retrieving clinic documents"** — expand this step to see which dental documents scored highest in FAISS retrieval. Look for `TX-WHITE-01` (Teeth Whitening treatment) in the hits.
 
 2. **Click on "Building prompt"** — expand to see the exact JSON messages array sent to vLLM. You'll see the system prompt, the retrieved context chunks injected as context, and the user's question.
 
@@ -153,10 +153,10 @@ Traditional application metrics (CPU, memory, request rate) don't tell you what 
 - **Request queue depth** — are requests stacking up because the model is slow? This predicts latency spikes.
 - **Token throughput** — how many tokens per second? This determines your capacity ceiling.
 
-vLLM v0.19.x exposes all of these as Prometheus metrics with the prefix `vllm:` (with a colon, not an underscore — this changed in v0.15.0).
+vLLM 0.9.1 exposes all of these as Prometheus metrics with the prefix `vllm:` (with a colon, not an underscore).
 
 :::warning vLLM metric prefix uses a colon, not an underscore
-vLLM v0.19.x metric names look like:
+vLLM 0.9.1 metric names look like:
 - `vllm:time_to_first_token_seconds` ✅ correct
 - `vllm_request_ttft_seconds` ✗ old format (pre-v0.15.0)
 
@@ -166,13 +166,17 @@ If you see "No data" in a Grafana panel, check that your PromQL query uses `vllm
 ### Architecture
 
 ```
-vLLM Pod → /metrics → Prometheus (scrapes every 30s) → Grafana (queries every 30s)
-RAG Pod  → /metrics ↗
-Chainlit → /metrics ↗
+vLLM Pod → :8000/metrics → Prometheus (scrapes every 30s) → Grafana (queries every 30s)
+RAG Pod  → :8001/metrics ↗
+Chainlit → :9090/metrics ↗
 
 Prometheus discovers targets via ServiceMonitor CRDs (defined by the course code)
 Grafana loads dashboards from ConfigMaps labeled grafana_dashboard: "1"
 ```
+
+:::note Chainlit uses a separate metrics port
+Chainlit registers a catch-all route `/{full_path:path}` that intercepts any `/metrics` path on port 8000. The `app.py` in this lab works around this by starting a standalone `prometheus_client` HTTP server on port **9090**. The Deployment exposes both ports, and the ServiceMonitor scrapes port 9090 for `chat_requests_total` and `chat_latency_seconds`.
+:::
 
 ### Step B1: Install kube-prometheus-stack
 
@@ -200,7 +204,7 @@ kubectl apply -f course-code/labs/lab-06/solution/k8s/observability/
 
 This creates:
 - `ServiceMonitor/vllm-monitor` — scrapes vLLM `/metrics` every 30s
-- `ServiceMonitor/rag-retriever-monitor` — scrapes RAG retriever `/metrics` every 30s
+- `ServiceMonitor/retriever-monitor` — scrapes RAG retriever `/metrics` every 30s
 - `ServiceMonitor/chainlit-monitor` — scrapes Chainlit metrics every 30s
 - `ConfigMap/vllm-dashboard` — the Grafana dashboard JSON (labeled `grafana_dashboard: "1"` for auto-discovery)
 
@@ -219,7 +223,7 @@ http://localhost:30400
 
 Login with: **admin / prom-operator**
 
-Go to **Dashboards** (the grid icon in the left sidebar) → **Browse** → look for **"Smile Dental LLM Pipeline — vLLM v0.19.x metrics"**.
+Go to **Dashboards** (the grid icon in the left sidebar) → **Browse** → look for **"Smile Dental — LLM Pipeline"**.
 
 :::note Dashboard may take 1-2 minutes to appear
 Grafana discovers dashboard ConfigMaps via a sidecar running every 60 seconds. If you don't see the dashboard immediately, wait a minute and refresh.
@@ -238,9 +242,11 @@ Return to Grafana and watch the panels update:
 | Panel | What to look for |
 |-------|-----------------|
 | **Time to First Token (P95)** | Should be 1-5 seconds on CPU; spikes indicate slow requests |
-| **Retriever search latency** | Should be < 100ms — FAISS is in-process |
-| **vLLM requests running** | Spikes to 1 during requests, returns to 0 when complete |
-| **KV cache usage** | Should stay well below 100% at `VLLM_CPU_KVCACHE_SPACE=2` |
+| **End-to-End Request Latency (P95)** | Total vLLM request latency from receipt to response complete |
+| **Active & Queued Requests** | Spikes to 1 during inference, returns to 0 when complete |
+| **KV Cache Utilization** | Should stay well below 100% at `VLLM_CPU_KVCACHE_SPACE=2` |
+| **Chat Request Rate** | Chainlit-level requests/sec; confirms traffic hitting the UI layer |
+| **Chat End-to-End Latency (P95)** | Full pipeline latency: RAG retrieval + prompt construction + LLM generation |
 
 ## Verification
 

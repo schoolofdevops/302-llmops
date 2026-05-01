@@ -11,10 +11,10 @@ Environment:
   VLLM_URL      — vLLM OpenAI-compatible API base URL
   MODEL_NAME    — Model identifier for vLLM API calls
 """
-import os, time, json
+import os, time, json, threading
 import chainlit as cl
 import httpx
-from prometheus_client import Counter, Histogram, make_asgi_app
+from prometheus_client import Counter, Histogram, start_http_server
 
 # ---- Prometheus metrics ---------------------------------------------------
 
@@ -24,6 +24,14 @@ chat_requests_total = Counter(
 chat_latency_seconds = Histogram(
     "chat_latency_seconds", "End-to-end chat response latency"
 )
+
+# Start standalone Prometheus metrics server on port 9090.
+# Chainlit's catch-all route /{full_path:path} intercepts any /metrics mount
+# on the main app (port 8000), so a separate port is the reliable approach.
+_metrics_thread = threading.Thread(
+    target=lambda: start_http_server(9090), daemon=True
+)
+_metrics_thread.start()
 
 # ---- Configuration -------------------------------------------------------
 
