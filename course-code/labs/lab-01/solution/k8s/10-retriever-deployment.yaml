@@ -20,7 +20,7 @@ spec:
         image: python:3.11-slim
         command: ["/bin/sh", "-c"]
         args:
-          - pip install faiss-cpu==1.13.2 sentence-transformers==5.4.1 numpy==1.26.4 --quiet &&
+          - pip install fastembed faiss-cpu numpy --quiet &&
             python /app/build_index.py
         env:
         - name: DATA_DIR
@@ -41,7 +41,7 @@ spec:
         image: python:3.11-slim
         command: ["/bin/sh", "-c"]
         args:
-          - pip install faiss-cpu==1.13.2 sentence-transformers==5.4.1 fastapi[standard]==0.135.3 prometheus-client==0.25.0 numpy==1.26.4 --quiet &&
+          - pip install fastembed faiss-cpu fastapi[standard] prometheus-client numpy --quiet &&
             python /app/retriever.py
         env:
         - name: INDEX_PATH
