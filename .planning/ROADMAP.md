@@ -92,7 +92,7 @@ Plans:
 - [x] 03-02-PLAN.md — Lab 07 code: Hermes startup verification + 3 MCP tool servers (TDD) + Hermes config + Docker Compose + Day-2 Chainlit
 - [x] 03-03-PLAN.md — Lab 07 Docusaurus walkthrough page (course-content/docs/labs/lab-07-agent-core.md)
 - [x] 03-04-PLAN.md — Lab 08 code: Agent Sandbox v0.4.3 install + Router image verify + 13 K8s manifests + cold/warm demo + book_appointment K8s mode
-- [ ] 03-05-PLAN.md — Lab 08 Docusaurus walkthrough page (course-content/docs/labs/lab-08-agent-sandbox.md)
+- [x] 03-05-PLAN.md — Lab 08 Docusaurus walkthrough page (course-content/docs/labs/lab-08-agent-sandbox.md)
 - [ ] 03-06-PLAN.md — Lab 09 code: Tempo + OTEL Collector Helm install + MCP OTEL instrumentation + cost middleware proxy + Grafana dashboard
 - [ ] 03-07-PLAN.md — Lab 09 Docusaurus walkthrough page (course-content/docs/labs/lab-09-observability.md)
 
@@ -118,5 +118,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Course Infrastructure | 5/5 | Complete |  |
 | 2. LLMOps Labs (Day 1) | 7/7 | Complete   | 2026-04-23 |
 | 2.1 Flatten workspace + uv | 0/1 | Not started | - |
-| 3. AgentOps Labs (Day 2) | 2/7 | In Progress|  |
+| 3. AgentOps Labs (Day 2) | 5/7 | In Progress|  |
 | 4. Production Ops + Capstone (Day 3) | 0/TBD | Not started | - |
