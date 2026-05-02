@@ -11,6 +11,19 @@ spec:
     spec:
       # NO runtimeClassName: gvisor — KIND does not support it (RESEARCH.md note).
       automountServiceAccountToken: false
+      # The hermes-agent image overwrites /etc/resolv.conf with 8.8.8.8/1.1.1.1.
+      # We must force ClusterFirst so in-cluster MCP tool DNS names resolve.
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+        - "10.96.0.10"   # CoreDNS ClusterIP (default for kubeadm clusters incl. KIND)
+        searches:
+        - "llm-agent.svc.cluster.local"
+        - "svc.cluster.local"
+        - "cluster.local"
+        options:
+        - name: ndots
+          value: "5"
       initContainers:
       # Copy config files from ConfigMap into the writable emptyDir so entrypoint
       # can manage them (ConfigMap mounts are read-only; entrypoint.sh writes to HERMES_HOME).
