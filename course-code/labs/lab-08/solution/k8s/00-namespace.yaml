@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: llm-agent
+  labels:
+    kubernetes.io/metadata.name: llm-agent   # required by NetworkPolicy namespaceSelector
+    purpose: agent-workloads
