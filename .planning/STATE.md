@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v0.19.0
 milestone_name: milestone
-status: Ready to plan
-stopped_at: Phase 3 context gathered
-last_updated: "2026-05-02T06:46:15.475Z"
+status: Ready to execute
+stopped_at: Completed 03-agentops-labs-day-2/03-01-PLAN.md
+last_updated: "2026-05-02T08:29:40.180Z"
 progress:
   total_phases: 5
   completed_phases: 3
-  total_plans: 13
-  completed_plans: 13
+  total_plans: 20
+  completed_plans: 14
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-12)
 
 **Core value:** Teach practitioners how to take AI systems (LLMs + agents) from prototype to production on Kubernetes — the only course covering the full journey from RAG to agentic deployments with K8s Agent Sandbox.
-**Current focus:** Phase 02.1 — flatten-workspace-and-switch-to-uv
+**Current focus:** Phase 03 — agentops-labs-day-2
 
 ## Current Position
 
-Phase: 3
-Plan: Not started
+Phase: 03 (agentops-labs-day-2) — EXECUTING
+Plan: 2 of 7
 
 ## Performance Metrics
 
@@ -59,6 +59,7 @@ Plan: Not started
 | Phase 02-llmops-labs-day-1 P05 | 7min | 2 tasks | 13 files |
 | Phase 02-llmops-labs-day-1 P07 | 8min | 2 tasks | 6 files |
 | Phase 02.1-flatten-workspace-and-switch-to-uv P01 | 15min | 2 tasks | 3 files |
+| Phase 03-agentops-labs-day-2 P01 | 4min | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -99,6 +100,9 @@ Recent decisions affecting current work:
 - [Phase 02.1]: uv pip install --system for student-facing commands — avoids venv requirement in workshop context
 - [Phase 02.1]: Flat workspace pattern: all student files go directly into llmops-project/ — no per-lab sub-directories
 - [Phase 02.1]: K8s initContainer pip unchanged — uv not available inside pod images
+- [Phase 03-agentops-labs-day-2]: filelock >=3.13.0 pinned as W4 Windows-compatibility requirement for book_appointment MCP tool local-JSON mode
+- [Phase 03-agentops-labs-day-2]: Groq llama-3.3-70b-versatile is default LLM_MODEL in config.env; Gemini is alternative (student-toggled)
+- [Phase 03-agentops-labs-day-2]: kindnet does NOT enforce NetworkPolicy (documented in COURSE_VERSIONS.md Notes for Lab 08 planner)
 
 ### Pending Todos
 
@@ -114,6 +118,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-02T06:46:15.470Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-agentops-labs-day-2/03-CONTEXT.md
+Last session: 2026-05-02T08:29:40.177Z
+Stopped at: Completed 03-agentops-labs-day-2/03-01-PLAN.md
+Resume file: None

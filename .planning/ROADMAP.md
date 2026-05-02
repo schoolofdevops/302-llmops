@@ -88,7 +88,7 @@ Plans:
 **Plans**: 7 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — COURSE_VERSIONS.md + config.env Day 2 pins + Lab 06 wind-down (D-19/D-20)
+- [x] 03-01-PLAN.md — COURSE_VERSIONS.md + config.env Day 2 pins + Lab 06 wind-down (D-19/D-20)
 - [ ] 03-02-PLAN.md — Lab 07 code: Hermes startup verification + 3 MCP tool servers (TDD) + Hermes config + Docker Compose + Day-2 Chainlit
 - [ ] 03-03-PLAN.md — Lab 07 Docusaurus walkthrough page (course-content/docs/labs/lab-07-agent-core.md)
 - [ ] 03-04-PLAN.md — Lab 08 code: Agent Sandbox v0.4.3 install + Router image verify + 13 K8s manifests + cold/warm demo + book_appointment K8s mode
