@@ -122,13 +122,13 @@ data:
           "id": 6,
           "targets": [
             {
-              "expr": "vllm:cpu_cache_usage_perc",
-              "legendFormat": "CPU KV Cache %",
+              "expr": "vllm:gpu_cache_usage_perc",
+              "legendFormat": "KV Cache %",
               "refId": "A"
             }
           ],
-          "title": "KV Cache Utilization (CPU)",
-          "description": "Fraction of the CPU KV cache in use. Set by VLLM_CPU_KVCACHE_SPACE=2 (2 GB). If this approaches 1.0, vLLM will OOM or start rejecting requests. Keep below 80%.",
+          "title": "KV Cache Utilization",
+          "description": "Fraction of KV cache in use (metric: vllm:gpu_cache_usage_perc — vLLM 0.9.1 uses this name even on CPU). Set by VLLM_CPU_KVCACHE_SPACE=2 (2 GB). If this approaches 1.0, vLLM will OOM or start rejecting requests. Keep below 80%.",
           "type": "timeseries"
         },
         {

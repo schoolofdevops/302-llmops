@@ -165,6 +165,10 @@ vLLM 0.9.1 metric names look like:
 If you see "No data" in a Grafana panel, check that your PromQL query uses `vllm:` (colon) prefix. The pre-built dashboard in this lab uses the correct names.
 :::
 
+:::note KV Cache metric name — vLLM CPU naming quirk
+The KV Cache panel queries `vllm:gpu_cache_usage_perc`. Despite running on CPU, vLLM 0.9.1 uses this same metric name for both GPU and CPU backends. There is no separate `vllm:cpu_cache_usage_perc` metric. The value correctly reflects your CPU KV cache utilization (set by `VLLM_CPU_KVCACHE_SPACE=2`).
+:::
+
 ### Architecture
 
 ```
