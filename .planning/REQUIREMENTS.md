@@ -61,10 +61,10 @@ Requirements for initial course release. Each maps to roadmap phases.
 
 ### Agent Deployment (K8s Agent Sandbox)
 
-- [ ] **SANDBOX-01**: Kubernetes Agent Sandbox CRD installed on KIND cluster
-- [ ] **SANDBOX-02**: Hermes Agent deployed as a Sandbox resource with isolation
-- [ ] **SANDBOX-03**: SandboxWarmPool configured for fast agent startup
-- [ ] **SANDBOX-04**: Agent accessible via gateway (Sandbox stable identity + networking)
+- [x] **SANDBOX-01**: Kubernetes Agent Sandbox CRD installed on KIND cluster
+- [x] **SANDBOX-02**: Hermes Agent deployed as a Sandbox resource with isolation
+- [x] **SANDBOX-03**: SandboxWarmPool configured for fast agent startup
+- [x] **SANDBOX-04**: Agent accessible via gateway (Sandbox stable identity + networking)
 
 ### Observability
 
@@ -172,10 +172,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AGENT-02 | Phase 3 | Complete |
 | AGENT-03 | Phase 3 | Complete |
 | AGENT-04 | Phase 3 | Complete |
-| SANDBOX-01 | Phase 3 | Pending |
-| SANDBOX-02 | Phase 3 | Pending |
-| SANDBOX-03 | Phase 3 | Pending |
-| SANDBOX-04 | Phase 3 | Pending |
+| SANDBOX-01 | Phase 3 | Complete |
+| SANDBOX-02 | Phase 3 | Complete |
+| SANDBOX-03 | Phase 3 | Complete |
+| SANDBOX-04 | Phase 3 | Complete |
 | OBS-05 | Phase 3 | Pending |
 | OBS-06 | Phase 3 | Pending |
 | OBS-07 | Phase 3 | Pending |

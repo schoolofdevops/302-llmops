@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v0.19.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 03-agentops-labs-day-2/03-03-PLAN.md
-last_updated: "2026-05-02T11:22:52.722Z"
+stopped_at: Completed 03-agentops-labs-day-2/03-04-PLAN.md
+last_updated: "2026-05-02T13:25:26.003Z"
 progress:
   total_phases: 5
   completed_phases: 3
   total_plans: 20
-  completed_plans: 16
+  completed_plans: 17
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-04-12)
 ## Current Position
 
 Phase: 03 (agentops-labs-day-2) — EXECUTING
-Plan: 5 of 7
+Plan: 6 of 7
 
 ## Performance Metrics
 
@@ -62,6 +62,7 @@ Plan: 5 of 7
 | Phase 03-agentops-labs-day-2 P01 | 4min | 3 tasks | 3 files |
 | Phase 03-agentops-labs-day-2 P02 | ~6h | 3 tasks | 17 files |
 | Phase 03-agentops-labs-day-2 P03 | 7min | 1 tasks | 1 files |
+| Phase 03-agentops-labs-day-2 P04 | ~3h | 3 tasks | 23 files |
 
 ## Accumulated Context
 
@@ -110,6 +111,10 @@ Recent decisions affecting current work:
 - [Phase 03-agentops-labs-day-2]: B1 Gemini live path verified: Gemini 2.5 Flash via OpenAI-compat endpoint exercises all 3 MCP tools; config.yaml default kept as groq/llama-3.3-70b-versatile for students without GOOGLE_API_KEY
 - [Phase 03-agentops-labs-day-2]: HTML comments (<!-- -->) replaced with MDX JSX comments ({/* */}) for Docusaurus MDX parser compatibility
 - [Phase 03-agentops-labs-day-2]: OS Tabs dropped from Lab 07 Part F — docker compose commands identical on macOS and Windows Git Bash
+- [Phase 03-agentops-labs-day-2]: ROUTER_MODE=gcr: Sandbox Router image (GCR) is publicly pullable on KIND without GCP credentials — resolves RESEARCH.md Open Q1
+- [Phase 03-agentops-labs-day-2]: dnsPolicy:None + CoreDNS IP 10.96.0.10 required in SandboxTemplate — hermes-agent overwrites /etc/resolv.conf at startup breaking in-cluster MCP DNS
+- [Phase 03-agentops-labs-day-2]: emptyDir + initContainer(busybox) for HERMES_HOME — ConfigMap mounts are read-only; hermes entrypoint.sh writes to /opt/data
+- [Phase 03-agentops-labs-day-2]: Cold-vs-warm observed: Warm 7.95s (LLM API), Cold refill 25.03s (image cached), first Cold request 2.54s — feeds plan 03-05 Lab 08 page Part G
 
 ### Pending Todos
 
@@ -125,6 +130,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-02T11:22:52.719Z
-Stopped at: Completed 03-agentops-labs-day-2/03-03-PLAN.md
+Last session: 2026-05-02T13:25:26.000Z
+Stopped at: Completed 03-agentops-labs-day-2/03-04-PLAN.md
 Resume file: None
