@@ -45,17 +45,21 @@ Teach practitioners how to take AI systems (LLMs + agents) from prototype to pro
 - Flat `llmops-project/` workspace replaces per-lab subdirs (`lab-01/`, `lab-02/`) across all lab guides
 - `uv` is primary package installer in student-facing commands (`pip` documented as fallback)
 
+(Validated in Phase 3: AgentOps Labs Day 2)
+
+- Hermes Agent (NousResearch v0.12.0) configured for Smile Dental — 3 MCP tool servers (triage, treatment_lookup, book_appointment) + multi-step workflow validated live (Lab 07)
+- Two-phase LLM strategy — Day 2 labs switch to free-tier API; both Groq (`llama-3.3-70b-versatile`) and Gemini (`gemini-2.5-flash`) live-tested
+- Kubernetes Agent Sandbox v0.4.3 — CRDs installed, agent deployed as Sandbox + SandboxWarmPool (replicas=2) + NetworkPolicy + Sandbox Router gateway (Lab 08)
+- Cold-vs-warm timing demo — observed warm 7.95s / cold refill 25.03s / cold 2.54s
+- Agent observability — Grafana Tempo + OTEL Collector deployed; 3 MCP tools auto-instrumented; cost middleware emits `agent_llm_tokens_total` + `agent_llm_cost_usd_total`; Grafana dashboard auto-discovered (Lab 09)
+- D-18 partial compliance documented honestly: tool/retriever spans hierarchical; Hermes-internal `agent.request`/`llm.completion` not visible (closed binary)
+
 ### Active
 
-- [ ] Add agentic capabilities — extend dental assistant into a multi-tool agent (appointment booking, treatment lookup, triage workflows)
-- [ ] Add Kubernetes Agent Sandbox module — deploy agents using the new Sandbox CRD, SandboxWarmPool, and Python SDK
 - [ ] Structure for 3-day workshop format (~24 hours, 12-15 labs)
 - [ ] Ensure all content is 2026-relevant (current AI landscape, modern frameworks, latest K8s features)
 - [ ] Design for dual delivery: instructor-led workshop + Udemy self-paced course
 - [ ] Evaluate and integrate LLM evaluation/testing practices (evals, guardrails)
-- [ ] Hermes Agent (NousResearch) for agentic module — configure, customize tools, deploy on K8s Agent Sandbox
-- [ ] Two-phase LLM: local SmolLM2 for LLMOps labs, free-tier API (Gemini/Groq) for agentic labs
-- [ ] Agent observability — traces, tool-call visibility, cost tracking for API-based agents
 
 ### Out of Scope
 
@@ -131,4 +135,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-27 after Phase 02.1 completion*
+*Last updated: 2026-05-02 after Phase 3 completion*
