@@ -94,7 +94,7 @@ Plans:
 - [x] 03-04-PLAN.md — Lab 08 code: Agent Sandbox v0.4.3 install + Router image verify + 13 K8s manifests + cold/warm demo + book_appointment K8s mode
 - [x] 03-05-PLAN.md — Lab 08 Docusaurus walkthrough page (course-content/docs/labs/lab-08-agent-sandbox.md)
 - [x] 03-06-PLAN.md — Lab 09 code: Tempo + OTEL Collector Helm install + MCP OTEL instrumentation + cost middleware proxy + Grafana dashboard
-- [ ] 03-07-PLAN.md — Lab 09 Docusaurus walkthrough page (course-content/docs/labs/lab-09-observability.md)
+- [x] 03-07-PLAN.md — Lab 09 Docusaurus walkthrough page (course-content/docs/labs/lab-09-observability.md)
 
 ### Phase 4: Production Ops + Capstone (Day 3)
 **Goal**: Students operate the system in production mode — autoscaling under load, all components managed by ArgoCD via GitOps, model pipeline automated as an Argo Workflow with an eval quality gate, guardrails protecting the agent, and a capstone that exercises the full stack end to end
