@@ -1,0 +1,32 @@
+# Tempo single-binary mode for KIND — in-memory tmpfs storage, no PVC.
+tempo:
+  reportingEnabled: false
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  storage:
+    trace:
+      backend: local
+      local:
+        path: /tmp/tempo/traces
+      wal:
+        path: /tmp/tempo/wal
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: "0.0.0.0:4317"
+        http:
+          endpoint: "0.0.0.0:4318"
+
+# Disable persistent volume — use ephemeral in-memory storage for KIND
+persistence:
+  enabled: false
+
+service:
+  type: ClusterIP
+  port: 3100
