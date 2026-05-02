@@ -141,7 +141,11 @@ async def on_message(message: cl.Message):
                 resp.raise_for_status()
             hits = resp.json().get("hits", [])
             elapsed = time.monotonic() - t0
-            s.output = f"Found {len(hits)} relevant chunks in {elapsed:.2f}s"
+            doc_lines = "\n".join(
+                f"  [{i+1}] {h.get('doc_id', '?')} ({h.get('section', '?')}) — score {h.get('score', 0):.2f}"
+                for i, h in enumerate(hits)
+            )
+            s.output = f"Found {len(hits)} relevant chunks in {elapsed:.2f}s\n{doc_lines}"
     except Exception as exc:
         chat_requests_total.labels(status="retriever_error").inc()
         await cl.Message(
