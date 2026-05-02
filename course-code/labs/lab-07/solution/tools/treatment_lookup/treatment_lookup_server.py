@@ -6,6 +6,9 @@ import os
 import httpx
 from mcp.server.fastmcp import FastMCP
 from mcp.server.streamable_http import TransportSecuritySettings
+from tools.otel_setup import setup_tracing
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
 
 # Disable DNS rebinding protection: MCP runs in Docker where the Host header
 # will be "mcp-treatment-lookup:8020" (Docker service name).
@@ -14,6 +17,11 @@ mcp = FastMCP(
     json_response=True,
     transport_security=TransportSecuritySettings(enable_dns_rebinding_protection=False),
 )
+
+# OTEL: must run BEFORE creating streamable_http_app() so FastAPI instrumentation hooks the right routes.
+# HTTPXClientInstrumentor enables the treatment_lookup → RAG retriever child span (satisfies OBS-06).
+setup_tracing(service_name=os.environ.get("OTEL_SERVICE_NAME", "mcp-treatment-lookup"))
+HTTPXClientInstrumentor().instrument()
 
 RETRIEVER_URL = os.environ.get(
     "RETRIEVER_URL",
@@ -47,4 +55,6 @@ async def health(_request):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(mcp.streamable_http_app(), host="0.0.0.0", port=PORT)
+    _app = mcp.streamable_http_app()
+    FastAPIInstrumentor.instrument_app(_app)
+    uvicorn.run(_app, host="0.0.0.0", port=PORT)

@@ -7,6 +7,9 @@ import json, os
 import httpx
 from mcp.server.fastmcp import FastMCP
 from mcp.server.streamable_http import TransportSecuritySettings
+from tools.otel_setup import setup_tracing
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
 
 # Disable DNS rebinding protection: MCP runs in Docker where the Host header
 # will be "mcp-triage:8010" (Docker service name) which differs from 127.0.0.1.
@@ -16,6 +19,10 @@ mcp = FastMCP(
     json_response=True,
     transport_security=TransportSecuritySettings(enable_dns_rebinding_protection=False),
 )
+
+# OTEL: must run BEFORE creating streamable_http_app() so FastAPI instrumentation hooks the right routes.
+setup_tracing(service_name=os.environ.get("OTEL_SERVICE_NAME", "mcp-triage"))
+HTTPXClientInstrumentor().instrument()
 
 LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "https://api.groq.com/openai/v1")
 LLM_API_KEY  = os.environ.get("LLM_API_KEY", "")
@@ -79,4 +86,6 @@ async def health(_request):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(mcp.streamable_http_app(), host="0.0.0.0", port=PORT)
+    _app = mcp.streamable_http_app()
+    FastAPIInstrumentor.instrument_app(_app)
+    uvicorn.run(_app, host="0.0.0.0", port=PORT)
