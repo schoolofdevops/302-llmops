@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bookings
+  namespace: llm-app
+data:
+  bookings: "[]"

@@ -1,0 +1,58 @@
+# Egress allow-list for Hermes Agent pods (D-07).
+# NOTE: Default KIND CNI (kindnet) does not enforce NetworkPolicy.
+# This manifest is applied as a documented production pattern. Real enforcement
+# requires Calico or Cilium CNI.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: hermes-agent-egress
+  namespace: llm-agent
+spec:
+  podSelector:
+    matchLabels:
+      app: hermes-agent
+  policyTypes:
+  - Egress
+  egress:
+  # 1. DNS — UDP+TCP 53 (REQUIRED — see RESEARCH.md Pitfall 7; without this all DNS breaks).
+  - ports:
+    - port: 53
+      protocol: UDP
+    - port: 53
+      protocol: TCP
+  # 2. RAG retriever (in-cluster, llm-app namespace).
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: llm-app
+      podSelector:
+        matchLabels:
+          app: rag-retriever
+    ports:
+    - port: 8001
+      protocol: TCP
+  # 3. HTTPS to Groq + Gemini APIs (FQDN-pinning needs Cilium; we allow all 443/TCP egress).
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - port: 443
+      protocol: TCP
+  # 4. MCP tool servers in llm-agent (in-namespace traffic).
+  - to:
+    - podSelector:
+        matchLabels:
+          app: mcp-triage
+    - podSelector:
+        matchLabels:
+          app: mcp-treatment-lookup
+    - podSelector:
+        matchLabels:
+          app: mcp-book-appointment
+    ports:
+    - port: 8010
+      protocol: TCP
+    - port: 8020
+      protocol: TCP
+    - port: 8030
+      protocol: TCP
