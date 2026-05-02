@@ -73,7 +73,7 @@ async with cl.Step(name="LLM generation", type="run") as s:
 If you create `response_msg` inside the `cl.Step` context, streaming tokens appear inside the collapsed step rather than in the main chat thread. By creating the message before entering the step, tokens stream visibly to the user while the step records generation metadata.
 :::
 
-All commands assume you are in the **repository root** (`llmops-course/`).
+All commands assume you are in the **repository root** (`302-llmops/`).
 
 ### Step A1: Build the Chainlit Docker image
 
