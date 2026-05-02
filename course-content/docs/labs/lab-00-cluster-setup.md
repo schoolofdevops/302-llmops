@@ -38,18 +38,18 @@ Go to **Docker Desktop → Settings → Resources → Memory** and set it to at 
 ## Step 2: Clone the course repository
 
 ```bash
-git clone https://github.com/schoolofdevops/llmops-course.git
-cd llmops-course
+git clone https://github.com/schoolofdevops/302-llmops.git
+cd 302-llmops
 ```
 
-:::important All commands from this point assume you are inside the `llmops-course/` directory (the repository root). Do not `cd` into subdirectories unless a step explicitly says so.
-:::
-
-Create the project workspace directory. The KIND cluster mounts this directory into all nodes — training data, model checkpoints, and merged models are written here by subsequent labs.
+Create the project workspace directory first. This is where training data, model checkpoints, and merged models will be stored — the KIND cluster mounts it into all nodes at `/mnt/project`. It is git-ignored so your learner artifacts never pollute the repo.
 
 ```bash
 mkdir -p llmops-project
 ```
+
+:::important All commands from this point assume you are inside the `302-llmops/` directory (the repository root). Do not `cd` into subdirectories unless a step explicitly says so.
+:::
 
 ---
 
@@ -150,11 +150,11 @@ Project directory path (e.g. /Users/yourname/llmops-project):
 Enter the **absolute path** to the `llmops-project` directory you created in Step 2. To get the absolute path:
 
 ```bash
-# Run this in a separate terminal to see the full path
+# Run this to see the full path to your current directory
 pwd
-# Output example: /Users/yourname/courses/llmops/llmops-course
+# Output example: /Users/yourname/courses/llmops/302-llmops
 # Your llmops-project absolute path would be:
-# /Users/yourname/courses/llmops/llmops-course/llmops-project
+# /Users/yourname/courses/llmops/302-llmops/llmops-project
 ```
 
 :::tip

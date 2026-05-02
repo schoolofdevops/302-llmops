@@ -82,7 +82,7 @@ The merged model is a standard HuggingFace model directory that any inference en
 
 ## Lab Steps
 
-All commands assume you are in the **repository root** (`llmops-course/`). If you are still inside `llmops-project/` from Lab 02:
+All commands assume you are in the **repository root** (`302-llmops/`). If you are still inside `llmops-project/` from Lab 02:
 
 ```bash
 cd ..
