@@ -237,20 +237,27 @@ You should see:
 
 All files must be present for vLLM to load the model in Lab 04.
 
-Optional — run a quick local inference test:
+Optional — run a quick local inference test (requires the venv from Lab 01 with transformers installed):
 
 ```bash
+cd llmops-project && source .venv/bin/activate
+uv pip install transformers torch --quiet
 python3 -c "
 from transformers import pipeline
 pipe = pipeline('text-generation',
-    model='llmops-project/training/merged-model',
+    model='training/merged-model',
     max_new_tokens=80)
 result = pipe([{'role': 'user', 'content': 'How much does teeth whitening cost?'}])
 print(result[0]['generated_text'][-1]['content'])
 "
+cd ..
 ```
 
 Expected: a response mentioning Smile Dental Clinic and INR pricing.
+
+:::note Skip this if short on time
+The real validation happens in Lab 05 when vLLM serves the model. This local test is optional — it just confirms the merge completed correctly without deploying anything.
+:::
 
 ## After This Lab
 
