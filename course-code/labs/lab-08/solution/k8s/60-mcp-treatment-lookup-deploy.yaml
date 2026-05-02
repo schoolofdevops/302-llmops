@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-treatment-lookup
+  namespace: llm-agent
+  labels:
+    app: mcp-treatment-lookup
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-treatment-lookup
+  template:
+    metadata:
+      labels:
+        app: mcp-treatment-lookup
+    spec:
+      containers:
+      - name: treatment-lookup
+        image: localhost:5001/mcp-treatment_lookup:v1.0.0
+        ports:
+        - name: mcp
+          containerPort: 8020
+        env:
+        - name: PORT
+          value: "8020"
+        - name: RETRIEVER_URL
+          value: "http://rag-retriever.llm-app.svc.cluster.local:8001"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8020
+          initialDelaySeconds: 5
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-treatment-lookup
+  namespace: llm-agent
+spec:
+  selector:
+    app: mcp-treatment-lookup
+  ports:
+  - port: 8020
+    targetPort: 8020

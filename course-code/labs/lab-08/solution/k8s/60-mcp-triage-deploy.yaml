@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-triage
+  namespace: llm-agent
+  labels:
+    app: mcp-triage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-triage
+  template:
+    metadata:
+      labels:
+        app: mcp-triage
+    spec:
+      containers:
+      - name: triage
+        image: localhost:5001/mcp-triage:v1.0.0
+        ports:
+        - name: mcp
+          containerPort: 8010
+        env:
+        - name: PORT
+          value: "8010"
+        - name: LLM_BASE_URL
+          value: "https://api.groq.com/openai/v1"
+        - name: LLM_MODEL
+          value: "llama-3.3-70b-versatile"
+        - name: LLM_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: llm-api-keys
+              key: groq-api-key
+              optional: true
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8010
+          initialDelaySeconds: 5
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-triage
+  namespace: llm-agent
+spec:
+  selector:
+    app: mcp-triage
+  ports:
+  - port: 8010
+    targetPort: 8010
