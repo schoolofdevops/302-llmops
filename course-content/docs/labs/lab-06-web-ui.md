@@ -233,11 +233,34 @@ Grafana discovers dashboard ConfigMaps via a sidecar running every 60 seconds. I
 
 ### Step B4: Generate traffic and observe metrics
 
-Send 3-5 queries through the Chainlit UI at `http://localhost:30300`. Try questions like:
+Run the traffic generator script — it sends 10 dental queries per round to vLLM and prints each response:
 
-- "What is the price of root canal treatment?"
-- "Do you accept EMI payments?"
-- "Which doctor handles orthodontic work?"
+```bash
+bash course-code/labs/lab-06/solution/scripts/generate-traffic.sh localhost 30200 3
+```
+
+This sends 30 requests total (3 rounds × 10 queries), with a 5-second pause between each to let the CPU inference complete. While it runs (~5 minutes), open Grafana and watch the panels update in real time.
+
+Expected output:
+```
+=================================================
+ Smile Dental Traffic Generator
+=================================================
+ Target:  http://localhost:30200
+ Rounds:  3  |  Queries: 10 per round  |  Delay: 5s
+=================================================
+
+--- Round 1/3 ---
+[1] How much does teeth whitening cost at Smile Dental?
+     → Teeth whitening at Smile Dental Clinic costs between ₹3,000 and ₹8,000...
+[2] What is the cancellation policy?
+     → Appointments cancelled less than 24 hours in advance...
+...
+=================================================
+ Done: 30 requests, 0 errors
+ Open Grafana to see metrics: http://localhost:30400
+=================================================
+```
 
 Return to Grafana and watch the panels update:
 
