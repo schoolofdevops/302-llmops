@@ -1,0 +1,68 @@
+apiVersion: extensions.agents.x-k8s.io/v1alpha1
+kind: SandboxTemplate
+metadata:
+  name: hermes-agent-template
+  namespace: llm-agent
+spec:
+  podTemplate:
+    metadata:
+      labels:
+        app: hermes-agent
+    spec:
+      # NO runtimeClassName: gvisor — KIND does not support it (RESEARCH.md note).
+      automountServiceAccountToken: false
+      containers:
+      - name: hermes
+        image: nousresearch/hermes-agent:latest
+        command: ["hermes", "gateway"]
+        ports:
+        - name: api
+          containerPort: 8642
+        env:
+        - name: API_SERVER_ENABLED
+          value: "true"
+        - name: API_SERVER_HOST
+          value: "0.0.0.0"
+        - name: API_SERVER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: hermes-api-secret
+              key: api-key
+        - name: GROQ_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: llm-api-keys
+              key: groq-api-key
+              optional: true
+        - name: GOOGLE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: llm-api-keys
+              key: google-api-key
+              optional: true
+        volumeMounts:
+        - name: hermes-config
+          mountPath: /opt/data
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "1.5Gi"
+          limits:
+            cpu: "1"
+            memory: "2Gi"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8642
+          initialDelaySeconds: 20
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8642
+          initialDelaySeconds: 60
+          periodSeconds: 30
+      volumes:
+      - name: hermes-config
+        configMap:
+          name: hermes-config
