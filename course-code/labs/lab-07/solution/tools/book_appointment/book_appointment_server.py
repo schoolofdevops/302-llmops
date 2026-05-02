@@ -35,6 +35,22 @@ def _append_local(booking: dict) -> None:
             f.truncate()
 
 
+def _append_configmap(booking: dict) -> None:
+    """K8s mode: patch the bookings ConfigMap in BOOKING_NAMESPACE (D-11)."""
+    from kubernetes import client as k8s_client, config as k8s_config
+    NAMESPACE = os.environ.get("BOOKING_NAMESPACE", "llm-app")
+    CM_NAME   = os.environ.get("BOOKING_CM_NAME", "bookings")
+    k8s_config.load_incluster_config()
+    v1 = k8s_client.CoreV1Api()
+    cm = v1.read_namespaced_config_map(CM_NAME, NAMESPACE)
+    data = json.loads(cm.data.get("bookings", "[]"))
+    data.append(booking)
+    v1.patch_namespaced_config_map(
+        CM_NAME, NAMESPACE,
+        {"data": {"bookings": json.dumps(data, indent=2)}},
+    )
+
+
 @mcp.tool()
 def book_appointment(
     patient_name: str,
@@ -62,8 +78,13 @@ def book_appointment(
         "status": "confirmed",
         "created_at": datetime.datetime.utcnow().isoformat(),
     }
-    _append_local(booking)
-    booking["storage"] = "local-file"
+    backend = os.environ.get("BOOKING_BACKEND", "local")
+    if backend == "configmap":
+        _append_configmap(booking)
+        booking["storage"] = "configmap"
+    else:
+        _append_local(booking)
+        booking["storage"] = "local-file"
     return booking
 
 
