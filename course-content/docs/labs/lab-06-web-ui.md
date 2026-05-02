@@ -318,6 +318,31 @@ curl -s http://localhost:30200/metrics | grep "^vllm:" | head -3
 # Expected: lines starting with vllm: (colon, not underscore)
 ```
 
+## Wind Down Before Day 2
+
+Day 2 swaps the local SmolLM2 model for a free-tier cloud LLM (Groq or Gemini) and adds the Hermes Agent + MCP tool servers + Kubernetes Agent Sandbox + OTEL collector + Tempo to the same KIND cluster. To make room on a 16 GB laptop, scale the vLLM Deployment to 0 replicas now. The Deployment stays in place — Day 3 autoscaling labs will scale it back up.
+
+```bash
+# Free ~2-4 GB RAM by stopping vLLM (keeps RAG retriever, Chainlit, Prometheus, Grafana running)
+kubectl scale deployment vllm-smollm2 --replicas=0 -n llm-serving
+
+# Verify pods terminated
+kubectl get pods -n llm-serving -l app=vllm-smollm2
+# Expected: No resources found in llm-serving namespace.
+
+# Confirm Deployment manifest is preserved (replicas=0 but spec intact)
+kubectl get deployment vllm-smollm2 -n llm-serving -o jsonpath='{.spec.replicas}{"\n"}'
+# Expected: 0
+```
+
+:::warning Skipping the wind-down
+If you jump directly from Lab 06 to Lab 07 without scaling vLLM down, your KIND cluster may run out of memory partway through Lab 07. The Hermes Agent container alone needs ~1.5 GB; the SandboxWarmPool in Lab 08 needs ~3-4 GB. If you skipped this step, run the `kubectl scale` command above before starting Lab 07.
+:::
+
+:::tip Coming back later
+On Day 3 (Lab 10 — Autoscaling), you will scale vLLM back up with `kubectl scale deployment vllm-smollm2 --replicas=1 -n llm-serving` and watch HPA grow it under load.
+:::
+
 ## After This Lab
 
 You have completed the full Day 1 LLMOps pipeline:
