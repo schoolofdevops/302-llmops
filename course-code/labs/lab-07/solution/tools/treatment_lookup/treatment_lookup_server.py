@@ -5,8 +5,15 @@ Per D-10 in CONTEXT.md: calls existing rag-retriever /search endpoint.
 import os
 import httpx
 from mcp.server.fastmcp import FastMCP
+from mcp.server.streamable_http import TransportSecuritySettings
 
-mcp = FastMCP("treatment_lookup", json_response=True)
+# Disable DNS rebinding protection: MCP runs in Docker where the Host header
+# will be "mcp-treatment-lookup:8020" (Docker service name).
+mcp = FastMCP(
+    "treatment_lookup",
+    json_response=True,
+    transport_security=TransportSecuritySettings(enable_dns_rebinding_protection=False),
+)
 
 RETRIEVER_URL = os.environ.get(
     "RETRIEVER_URL",

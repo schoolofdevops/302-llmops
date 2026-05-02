@@ -6,8 +6,15 @@ This Lab-07 file uses local-JSON only; Lab 08 will add the ConfigMap path via en
 import datetime, json, os, pathlib
 from filelock import FileLock
 from mcp.server.fastmcp import FastMCP
+from mcp.server.streamable_http import TransportSecuritySettings
 
-mcp = FastMCP("book_appointment", json_response=True)
+# Disable DNS rebinding protection: MCP runs in Docker where the Host header
+# will be "mcp-book-appointment:8030" (Docker service name).
+mcp = FastMCP(
+    "book_appointment",
+    json_response=True,
+    transport_security=TransportSecuritySettings(enable_dns_rebinding_protection=False),
+)
 
 BOOKINGS_FILE = pathlib.Path(os.environ.get("BOOKINGS_FILE", "/data/bookings.json"))
 PORT = int(os.environ.get("PORT", "8030"))
