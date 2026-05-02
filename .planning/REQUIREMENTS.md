@@ -54,10 +54,10 @@ Requirements for initial course release. Each maps to roadmap phases.
 
 ### Agentic System
 
-- [ ] **AGENT-01**: Hermes Agent configured with Smile Dental custom tools (appointment booking, treatment lookup, triage)
-- [ ] **AGENT-02**: Hermes Agent connected to free-tier LLM API (Gemini or Groq — student choice, OpenAI-compatible)
-- [ ] **AGENT-03**: Hermes Agent integrated with existing RAG retriever as a tool
-- [ ] **AGENT-04**: Agent demonstrates multi-step workflow (e.g., symptom → triage → treatment info → book appointment)
+- [x] **AGENT-01**: Hermes Agent configured with Smile Dental custom tools (appointment booking, treatment lookup, triage)
+- [x] **AGENT-02**: Hermes Agent connected to free-tier LLM API (Gemini or Groq — student choice, OpenAI-compatible)
+- [x] **AGENT-03**: Hermes Agent integrated with existing RAG retriever as a tool
+- [x] **AGENT-04**: Agent demonstrates multi-step workflow (e.g., symptom → triage → treatment info → book appointment)
 
 ### Agent Deployment (K8s Agent Sandbox)
 
@@ -168,10 +168,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | OBS-02 | Phase 2 | Complete |
 | OBS-03 | Phase 2 | Complete |
 | OBS-04 | Phase 2 | Complete |
-| AGENT-01 | Phase 3 | Pending |
-| AGENT-02 | Phase 3 | Pending |
-| AGENT-03 | Phase 3 | Pending |
-| AGENT-04 | Phase 3 | Pending |
+| AGENT-01 | Phase 3 | Complete |
+| AGENT-02 | Phase 3 | Complete |
+| AGENT-03 | Phase 3 | Complete |
+| AGENT-04 | Phase 3 | Complete |
 | SANDBOX-01 | Phase 3 | Pending |
 | SANDBOX-02 | Phase 3 | Pending |
 | SANDBOX-03 | Phase 3 | Pending |

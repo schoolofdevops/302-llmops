@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v0.19.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 03-agentops-labs-day-2/03-01-PLAN.md
-last_updated: "2026-05-02T08:29:40.180Z"
+stopped_at: Completed 03-agentops-labs-day-2/03-02-PLAN.md
+last_updated: "2026-05-02T11:07:22.191Z"
 progress:
   total_phases: 5
   completed_phases: 3
   total_plans: 20
-  completed_plans: 14
+  completed_plans: 15
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-04-12)
 ## Current Position
 
 Phase: 03 (agentops-labs-day-2) — EXECUTING
-Plan: 2 of 7
+Plan: 4 of 7
 
 ## Performance Metrics
 
@@ -60,6 +60,7 @@ Plan: 2 of 7
 | Phase 02-llmops-labs-day-1 P07 | 8min | 2 tasks | 6 files |
 | Phase 02.1-flatten-workspace-and-switch-to-uv P01 | 15min | 2 tasks | 3 files |
 | Phase 03-agentops-labs-day-2 P01 | 4min | 3 tasks | 3 files |
+| Phase 03-agentops-labs-day-2 P02 | ~6h | 3 tasks | 17 files |
 
 ## Accumulated Context
 
@@ -103,6 +104,9 @@ Recent decisions affecting current work:
 - [Phase 03-agentops-labs-day-2]: filelock >=3.13.0 pinned as W4 Windows-compatibility requirement for book_appointment MCP tool local-JSON mode
 - [Phase 03-agentops-labs-day-2]: Groq llama-3.3-70b-versatile is default LLM_MODEL in config.env; Gemini is alternative (student-toggled)
 - [Phase 03-agentops-labs-day-2]: kindnet does NOT enforce NetworkPolicy (documented in COURSE_VERSIONS.md Notes for Lab 08 planner)
+- [Phase 03-agentops-labs-day-2]: TransportSecuritySettings(enable_dns_rebinding_protection=False) required for FastMCP servers in Docker where Host header is a service name
+- [Phase 03-agentops-labs-day-2]: Hermes v0.12.0: CPU-only startup confirmed with 'hermes gateway' (not 'hermes gateway run'); /health responds in ~6s; closes RESEARCH.md Q2+Q3
+- [Phase 03-agentops-labs-day-2]: B1 Gemini live path verified: Gemini 2.5 Flash via OpenAI-compat endpoint exercises all 3 MCP tools; config.yaml default kept as groq/llama-3.3-70b-versatile for students without GOOGLE_API_KEY
 
 ### Pending Todos
 
@@ -118,6 +122,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-02T08:29:40.177Z
-Stopped at: Completed 03-agentops-labs-day-2/03-01-PLAN.md
+Last session: 2026-05-02T11:07:22.186Z
+Stopped at: Completed 03-agentops-labs-day-2/03-02-PLAN.md
 Resume file: None
