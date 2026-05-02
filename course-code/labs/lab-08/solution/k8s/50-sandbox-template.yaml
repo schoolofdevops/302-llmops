@@ -11,10 +11,24 @@ spec:
     spec:
       # NO runtimeClassName: gvisor — KIND does not support it (RESEARCH.md note).
       automountServiceAccountToken: false
+      initContainers:
+      # Copy config files from ConfigMap into the writable emptyDir so entrypoint
+      # can manage them (ConfigMap mounts are read-only; entrypoint.sh writes to HERMES_HOME).
+      - name: config-init
+        image: busybox:1.36
+        command: ["sh", "-c", "cp /configmap/config.yaml /hermes-home/config.yaml && cp /configmap/SOUL.md /hermes-home/SOUL.md"]
+        volumeMounts:
+        - name: hermes-config-cm
+          mountPath: /configmap
+          readOnly: true
+        - name: hermes-home
+          mountPath: /hermes-home
       containers:
       - name: hermes
         image: nousresearch/hermes-agent:latest
-        command: ["hermes", "gateway"]
+        # Invoke the image's own entrypoint.sh with 'gateway' as the subcommand.
+        # entrypoint.sh bootstraps config dirs, activates .venv, then execs: hermes gateway
+        command: ["/opt/hermes/docker/entrypoint.sh", "gateway"]
         ports:
         - name: api
           containerPort: 8642
@@ -41,7 +55,7 @@ spec:
               key: google-api-key
               optional: true
         volumeMounts:
-        - name: hermes-config
+        - name: hermes-home
           mountPath: /opt/data
         resources:
           requests:
@@ -63,6 +77,8 @@ spec:
           initialDelaySeconds: 60
           periodSeconds: 30
       volumes:
-      - name: hermes-config
+      - name: hermes-config-cm
         configMap:
           name: hermes-config
+      - name: hermes-home
+        emptyDir: {}
