@@ -1,0 +1,105 @@
+# Lab 07 — Smile Dental Agent stack (Docker Compose, local mode)
+# Loads .env automatically; copy .env.example → .env first.
+# NOTE (I2): ${VAR:-default} below is Docker Compose interpolation syntax (NOT POSIX shell). It works
+# identically on Windows (Docker Desktop), macOS, and Linux because Compose parses it before the
+# container starts — no shell required. See https://docs.docker.com/compose/environment-variables/.
+version: "3.9"
+
+services:
+  hermes:
+    image: nousresearch/hermes-agent:latest
+    container_name: hermes-agent
+    command: hermes gateway
+    ports:
+      - "8642:8642"
+    environment:
+      API_SERVER_ENABLED: "true"
+      API_SERVER_HOST: "0.0.0.0"
+      API_SERVER_KEY: "${HERMES_API_KEY:-smile-dental-course-key}"
+      GROQ_API_KEY: "${GROQ_API_KEY:-}"
+      GOOGLE_API_KEY: "${GOOGLE_API_KEY:-}"
+      # GEMINI_BASE_URL points Hermes at the OpenAI-compatible Gemini endpoint
+      # so that google/gemini-2.5-flash works via /v1beta/openai/chat/completions
+      GEMINI_BASE_URL: "${GEMINI_BASE_URL:-https://generativelanguage.googleapis.com/v1beta/openai}"
+    volumes:
+      - ./hermes-config:/opt/data
+    depends_on:
+      mcp-triage:
+        condition: service_healthy
+      mcp-treatment-lookup:
+        condition: service_healthy
+      mcp-book-appointment:
+        condition: service_healthy
+    networks: [agent-net]
+
+  mcp-triage:
+    build:
+      context: .
+      dockerfile: tools/triage/Dockerfile
+    container_name: mcp-triage
+    environment:
+      LLM_BASE_URL: "${LLM_BASE_URL:-https://api.groq.com/openai/v1}"
+      LLM_API_KEY:  "${GROQ_API_KEY:-${GOOGLE_API_KEY:-}}"
+      LLM_MODEL:    "${LLM_MODEL:-llama-3.3-70b-versatile}"
+      PORT: "8010"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8010/health').read()"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    networks: [agent-net]
+
+  mcp-treatment-lookup:
+    build:
+      context: .
+      dockerfile: tools/treatment_lookup/Dockerfile
+    container_name: mcp-treatment-lookup
+    environment:
+      RETRIEVER_URL: "${RETRIEVER_URL:-http://host.docker.internal:8001}"
+      PORT: "8020"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # Linux compatibility
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8020/health').read()"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    networks: [agent-net]
+
+  mcp-book-appointment:
+    build:
+      context: .
+      dockerfile: tools/book_appointment/Dockerfile
+    container_name: mcp-book-appointment
+    environment:
+      BOOKINGS_FILE: /data/bookings.json
+      PORT: "8030"
+    volumes:
+      - bookings-data:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8030/health').read()"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    networks: [agent-net]
+
+  chainlit:
+    build:
+      context: ./ui
+    container_name: chainlit-ui
+    ports:
+      - "8000:8000"
+    environment:
+      AGENT_URL: "http://hermes:8642"
+      HERMES_API_KEY: "${HERMES_API_KEY:-smile-dental-course-key}"
+    depends_on:
+      hermes:
+        condition: service_started
+    networks: [agent-net]
+
+volumes:
+  bookings-data:
+
+networks:
+  agent-net:
+    driver: bridge

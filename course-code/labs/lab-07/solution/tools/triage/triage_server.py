@@ -6,8 +6,16 @@ Per D-09 in CONTEXT.md: this tool prompts the LLM with a triage rubric.
 import json, os
 import httpx
 from mcp.server.fastmcp import FastMCP
+from mcp.server.streamable_http import TransportSecuritySettings
 
-mcp = FastMCP("triage", json_response=True)
+# Disable DNS rebinding protection: MCP runs in Docker where the Host header
+# will be "mcp-triage:8010" (Docker service name) which differs from 127.0.0.1.
+# FastMCP defaults to localhost-only protection; override here for container mode.
+mcp = FastMCP(
+    "triage",
+    json_response=True,
+    transport_security=TransportSecuritySettings(enable_dns_rebinding_protection=False),
+)
 
 LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "https://api.groq.com/openai/v1")
 LLM_API_KEY  = os.environ.get("LLM_API_KEY", "")
@@ -18,6 +26,26 @@ TRIAGE_PROMPT = """You are a dental triage assistant.
 Classify the symptom severity as one of: severe, urgent, routine.
 Respond ONLY with a JSON object: {{"severity": "severe"|"urgent"|"routine", "reason": "<one short sentence>"}}
 Symptom: {symptom}"""
+
+# 512 tokens allows room for thinking models (gemini-2.5-flash uses internal
+# reasoning tokens before output; 100 was too small and returned truncated JSON).
+_MAX_TOKENS = int(os.environ.get("LLM_MAX_TOKENS", "512"))
+
+
+def _extract_json(text: str) -> dict:
+    """Parse JSON from LLM response, stripping markdown code fences if present.
+
+    Gemini and some other models wrap JSON in ```json...``` blocks even when
+    instructed not to. Strip fences before parsing.
+    """
+    stripped = text.strip()
+    # Remove leading ```json or ``` fence
+    if stripped.startswith("```"):
+        stripped = stripped.split("\n", 1)[-1]
+    # Remove trailing ``` fence
+    if stripped.endswith("```"):
+        stripped = stripped.rsplit("```", 1)[0]
+    return json.loads(stripped.strip())
 
 
 @mcp.tool()
@@ -34,13 +62,13 @@ async def triage(symptom: str) -> dict:
             json={
                 "model": LLM_MODEL,
                 "messages": [{"role": "user", "content": TRIAGE_PROMPT.format(symptom=symptom)}],
-                "max_tokens": 100,
+                "max_tokens": _MAX_TOKENS,
                 "temperature": 0.1,
             },
         )
         resp.raise_for_status()
         text = resp.json()["choices"][0]["message"]["content"]
-    return json.loads(text)
+    return _extract_json(text)
 
 
 @mcp.custom_route("/health", methods=["GET"])

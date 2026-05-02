@@ -1,0 +1,23 @@
+# Hermes Agent configuration for Smile Dental — Lab 07 (Docker Compose mode)
+# MCP servers reach each other inside the agent-net Docker network by service name.
+
+model:
+  default: gemini-2.5-flash     # 1M context — satisfies Hermes 64K minimum (Gemini OpenAI-compat)
+
+mcp_servers:
+  triage:
+    url: "http://mcp-triage:8010/mcp"
+  treatment_lookup:
+    url: "http://mcp-treatment-lookup:8020/mcp"
+  book_appointment:
+    url: "http://mcp-book-appointment:8030/mcp"
+
+agent:
+  max_turns: 10
+  disabled_toolsets: [memory, web, browser, code, voice]
+
+compression:
+  enabled: false
+
+display:
+  streaming: false
