@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v0.19.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 03-agentops-labs-day-2/03-02-PLAN.md
-last_updated: "2026-05-02T11:07:22.191Z"
+stopped_at: Completed 03-agentops-labs-day-2/03-03-PLAN.md
+last_updated: "2026-05-02T11:22:52.722Z"
 progress:
   total_phases: 5
   completed_phases: 3
   total_plans: 20
-  completed_plans: 15
+  completed_plans: 16
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-04-12)
 ## Current Position
 
 Phase: 03 (agentops-labs-day-2) — EXECUTING
-Plan: 4 of 7
+Plan: 5 of 7
 
 ## Performance Metrics
 
@@ -61,6 +61,7 @@ Plan: 4 of 7
 | Phase 02.1-flatten-workspace-and-switch-to-uv P01 | 15min | 2 tasks | 3 files |
 | Phase 03-agentops-labs-day-2 P01 | 4min | 3 tasks | 3 files |
 | Phase 03-agentops-labs-day-2 P02 | ~6h | 3 tasks | 17 files |
+| Phase 03-agentops-labs-day-2 P03 | 7min | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -107,6 +108,8 @@ Recent decisions affecting current work:
 - [Phase 03-agentops-labs-day-2]: TransportSecuritySettings(enable_dns_rebinding_protection=False) required for FastMCP servers in Docker where Host header is a service name
 - [Phase 03-agentops-labs-day-2]: Hermes v0.12.0: CPU-only startup confirmed with 'hermes gateway' (not 'hermes gateway run'); /health responds in ~6s; closes RESEARCH.md Q2+Q3
 - [Phase 03-agentops-labs-day-2]: B1 Gemini live path verified: Gemini 2.5 Flash via OpenAI-compat endpoint exercises all 3 MCP tools; config.yaml default kept as groq/llama-3.3-70b-versatile for students without GOOGLE_API_KEY
+- [Phase 03-agentops-labs-day-2]: HTML comments (<!-- -->) replaced with MDX JSX comments ({/* */}) for Docusaurus MDX parser compatibility
+- [Phase 03-agentops-labs-day-2]: OS Tabs dropped from Lab 07 Part F — docker compose commands identical on macOS and Windows Git Bash
 
 ### Pending Todos
 
@@ -122,6 +125,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-02T11:07:22.186Z
-Stopped at: Completed 03-agentops-labs-day-2/03-02-PLAN.md
+Last session: 2026-05-02T11:22:52.719Z
+Stopped at: Completed 03-agentops-labs-day-2/03-03-PLAN.md
 Resume file: None
