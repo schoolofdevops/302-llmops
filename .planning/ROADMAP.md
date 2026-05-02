@@ -85,7 +85,16 @@ Plans:
   3. Agent runs as a Kubernetes Sandbox resource with isolation and is accessible via Sandbox stable gateway identity
   4. SandboxWarmPool is configured and a cold-start vs warm-start timing comparison is observable
   5. OTEL traces show distributed spans across agent → retriever → LLM calls, visualized in Grafana Tempo or Jaeger
-**Plans**: TBD
+**Plans**: 7 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — COURSE_VERSIONS.md + config.env Day 2 pins + Lab 06 wind-down (D-19/D-20)
+- [ ] 03-02-PLAN.md — Lab 07 code: Hermes startup verification + 3 MCP tool servers (TDD) + Hermes config + Docker Compose + Day-2 Chainlit
+- [ ] 03-03-PLAN.md — Lab 07 Docusaurus walkthrough page (course-content/docs/labs/lab-07-agent-core.md)
+- [ ] 03-04-PLAN.md — Lab 08 code: Agent Sandbox v0.4.3 install + Router image verify + 13 K8s manifests + cold/warm demo + book_appointment K8s mode
+- [ ] 03-05-PLAN.md — Lab 08 Docusaurus walkthrough page (course-content/docs/labs/lab-08-agent-sandbox.md)
+- [ ] 03-06-PLAN.md — Lab 09 code: Tempo + OTEL Collector Helm install + MCP OTEL instrumentation + cost middleware proxy + Grafana dashboard
+- [ ] 03-07-PLAN.md — Lab 09 Docusaurus walkthrough page (course-content/docs/labs/lab-09-observability.md)
 
 ### Phase 4: Production Ops + Capstone (Day 3)
 **Goal**: Students operate the system in production mode — autoscaling under load, all components managed by ArgoCD via GitOps, model pipeline automated as an Argo Workflow with an eval quality gate, guardrails protecting the agent, and a capstone that exercises the full stack end to end
@@ -109,5 +118,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Course Infrastructure | 5/5 | Complete |  |
 | 2. LLMOps Labs (Day 1) | 7/7 | Complete   | 2026-04-23 |
 | 2.1 Flatten workspace + uv | 0/1 | Not started | - |
-| 3. AgentOps Labs (Day 2) | 0/TBD | Not started | - |
+| 3. AgentOps Labs (Day 2) | 0/7 | Not started | - |
 | 4. Production Ops + Capstone (Day 3) | 0/TBD | Not started | - |
