@@ -20,21 +20,24 @@ data:
       "panels": [
         {
           "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
-          "fieldConfig": {
-            "defaults": {"unit": "s"},
-            "overrides": []
-          },
+          "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
           "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
           "id": 1,
-          "options": {"tooltip": {"mode": "single"}},
+          "options": {"tooltip": {"mode": "multi"}},
           "targets": [
             {
               "expr": "histogram_quantile(0.95, rate(vllm:time_to_first_token_seconds_bucket[5m]))",
               "legendFormat": "P95 TTFT",
               "refId": "A"
+            },
+            {
+              "expr": "histogram_quantile(0.50, rate(vllm:time_to_first_token_seconds_bucket[5m]))",
+              "legendFormat": "P50 TTFT",
+              "refId": "B"
             }
           ],
-          "title": "Time to First Token (P95)",
+          "title": "Time to First Token — TTFT (P50 / P95)",
+          "description": "TTFT: time from request received to first token generated. Measures prompt processing speed. High TTFT = prompt too long or model overloaded.",
           "type": "timeseries"
         },
         {
@@ -42,6 +45,28 @@ data:
           "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
           "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
           "id": 2,
+          "options": {"tooltip": {"mode": "multi"}},
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.95, rate(vllm:time_per_output_token_seconds_bucket[5m]))",
+              "legendFormat": "P95 TPOT",
+              "refId": "A"
+            },
+            {
+              "expr": "histogram_quantile(0.50, rate(vllm:time_per_output_token_seconds_bucket[5m]))",
+              "legendFormat": "P50 TPOT",
+              "refId": "B"
+            }
+          ],
+          "title": "Time Per Output Token — TPOT (P50 / P95)",
+          "description": "TPOT: average time to generate each successive token after the first. Measures decode speed. TPOT = 1/throughput_per_request. High TPOT = slow generation, KV cache pressure, or CPU saturation.",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+          "id": 3,
           "targets": [
             {
               "expr": "histogram_quantile(0.95, rate(vllm:e2e_request_latency_seconds_bucket[5m]))",
@@ -50,63 +75,67 @@ data:
             }
           ],
           "title": "End-to-End Request Latency (P95)",
+          "description": "E2E latency = TTFT + (TPOT × output_tokens). The total wall-clock time a user waits for a complete response.",
           "type": "timeseries"
         },
         {
           "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
           "fieldConfig": {"defaults": {"unit": "reqps"}, "overrides": []},
-          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
-          "id": 3,
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+          "id": 4,
           "targets": [
             {
               "expr": "rate(vllm:generation_tokens_total[1m])",
-              "legendFormat": "Tokens/sec",
+              "legendFormat": "Generation tokens/sec",
               "refId": "A"
             }
           ],
           "title": "Token Throughput (generation tokens/sec)",
+          "description": "Total generation tokens produced per second across all requests. This is the system-level throughput — not per-request TPOT.",
           "type": "timeseries"
         },
         {
           "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
           "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []},
-          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
-          "id": 4,
-          "targets": [
-            {
-              "expr": "vllm:num_requests_running",
-              "legendFormat": "Running",
-              "refId": "A"
-            },
-            {
-              "expr": "vllm:num_requests_waiting",
-              "legendFormat": "Waiting",
-              "refId": "B"
-            }
-          ],
-          "title": "Active & Queued Requests",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
-          "fieldConfig": {"defaults": {"unit": "percentunit", "max": 1}, "overrides": []},
           "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
           "id": 5,
           "targets": [
             {
-              "expr": "vllm:kv_cache_usage_perc",
-              "legendFormat": "KV Cache %",
+              "expr": "vllm:num_requests_running",
+              "legendFormat": "Running (in-flight)",
+              "refId": "A"
+            },
+            {
+              "expr": "vllm:num_requests_waiting",
+              "legendFormat": "Waiting (queue depth)",
+              "refId": "B"
+            }
+          ],
+          "title": "Active & Queued Requests — KEDA autoscaling signal",
+          "description": "Queue depth (Waiting > 0 sustained) is the primary KEDA trigger for autoscaling in Lab 10. Running=1 is normal for max-num-seqs=1 (CPU). If Waiting spikes and stays high, the model needs more replicas.",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {"defaults": {"unit": "percentunit", "max": 1, "min": 0}, "overrides": []},
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+          "id": 6,
+          "targets": [
+            {
+              "expr": "vllm:cpu_cache_usage_perc",
+              "legendFormat": "CPU KV Cache %",
               "refId": "A"
             }
           ],
-          "title": "KV Cache Utilization",
+          "title": "KV Cache Utilization (CPU)",
+          "description": "Fraction of the CPU KV cache in use. Set by VLLM_CPU_KVCACHE_SPACE=2 (2 GB). If this approaches 1.0, vLLM will OOM or start rejecting requests. Keep below 80%.",
           "type": "timeseries"
         },
         {
           "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
           "fieldConfig": {"defaults": {"unit": "reqps"}, "overrides": []},
-          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
-          "id": 6,
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 24},
+          "id": 7,
           "targets": [
             {
               "expr": "rate(retriever_search_requests_total[1m])",
@@ -120,8 +149,8 @@ data:
         {
           "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
           "fieldConfig": {"defaults": {"unit": "reqps"}, "overrides": []},
-          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 24},
-          "id": 7,
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 24},
+          "id": 8,
           "targets": [
             {
               "expr": "rate(chat_requests_total{status=\"ok\"}[1m])",
@@ -140,8 +169,8 @@ data:
         {
           "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
           "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
-          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 24},
-          "id": 8,
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 32},
+          "id": 9,
           "targets": [
             {
               "expr": "histogram_quantile(0.95, rate(chat_latency_seconds_bucket[5m]))",
@@ -150,6 +179,7 @@ data:
             }
           ],
           "title": "Chat End-to-End Latency (P95)",
+          "description": "Full pipeline: RAG retrieval + prompt build + vLLM generation. Higher than vLLM E2E latency by the retrieval overhead.",
           "type": "timeseries"
         }
       ],
@@ -175,5 +205,5 @@ data:
       "timezone": "browser",
       "title": "Smile Dental — LLM Pipeline",
       "uid": "smile-dental-llm",
-      "version": 1
+      "version": 2
     }
