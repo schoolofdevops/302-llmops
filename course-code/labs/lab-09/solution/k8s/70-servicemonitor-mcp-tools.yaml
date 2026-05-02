@@ -1,0 +1,21 @@
+# MCP tool servers run FastAPIInstrumentor — their HTTP server already exposes /metrics
+# on the same port as /mcp. We add a ServiceMonitor to surface tool latency in Grafana.
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: mcp-tools
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  namespaceSelector:
+    matchNames: [llm-agent]
+  selector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values: [mcp-triage, mcp-treatment-lookup, mcp-book-appointment]
+  endpoints:
+  - port: mcp
+    path: /metrics
+    interval: 15s
