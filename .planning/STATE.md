@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v0.19.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Completed 03-agentops-labs-day-2/03-05-PLAN.md
-last_updated: "2026-05-02T13:34:02.767Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 03-agentops-labs-day-2/03-06-PLAN.md
+last_updated: "2026-05-02T14:18:33.564Z"
 progress:
   total_phases: 5
   completed_phases: 3
   total_plans: 20
-  completed_plans: 18
+  completed_plans: 19
 ---
 
 # Project State
@@ -64,6 +64,7 @@ Plan: 7 of 7
 | Phase 03-agentops-labs-day-2 P03 | 7min | 1 tasks | 1 files |
 | Phase 03-agentops-labs-day-2 P04 | ~3h | 3 tasks | 23 files |
 | Phase 03-agentops-labs-day-2 P05 | 5min | 1 tasks | 1 files |
+| Phase 03-agentops-labs-day-2 P06 | 50min | 3 tasks | 26 files |
 
 ## Accumulated Context
 
@@ -117,6 +118,10 @@ Recent decisions affecting current work:
 - [Phase 03-agentops-labs-day-2]: emptyDir + initContainer(busybox) for HERMES_HOME — ConfigMap mounts are read-only; hermes entrypoint.sh writes to /opt/data
 - [Phase 03-agentops-labs-day-2]: Cold-vs-warm observed: Warm 7.95s (LLM API), Cold refill 25.03s (image cached), first Cold request 2.54s — feeds plan 03-05 Lab 08 page Part G
 - [Phase 03-agentops-labs-day-2]: ROUTER_MODE=gcr active during Lab 08 doc verification; GCR Router image confirmed pullable on KIND without credentials
+- [Phase 03-agentops-labs-day-2]: Tempo datasource URL port 3200 (not 3100) — grafana/tempo chart 1.24.4 exposes query at :3200 (tempo-prom-metrics)
+- [Phase 03-agentops-labs-day-2]: CollectorRegistry (isolated) in cost_middleware.py avoids Duplicated timeseries error in pytest reload() fixtures
+- [Phase 03-agentops-labs-day-2]: kind load docker-image required for new images — KIND worker nodes cannot resolve localhost:5001
+- [Phase 03-agentops-labs-day-2]: OTEL Collector chart 0.153.0 requires explicit image.repository=otel/opentelemetry-collector-contrib (breaking change)
 
 ### Pending Todos
 
@@ -132,6 +137,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-02T13:34:02.765Z
-Stopped at: Completed 03-agentops-labs-day-2/03-05-PLAN.md
+Last session: 2026-05-02T14:18:33.561Z
+Stopped at: Completed 03-agentops-labs-day-2/03-06-PLAN.md
 Resume file: None

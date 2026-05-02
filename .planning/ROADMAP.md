@@ -93,7 +93,7 @@ Plans:
 - [x] 03-03-PLAN.md — Lab 07 Docusaurus walkthrough page (course-content/docs/labs/lab-07-agent-core.md)
 - [x] 03-04-PLAN.md — Lab 08 code: Agent Sandbox v0.4.3 install + Router image verify + 13 K8s manifests + cold/warm demo + book_appointment K8s mode
 - [x] 03-05-PLAN.md — Lab 08 Docusaurus walkthrough page (course-content/docs/labs/lab-08-agent-sandbox.md)
-- [ ] 03-06-PLAN.md — Lab 09 code: Tempo + OTEL Collector Helm install + MCP OTEL instrumentation + cost middleware proxy + Grafana dashboard
+- [x] 03-06-PLAN.md — Lab 09 code: Tempo + OTEL Collector Helm install + MCP OTEL instrumentation + cost middleware proxy + Grafana dashboard
 - [ ] 03-07-PLAN.md — Lab 09 Docusaurus walkthrough page (course-content/docs/labs/lab-09-observability.md)
 
 ### Phase 4: Production Ops + Capstone (Day 3)

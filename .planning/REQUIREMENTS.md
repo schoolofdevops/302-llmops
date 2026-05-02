@@ -72,9 +72,9 @@ Requirements for initial course release. Each maps to roadmap phases.
 - [x] **OBS-02**: vLLM metrics scraped (TTFT, latency, tokens/sec, request counts)
 - [x] **OBS-03**: Chat API and Retriever instrumented with Prometheus metrics
 - [x] **OBS-04**: Grafana dashboard for LLM workload visibility
-- [ ] **OBS-05**: Agent observability — tool-call traces, API cost tracking, latency per tool
-- [ ] **OBS-06**: OpenTelemetry (OTEL) instrumentation for distributed tracing across agent → retriever → LLM
-- [ ] **OBS-07**: OTEL collector deployed on K8s, traces visualized in Grafana Tempo or Jaeger
+- [x] **OBS-05**: Agent observability — tool-call traces, API cost tracking, latency per tool
+- [x] **OBS-06**: OpenTelemetry (OTEL) instrumentation for distributed tracing across agent → retriever → LLM
+- [x] **OBS-07**: OTEL collector deployed on K8s, traces visualized in Grafana Tempo or Jaeger
 
 ### Autoscaling
 
@@ -176,9 +176,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SANDBOX-02 | Phase 3 | Complete |
 | SANDBOX-03 | Phase 3 | Complete |
 | SANDBOX-04 | Phase 3 | Complete |
-| OBS-05 | Phase 3 | Pending |
-| OBS-06 | Phase 3 | Pending |
-| OBS-07 | Phase 3 | Pending |
+| OBS-05 | Phase 3 | Complete |
+| OBS-06 | Phase 3 | Complete |
+| OBS-07 | Phase 3 | Complete |
 | SCALE-01 | Phase 4 | Pending |
 | SCALE-02 | Phase 4 | Pending |
 | SCALE-03 | Phase 4 | Pending |
