@@ -237,34 +237,46 @@ Grafana discovers dashboard ConfigMaps via a sidecar running every 60 seconds. I
 
 ### Step B4: Generate traffic and observe metrics
 
-Run the traffic generator script — it sends 10 dental queries per round to vLLM and prints each response:
+Two traffic generator scripts are provided. Run the **full pipeline script** to populate all panels — it calls the RAG retriever and vLLM in sequence, exactly as Chainlit does internally:
 
 ```bash
-bash course-code/labs/lab-06/solution/scripts/generate-traffic.sh localhost 30200 3
+bash course-code/labs/lab-06/solution/scripts/generate-traffic-full.sh localhost 30100 30200 3
 ```
 
-This sends 30 requests total (3 rounds × 10 queries), with a 5-second pause between each to let the CPU inference complete. While it runs (~5 minutes), open Grafana and watch the panels update in real time.
+This sends 30 requests total (3 rounds × 10 queries), calling the RAG retriever for each query before sending the result to vLLM. While it runs (~5 minutes), open Grafana and watch the panels update.
 
 Expected output:
 ```
 =================================================
- Smile Dental Traffic Generator
+ Smile Dental Full Pipeline Traffic Generator
 =================================================
- Target:  http://localhost:30200
- Rounds:  3  |  Queries: 10 per round  |  Delay: 5s
+ Retriever: http://localhost:30100
+ vLLM:      http://localhost:30200
+ Rounds:    3  |  Queries: 10 per round  |  Delay: 5s
+
+ Panels populated:
+   ✓ TTFT, TPOT, E2E Latency, Token Throughput
+   ✓ Active & Queued Requests (KEDA signal)
+   ✓ KV Cache Utilization
+   ✓ RAG Retriever Query Rate
+   ~ Chat Rate + Chat Latency: use browser at http://localhost:30300
 =================================================
 
 --- Round 1/3 ---
 [1] How much does teeth whitening cost at Smile Dental?
-     → Teeth whitening at Smile Dental Clinic costs between ₹3,000 and ₹8,000...
-[2] What is the cancellation policy?
-     → Appointments cancelled less than 24 hours in advance...
+     [3 docs] → At Smile Dental, we offer teeth whitening starting from ₹3,000...
 ...
 =================================================
  Done: 30 requests, 0 errors
- Open Grafana to see metrics: http://localhost:30400
 =================================================
 ```
+
+To also populate the **Chat Request Rate** and **Chat End-to-End Latency** panels, send a few queries through the browser UI at `http://localhost:30300` while the script is running. Those panels track Chainlit-level traffic and require the `on_message` handler to execute.
+
+:::note Two traffic scripts
+- `generate-traffic-full.sh` — calls RAG retriever + vLLM in sequence (populates 7/9 panels)
+- `generate-traffic.sh` — calls vLLM directly, no RAG retrieval (populates 6/9 panels, useful for isolated vLLM load testing)
+:::
 
 Return to Grafana and watch the panels update:
 
