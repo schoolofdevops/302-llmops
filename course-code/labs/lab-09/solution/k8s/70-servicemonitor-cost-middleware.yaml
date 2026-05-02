@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: cost-middleware
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  namespaceSelector:
+    matchNames: [llm-agent]
+  selector:
+    matchLabels:
+      app: cost-middleware
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 15s

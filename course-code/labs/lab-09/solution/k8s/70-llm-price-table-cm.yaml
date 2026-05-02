@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llm-price-table
+  namespace: llm-agent
+data:
+  prices.json: |
+    {
+      "groq/llama-3.3-70b-versatile": {
+        "input_usd_per_1m": 0.59,
+        "output_usd_per_1m": 0.79
+      },
+      "google/gemini-2.5-flash": {
+        "input_usd_per_1m": 0.30,
+        "output_usd_per_1m": 2.50
+      }
+    }

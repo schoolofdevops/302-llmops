@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cost-middleware
+  namespace: llm-agent
+  labels:
+    app: cost-middleware
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cost-middleware
+  template:
+    metadata:
+      labels:
+        app: cost-middleware
+    spec:
+      containers:
+      - name: cost-middleware
+        image: localhost:5001/cost-middleware:v1.0.0
+        ports:
+        - name: http
+          containerPort: 9100
+        env:
+        - name: UPSTREAM_URL
+          value: "http://sandbox-router-svc.llm-agent.svc.cluster.local:8080"
+        - name: HERMES_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: hermes-api-secret
+              key: api-key
+        - name: PRICE_TABLE_PATH
+          value: "/etc/llm-prices/prices.json"
+        volumeMounts:
+        - name: prices
+          mountPath: /etc/llm-prices
+          readOnly: true
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 9100
+          initialDelaySeconds: 5
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+      volumes:
+      - name: prices
+        configMap:
+          name: llm-price-table
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cost-middleware
+  namespace: llm-agent
+  labels:
+    app: cost-middleware
+spec:
+  selector:
+    app: cost-middleware
+  ports:
+  - name: http
+    port: 9100
+    targetPort: 9100
