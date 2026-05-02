@@ -160,4 +160,4 @@ GOOGLE_API_KEY was available on this machine. B1 was exercised in the previous s
 
 ## Self-Check: PASSED
 
-All 8 key files found. All 5 commits verified in git log. 8/8 tests passing. config.yaml restored to Groq default.
+All 8 key files found. All 6 commits verified in git log (2d3c1a4, f9627aa, a35aa2f, 742f1f6, f40bc28, 8f9022d). 8/8 tests passing. config.yaml restored to Groq default. SUMMARY.md created. STATE.md + ROADMAP.md + REQUIREMENTS.md updated.
