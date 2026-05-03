@@ -240,7 +240,7 @@ Grafana discovers dashboard ConfigMaps via a sidecar running every 60 seconds. I
 Two traffic generator scripts are provided. Run the **full pipeline script** to populate all panels — it calls the RAG retriever and vLLM in sequence, exactly as Chainlit does internally:
 
 ```bash
-bash course-code/labs/lab-06/solution/scripts/generate-traffic-full.sh localhost 30100 30200 3
+bash course-code/labs/lab-06/solution/scripts/generate-traffic-full.sh localhost 31001 30200 3
 ```
 
 This sends 30 requests total (3 rounds × 10 queries), calling the RAG retriever for each query before sending the result to vLLM. While it runs (~5 minutes), open Grafana and watch the panels update.
@@ -250,7 +250,7 @@ Expected output:
 =================================================
  Smile Dental Full Pipeline Traffic Generator
 =================================================
- Retriever: http://localhost:30100
+ Retriever: http://localhost:31001
  vLLM:      http://localhost:30200
  Rounds:    3  |  Queries: 10 per round  |  Delay: 5s
 
@@ -349,7 +349,7 @@ You have completed the full Day 1 LLMOps pipeline:
 
 | Component | URL | Status |
 |-----------|-----|--------|
-| RAG Retriever | `http://localhost:30100/search` | Running |
+| RAG Retriever | `http://localhost:31001/search` | Running |
 | vLLM API | `http://localhost:30200/v1/chat/completions` | Running |
 | Smile Dental Chat | `http://localhost:30300` | Running |
 | Grafana | `http://localhost:30400` | Running |
