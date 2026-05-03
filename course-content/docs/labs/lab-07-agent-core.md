@@ -34,11 +34,7 @@ Key subdirectories in `solution/`:
 ## Prerequisites
 
 - [ ] Day 1 labs (00–06) complete and KIND cluster running
-- [ ] Day-1 RAG retriever reachable on host port 8001 — in a **separate terminal** run:
-  ```bash
-  kubectl -n llm-app port-forward svc/rag-retriever 8001:8001
-  ```
-  Leave this terminal open for the duration of Lab 07.
+- [ ] Day-1 RAG retriever reachable on `host.docker.internal:31001` — the rag-retriever NodePort (31001) is auto-exposed by the KIND port mapping configured in Lab 00, so no `kubectl port-forward` is needed. Verify with `curl -s http://localhost:31001/health` and expect `{"ok":true}`. If the cluster was rebuilt without the 31001 mapping, re-run `bash course-code/labs/lab-00/solution/setup/bootstrap-kind.sh` (or the starter equivalent) so the new `extraPortMappings` entry takes effect.
 - [ ] vLLM scaled to 0 to free ~2–4 GB RAM. If you completed the "Wind Down Before Day 2" section at the end of Lab 06, you already ran this. If not, run it now:
   ```bash
   kubectl scale deployment vllm-smollm2 --replicas=0 -n llm-serving
@@ -184,7 +180,7 @@ async def triage(symptom: str) -> dict:
 
 ### treatment_lookup — wraps the Day-1 RAG retriever
 
-This tool reuses the Day-1 RAG retriever unchanged (D-10). It calls `/search` and returns top-k chunks. In Docker Compose mode the URL is `host.docker.internal:8001`; Lab 08 points it at the in-cluster Service.
+This tool reuses the Day-1 RAG retriever unchanged (D-10). It calls `/search` and returns top-k chunks. In Docker Compose mode the URL is `host.docker.internal:31001` (the retriever's NodePort, exposed via KIND port mapping); Lab 08 points it at the in-cluster Service.
 
 From `course-code/labs/lab-07/solution/tools/treatment_lookup/treatment_lookup_server.py`:
 
@@ -400,7 +396,7 @@ Gemini 2.5 Flash spends part of every completion budget on internal reasoning. W
 :::
 
 :::note treatment_lookup may return empty hits
-If the Day-1 RAG retriever is not port-forwarded (`kubectl -n llm-app port-forward svc/rag-retriever 8001:8001`), `treatment_lookup` returns an empty list. The agent gracefully continues to `book_appointment` anyway — this is expected behavior in Docker Compose mode. Full end-to-end with retrieval works in Lab 08 (K8s).
+If the Day-1 RAG retriever Service is unreachable on `host.docker.internal:31001` (cluster down, retriever pod not Ready, or the 31001 KIND port mapping missing), `treatment_lookup` returns an empty list. The agent gracefully continues to `book_appointment` anyway — this is expected behavior in Docker Compose mode. Full end-to-end with retrieval works in Lab 08 (K8s).
 :::
 
 ### Canonical demo — Chainlit UI
@@ -476,7 +472,7 @@ On Linux, `host.docker.internal` does not resolve by default inside containers. 
 extra_hosts:
   - "host.docker.internal:host-gateway"
 ```
-This resolves the Day-1 RAG retriever at `http://host.docker.internal:8001`. On macOS and Windows Docker Desktop, this is automatic. On Linux Docker Engine, the `extra_hosts` entry is required.
+This resolves the Day-1 RAG retriever at `http://host.docker.internal:31001`. On macOS and Windows Docker Desktop, this is automatic. On Linux Docker Engine, the `extra_hosts` entry is required.
 :::
 
 :::warning Free-tier rate limits
@@ -494,7 +490,7 @@ Groq free tier: 30 RPM / 6,000 TPM / 1,000 RPD per model. Each canonical demo qu
 | mcp-triage | container-internal `:8010/mcp` | Running (Docker) |
 | mcp-treatment-lookup | container-internal `:8020/mcp` | Running (Docker) |
 | mcp-book-appointment | container-internal `:8030/mcp` | Running (Docker) |
-| RAG retriever (Day 1, port-forwarded) | `http://localhost:8001` | Required upstream (KIND) |
+| RAG retriever (Day 1, NodePort) | `http://localhost:31001` | Required upstream (KIND) |
 
 In Lab 08 we package this exact stack into Kubernetes Agent Sandbox. Each Chainlit session will claim its own pre-warmed Sandbox instance from a `SandboxWarmPool` — providing per-user isolation and near-zero cold-start latency. The functionality is identical to what you built here; Lab 08 is promotion to Kubernetes, not new features.
 
@@ -507,4 +503,4 @@ cd course-code/labs/lab-07/solution
 docker compose down -v
 ```
 
-The `-v` flag removes the `bookings-data` volume. Leave the stack running if you want to compare the Docker Compose version with the Lab 08 Kubernetes deployment. Stop the `kubectl port-forward` terminal (Ctrl-C) when done.
+The `-v` flag removes the `bookings-data` volume. Leave the stack running if you want to compare the Docker Compose version with the Lab 08 Kubernetes deployment.
