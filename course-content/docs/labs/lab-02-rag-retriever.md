@@ -241,14 +241,14 @@ kubectl logs -n llm-app -l app=rag-retriever -c retriever | tail -5
 Test the health check:
 
 ```bash
-curl http://localhost:30100/health
+curl http://localhost:31001/health
 # {"ok":true}
 ```
 
 Test retrieval with a dental query:
 
 ```bash
-curl -s -X POST http://localhost:30100/search \
+curl -s -X POST http://localhost:31001/search \
   -H "Content-Type: application/json" \
   -d '{"query": "How much does teeth whitening cost?", "k": 3}' | python3 -m json.tool
 ```
@@ -282,24 +282,24 @@ Try different queries to see which documents score highest:
 
 ```bash
 # Policy question
-curl -s -X POST http://localhost:30100/search \
+curl -s -X POST http://localhost:31001/search \
   -H "Content-Type: application/json" \
   -d '{"query": "What is the cancellation policy?", "k": 2}' | python3 -m json.tool
 
 # General FAQ
-curl -s -X POST http://localhost:30100/search \
+curl -s -X POST http://localhost:31001/search \
   -H "Content-Type: application/json" \
   -d '{"query": "Do you accept insurance?", "k": 2}' | python3 -m json.tool
 ```
 
 ## After This Lab
 
-The Smile Dental RAG retriever is running in the `llm-app` namespace on NodePort 30100.
+The Smile Dental RAG retriever is running in the `llm-app` namespace on NodePort 31001.
 
 | Resource | Status |
 |----------|--------|
 | `rag-retriever` Deployment | Running (1/1) |
-| `rag-retriever` Service | NodePort 30100 |
+| `rag-retriever` Service | NodePort 31001 |
 | FAISS index | 32 chunks (treatments + policies + FAQs) |
 
 The retriever is used by:
