@@ -25,7 +25,8 @@ helm upgrade --install otel-collector open-telemetry/opentelemetry-collector \
   --values "${HELM_DIR}/values-otel-collector.yaml" \
   --wait --timeout 5m
 
-echo "[4/4] Verifying both deployments are Available..."
-kubectl wait --for=condition=available deployment/tempo -n "${NS}" --timeout=120s || true
-kubectl wait --for=condition=available deployment/otel-collector-opentelemetry-collector -n "${NS}" --timeout=120s
+echo "[4/4] Verifying Tempo (StatefulSet) and OTEL Collector (Deployment) are Ready..."
+# Tempo single-binary mode is a StatefulSet, not a Deployment.
+kubectl rollout status statefulset/tempo -n "${NS}" --timeout=180s
+kubectl wait --for=condition=available deployment/otel-collector-opentelemetry-collector -n "${NS}" --timeout=180s
 kubectl get svc -n "${NS}" | grep -E 'tempo|otel-collector'

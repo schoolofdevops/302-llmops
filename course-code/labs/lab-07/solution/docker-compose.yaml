@@ -3,7 +3,6 @@
 # NOTE (I2): ${VAR:-default} below is Docker Compose interpolation syntax (NOT POSIX shell). It works
 # identically on Windows (Docker Desktop), macOS, and Linux because Compose parses it before the
 # container starts — no shell required. See https://docs.docker.com/compose/environment-variables/.
-version: "3.9"
 
 services:
   hermes:
@@ -87,8 +86,9 @@ services:
     build:
       context: ./ui
     container_name: chainlit-ui
+    # Host port 8888 (NOT 8000) — KIND control-plane already maps host:8000.
     ports:
-      - "8000:8000"
+      - "8888:8000"
     environment:
       AGENT_URL: "http://hermes:8642"
       HERMES_API_KEY: "${HERMES_API_KEY:-smile-dental-course-key}"

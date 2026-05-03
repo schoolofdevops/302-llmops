@@ -80,6 +80,10 @@ Run this on a good network connection or let it run in the background. The first
 
 Hermes Agent enforces a **64,000-token minimum context window** at startup. SmolLM2-135M (the model from Day 1) has a 4,096-token context and does not qualify — Hermes will refuse to start with it. For Day 2 we use a free-tier cloud LLM: Groq's `llama-3.3-70b-versatile` (128K context) or Google's `gemini-2.5-flash` (1M context). Both are consumed via an OpenAI-compatible base URL, so the same Chainlit and Hermes config works for either provider.
 
+:::warning Tab choice changes BOTH `.env` AND `hermes-config/config.yaml`
+The provider Tab below sets keys in `.env`. You ALSO need to edit `hermes-config/config.yaml` line `model.default:` to match. The default in the file is the Gemini path (`gemini-2.5-flash`). If you pick Groq, change it to `groq/llama-3.3-70b-versatile`.
+:::
+
 <Tabs groupId="llm-provider">
 <TabItem value="groq" label="Groq (recommended)">
 
@@ -389,7 +393,11 @@ curl -s -X POST http://localhost:8642/v1/chat/completions \
   }' | python3 -m json.tool
 ```
 
-In the response, look for `"tool_calls"` with three entries: `mcp_triage_triage`, `mcp_treatment_lookup_treatment_lookup`, `mcp_book_appointment_book_appointment`.
+Hermes loops through tool calls **internally** and returns a single assistant message. The OpenAI-compat response schema does not include the per-step `tool_calls` array — verify tool execution by checking the booking persistence step below and the per-tool MCP server logs (`docker compose logs mcp-triage`).
+
+:::tip Gemini "thinking" model needs explicit max_tokens
+Gemini 2.5 Flash spends part of every completion budget on internal reasoning. When the agent has to call multiple tools, the default Hermes `max_tokens` can leave zero output budget and the response comes back empty. Add `"max_tokens": 2000` to the JSON body to give it room. (Groq Llama is not a thinking model; this is Gemini-specific.)
+:::
 
 :::note treatment_lookup may return empty hits
 If the Day-1 RAG retriever is not port-forwarded (`kubectl -n llm-app port-forward svc/rag-retriever 8001:8001`), `treatment_lookup` returns an empty list. The agent gracefully continues to `book_appointment` anyway — this is expected behavior in Docker Compose mode. Full end-to-end with retrieval works in Lab 08 (K8s).
@@ -397,7 +405,11 @@ If the Day-1 RAG retriever is not port-forwarded (`kubectl -n llm-app port-forwa
 
 ### Canonical demo — Chainlit UI
 
-Open `http://localhost:8000` in your browser. You will see the Smile Dental welcome message.
+Open `http://localhost:8888` in your browser. You will see the Smile Dental welcome message.
+
+:::note Why host port 8888 (not 8000)
+KIND's control-plane container already maps host port 8000 (per the `extraPortMappings` in `kind-config.yaml`). Chainlit is published on host port 8888 so it doesn't collide. The container itself still listens on 8000 — the mapping is `8888:8000`.
+:::
 
 Type: **severe tooth pain since yesterday**
 
