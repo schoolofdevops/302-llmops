@@ -82,6 +82,10 @@ nodes:
     hostPort: 30100
     listenAddress: "0.0.0.0"
     protocol: tcp
+  - containerPort: 31001
+    hostPort: 31001
+    listenAddress: "0.0.0.0"
+    protocol: tcp
 - role: worker
   image: kindest/node:v1.34.0
   extraMounts:

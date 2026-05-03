@@ -54,7 +54,7 @@ services:
       dockerfile: tools/treatment_lookup/Dockerfile
     container_name: mcp-treatment-lookup
     environment:
-      RETRIEVER_URL: "${RETRIEVER_URL:-http://host.docker.internal:8001}"
+      RETRIEVER_URL: "${RETRIEVER_URL:-http://host.docker.internal:31001}"
       PORT: "8020"
     extra_hosts:
       - "host.docker.internal:host-gateway"   # Linux compatibility
