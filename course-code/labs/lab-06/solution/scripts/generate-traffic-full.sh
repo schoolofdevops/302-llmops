@@ -6,12 +6,12 @@
 # (chat_requests_total, chat_latency_seconds) — use the browser UI for those.
 #
 # Usage: bash generate-traffic-full.sh [HOST] [RETRIEVER_PORT] [VLLM_PORT] [ROUNDS]
-# Example: bash generate-traffic-full.sh localhost 30100 30200 3
+# Example: bash generate-traffic-full.sh localhost 31001 30200 3
 
 set -euo pipefail
 
 HOST="${1:-localhost}"
-RETRIEVER_PORT="${2:-30100}"
+RETRIEVER_PORT="${2:-31001}"
 VLLM_PORT="${3:-30200}"
 ROUNDS="${4:-3}"
 
