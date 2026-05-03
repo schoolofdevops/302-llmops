@@ -376,8 +376,8 @@ Apply:
 kubectl apply -f course-code/labs/lab-08/solution/k8s/60-network-policy.yaml
 ```
 
-:::warning kindnet does NOT enforce NetworkPolicy
-KIND's default CNI (`kindnet`) does not implement the NetworkPolicy spec. We apply this manifest because it **documents the production isolation pattern** — on a real cluster with Calico or Cilium, this policy enforces strict egress from Hermes pods. On KIND, the policy object is stored in etcd but traffic is not filtered. Students deploying to GKE, EKS, or any Calico/Cilium cluster will get real enforcement automatically.
+:::warning NetworkPolicy IS enforced on KIND v1.34+
+Recent kindnet versions (shipped with KIND v1.34+) implement NetworkPolicy enforcement. The policy object is no longer pedagogical-only — egress and ingress are filtered. The course manifest lists exactly the upstreams Hermes legitimately needs (DNS, retriever, MCP tools, HTTPS for LLM APIs, OTEL Collector) and exposes ingress to the Sandbox Router and the Lab 09 cost-middleware. If you add new callers later, append them to the `from:` list under `ingress:`.
 :::
 
 ---
@@ -402,11 +402,28 @@ kubectl apply -f course-code/labs/lab-08/solution/k8s/40-chainlit-deploy-day2.ya
 kubectl rollout status deployment/chainlit-ui -n llm-app
 ```
 
-The Deployment sets `AGENT_URL=http://sandbox-router-svc.llm-agent.svc.cluster.local:8080` — pointing Chainlit at the Router.
+The Deployment sets `AGENT_URL=http://hermes-agent.llm-agent.svc.cluster.local:8642` — pointing Chainlit at the **stable hermes-agent Service** (created by `50-hermes-service.yaml`), which load-balances across the 2 WarmPool pods. This path does not require per-session Sandbox claim handling.
 
-:::tip If you are in port-forward mode
-Edit `AGENT_URL` in `40-chainlit-deploy-day2.yaml` to point at `http://host.docker.internal:18642` (the port-forwarded Sandbox pod port) before applying. Alternatively, use the `curl` path in Part F to verify the agent directly without Chainlit.
+:::info Why not route Chainlit through the Sandbox Router?
+The Sandbox Router demands an `X-Sandbox-ID` header on every request. To use the Router from Chainlit, the UI would need to claim a Sandbox via a `SandboxClaim` CRD on session-start and inject the returned ID into every `/v1/chat/completions` call. The shipped Chainlit code does not yet do this — see "Per-session routing through the Router" below for a manual curl demo, and treat the full UI integration as future work. The stable Service path is functionally equivalent for the Day-2 lab demo and keeps the chain Chainlit → cost-middleware (Lab 09) → Hermes simple.
 :::
+
+### E.3 Per-session routing through the Router (manual demo)
+
+The Sandbox Router is still deployed (`sandbox-router-svc:8080`) and works for any caller that supplies a valid `X-Sandbox-ID`. WarmPool sandboxes already exist as `Sandbox` resources whose `metadata.name` IS the routing ID:
+
+```bash
+kubectl -n llm-agent port-forward svc/sandbox-router-svc 8080:8080 &
+SANDBOX_ID=$(kubectl get sandbox -n llm-agent -o jsonpath='{.items[0].metadata.name}')
+curl -s -X POST http://localhost:8080/v1/chat/completions \
+  -H "Authorization: Bearer smile-dental-course-key" \
+  -H "Content-Type: application/json" \
+  -H "X-Sandbox-ID: ${SANDBOX_ID}" \
+  -d '{"model":"hermes","messages":[{"role":"user","content":"What is your job?"}],"stream":false,"max_tokens":300}' \
+  | python3 -m json.tool
+```
+
+The `X-Sandbox-ID` header tells the Router which pre-warmed Sandbox pod to forward to. In a full per-session UI you would call `kubectl create -f` a `SandboxClaim` resource per Chainlit session, watch its status for `boundSandboxName`, and pass that as the header for every subsequent request from the session.
 
 ---
 
@@ -434,12 +451,13 @@ curl -s -X POST http://localhost:18642/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "hermes",
-    "messages": [{"role": "user", "content": "severe tooth pain since yesterday"}],
-    "stream": false
+    "messages": [{"role": "user", "content": "severe tooth pain since yesterday, my name is Carol, please book me in"}],
+    "stream": false,
+    "max_tokens": 2000
   }' | python3 -m json.tool
 ```
 
-In the response, look for `"tool_calls"` containing all three MCP tools.
+Hermes hides per-step `tool_calls` from the response — verify tool execution by checking the bookings ConfigMap above. If you used Gemini, the explicit `"max_tokens": 2000` is required so the thinking model has room to both reason and produce tool calls plus a final answer.
 
 ---
 

@@ -1,5 +1,7 @@
 # Day 2 Chainlit Deployment — replaces lab-05's 40-deploy-chainlit.yaml.
-# Routes through Sandbox Router instead of vLLM directly.
+# Routes through the stable hermes-agent Service (50-hermes-service.yaml).
+# (The Sandbox Router at sandbox-router-svc is also deployed; switch AGENT_URL to it
+# once Chainlit per-session SandboxClaim handling is added — see Lab 08 Part D.5.)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,7 +22,7 @@ spec:
         image: localhost:5001/smile-dental-ui-day2:v1.0.0
         env:
         - name: AGENT_URL
-          value: "http://sandbox-router-svc.llm-agent.svc.cluster.local:8080"
+          value: "http://hermes-agent.llm-agent.svc.cluster.local:8642"
         - name: HERMES_API_KEY
           valueFrom:
             secretKeyRef:

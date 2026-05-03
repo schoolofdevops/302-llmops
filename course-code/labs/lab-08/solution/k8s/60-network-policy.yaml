@@ -1,7 +1,6 @@
 # Egress allow-list for Hermes Agent pods (D-07).
-# NOTE: Default KIND CNI (kindnet) does not enforce NetworkPolicy.
-# This manifest is applied as a documented production pattern. Real enforcement
-# requires Calico or Cilium CNI.
+# NOTE: KIND default CNI (kindnet v1.34+) DOES enforce NetworkPolicy in current versions.
+# In production this policy is enforced by any standard CNI (Calico, Cilium, kindnet).
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -13,6 +12,19 @@ spec:
       app: hermes-agent
   policyTypes:
   - Egress
+  - Ingress
+  ingress:
+  # Sandbox Router AND cost-middleware (Lab 09) reach Hermes pods on the API port.
+  - from:
+    - podSelector:
+        matchLabels:
+          app: sandbox-router
+    - podSelector:
+        matchLabels:
+          app: cost-middleware
+    ports:
+    - port: 8642
+      protocol: TCP
   egress:
   # 1. DNS — UDP+TCP 53 (REQUIRED — see RESEARCH.md Pitfall 7; without this all DNS breaks).
   - ports:
@@ -55,4 +67,14 @@ spec:
     - port: 8020
       protocol: TCP
     - port: 8030
+      protocol: TCP
+  # 5. OTEL Collector in monitoring namespace (Lab 09 trace export — for treatment_lookup → retriever spans).
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
+    ports:
+    - port: 4317
+      protocol: TCP
+    - port: 4318
       protocol: TCP

@@ -4,6 +4,10 @@ metadata:
   name: hermes-agent-template
   namespace: llm-agent
 spec:
+  # Course-managed NetworkPolicy lives in 60-network-policy.yaml.
+  # Setting Unmanaged prevents the controller from auto-creating a restrictive default NP
+  # that would block cost-middleware (Lab 09) from reaching Hermes pods.
+  networkPolicyManagement: Unmanaged
   podTemplate:
     metadata:
       labels:
@@ -67,6 +71,10 @@ spec:
               name: llm-api-keys
               key: google-api-key
               optional: true
+        # GEMINI_BASE_URL is required when Hermes uses bare model `gemini-2.5-flash`
+        # (Gemini OpenAI-compat endpoint). Required for the Gemini path even on Groq Tab.
+        - name: GEMINI_BASE_URL
+          value: "https://generativelanguage.googleapis.com/v1beta/openai"
         volumeMounts:
         - name: hermes-home
           mountPath: /opt/data

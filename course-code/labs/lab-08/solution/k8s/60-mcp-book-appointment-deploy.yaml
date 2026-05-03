@@ -19,6 +19,7 @@ spec:
       containers:
       - name: book
         image: localhost:5001/mcp-book_appointment:v1.0.0
+        imagePullPolicy: Always
         ports:
         - name: mcp
           containerPort: 8030
@@ -31,6 +32,10 @@ spec:
           value: "llm-app"
         - name: BOOKING_CM_NAME
           value: "bookings"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317"
+        - name: OTEL_SERVICE_NAME
+          value: "mcp-book-appointment"
         readinessProbe:
           httpGet:
             path: /health

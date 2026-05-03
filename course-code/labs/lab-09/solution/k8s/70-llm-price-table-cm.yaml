@@ -10,7 +10,20 @@ data:
         "input_usd_per_1m": 0.59,
         "output_usd_per_1m": 0.79
       },
+      "llama-3.3-70b-versatile": {
+        "input_usd_per_1m": 0.59,
+        "output_usd_per_1m": 0.79
+      },
       "google/gemini-2.5-flash": {
+        "input_usd_per_1m": 0.30,
+        "output_usd_per_1m": 2.50
+      },
+      "gemini-2.5-flash": {
+        "input_usd_per_1m": 0.30,
+        "output_usd_per_1m": 2.50
+      },
+      "hermes": {
+        "_note": "Hermes echoes 'hermes' as the response model regardless of upstream provider — match Gemini rates as default lab path.",
         "input_usd_per_1m": 0.30,
         "output_usd_per_1m": 2.50
       }

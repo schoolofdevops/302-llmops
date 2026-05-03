@@ -1,0 +1,19 @@
+# Stable in-cluster Service spanning all WarmPool Hermes pods.
+# - Used by cost-middleware (Lab 09) as UPSTREAM_URL.
+# - Sandbox Router (50-sandbox-router.yaml) provides the per-session-routing path
+#   for browser/Chainlit traffic. This Service is the simpler stable-endpoint path
+#   for service-to-service callers (cost-middleware) that don't need per-session isolation.
+apiVersion: v1
+kind: Service
+metadata:
+  name: hermes-agent
+  namespace: llm-agent
+  labels:
+    app: hermes-agent
+spec:
+  selector:
+    app: hermes-agent
+  ports:
+  - name: api
+    port: 8642
+    targetPort: 8642

@@ -2,7 +2,7 @@
 # MCP servers reach each other inside the agent-net Docker network by service name.
 
 model:
-  default: groq/llama-3.3-70b-versatile     # 128K context — satisfies Hermes 64K minimum
+  default: gemini-2.5-flash     # 1M context — Gemini OAI-compat (no provider prefix)
 
 mcp_servers:
   triage:

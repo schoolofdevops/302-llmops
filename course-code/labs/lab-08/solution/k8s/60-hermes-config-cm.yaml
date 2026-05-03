@@ -5,8 +5,10 @@ metadata:
   namespace: llm-agent
 data:
   config.yaml: |
+    # Default model = bare gemini-2.5-flash (Gemini OAI-compat path).
+    # For Groq, change to: groq/llama-3.3-70b-versatile (and ensure GROQ_API_KEY set in llm-api-keys Secret).
     model:
-      default: groq/llama-3.3-70b-versatile
+      default: gemini-2.5-flash
 
     mcp_servers:
       triage:

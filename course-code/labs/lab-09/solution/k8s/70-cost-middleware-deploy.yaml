@@ -18,12 +18,17 @@ spec:
       containers:
       - name: cost-middleware
         image: localhost:5001/cost-middleware:v1.0.0
+        imagePullPolicy: Always
         ports:
         - name: http
           containerPort: 9100
         env:
+        # Targets the stable hermes-agent Service (Lab 08 50-hermes-service.yaml),
+        # which load-balances across the 2 WarmPool Hermes pods.
+        # The Sandbox Router (sandbox-router-svc) is reserved for Chainlit per-session
+        # routing path, which requires X-Sandbox-ID header management.
         - name: UPSTREAM_URL
-          value: "http://sandbox-router-svc.llm-agent.svc.cluster.local:8080"
+          value: "http://hermes-agent.llm-agent.svc.cluster.local:8642"
         - name: HERMES_API_KEY
           valueFrom:
             secretKeyRef:
