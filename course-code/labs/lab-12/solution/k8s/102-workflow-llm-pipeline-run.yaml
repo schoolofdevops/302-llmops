@@ -1,0 +1,16 @@
+# Lab 12: One-shot Workflow that triggers the llm-pipeline WorkflowTemplate.
+# Submit with:
+#   kubectl create -f 102-workflow-llm-pipeline-run.yaml
+# Or via script:
+#   bash scripts/trigger-pipeline.sh         # PASS path (threshold=0.7)
+#   bash scripts/trigger-pipeline.sh --force-fail  # FAIL path (threshold=0.99)
+# Or via argo CLI:
+#   argo submit -n argo --from workflowtemplate/llm-pipeline --watch
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: llm-pipeline-
+  namespace: argo
+spec:
+  workflowTemplateRef:
+    name: llm-pipeline
