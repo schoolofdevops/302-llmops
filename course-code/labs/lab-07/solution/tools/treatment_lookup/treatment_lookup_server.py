@@ -7,6 +7,7 @@ import httpx
 from mcp.server.fastmcp import FastMCP
 from mcp.server.streamable_http import TransportSecuritySettings
 from tools.otel_setup import setup_tracing
+from guardrails.middleware import GuardrailMiddleware
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
 
@@ -17,6 +18,9 @@ mcp = FastMCP(
     json_response=True,
     transport_security=TransportSecuritySettings(enable_dns_rebinding_protection=False),
 )
+
+# Pitfall 9: register GuardrailMiddleware BEFORE streamable_http_app() (called at module bottom).
+mcp.add_middleware(GuardrailMiddleware())
 
 # OTEL: must run BEFORE creating streamable_http_app() so FastAPI instrumentation hooks the right routes.
 # HTTPXClientInstrumentor enables the treatment_lookup → RAG retriever child span (satisfies OBS-06).
