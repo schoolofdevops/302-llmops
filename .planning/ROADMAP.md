@@ -112,7 +112,7 @@ Plans:
 - [x] 04-01-PLAN.md — Phase 4 foundation (COURSE_VERSIONS pins, config.env, cleanup-phase4.sh, vLLM scale-back-up prereq, starter READMEs)
 - [ ] 04-02-PLAN.md — Lab 10 autoscaling code (KEDA + metrics-server install, ScaledObject on vLLM, HPA on RAG retriever, hey loadgen Job, Grafana dashboard)
 - [ ] 04-03-PLAN.md — Lab 10 doc page (autoscaling walkthrough with embedded live evidence)
-- [ ] 04-04-PLAN.md — Lab 11 ArgoCD install (control-plane only — chart 9.5.11, NodePort 30700, 3 bootstrap scripts, namespace YAML)
+- [x] 04-04-PLAN.md — Lab 11 ArgoCD install (control-plane only — chart 9.5.11, NodePort 30700, 3 bootstrap scripts, namespace YAML)
 - [ ] 04-05-PLAN.md — Lab 11 doc page (GitOps walkthrough, App-of-Apps narrative, GITOPS-02 promotion demo evidence)
 - [ ] 04-06-PLAN.md — Lab 12 pipeline + eval gate code (Argo Workflows + DeepEval container TDD + WorkflowTemplate DAG with conditional commit-tag step)
 - [ ] 04-07-PLAN.md — Lab 12 doc page (pipeline walkthrough, PASS path + FAIL path demo)

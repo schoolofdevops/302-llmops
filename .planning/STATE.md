@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v0.19.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 04-01-PLAN.md
-last_updated: "2026-05-04T03:03:23.141Z"
+stopped_at: Completed 04-04-PLAN.md
+last_updated: "2026-05-04T12:04:48.775Z"
 last_activity: 2026-05-04
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 29
-  completed_plans: 21
+  completed_plans: 22
 ---
 
 # Project State
@@ -68,6 +68,7 @@ Plan: 2 of 9
 | Phase 03-agentops-labs-day-2 P06 | 50min | 3 tasks | 26 files |
 | Phase 03-agentops-labs-day-2 P07 | 12min | 1 tasks | 1 files |
 | Phase 04-production-ops-capstone-day-3 P01 | 14min | 2 tasks | 8 files |
+| Phase 04-production-ops-capstone-day-3 P04 | 36min | 1 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -128,6 +129,8 @@ Recent decisions affecting current work:
 - [Phase 03-agentops-labs-day-2]: Lab 09 page embeds 0.000613 USD as agent_llm_cost_usd_total from 03-06 live run; D-18 partial compliance disclosed (closed binary / do not fork) with Tempo time-window workaround
 - [Phase 04-production-ops-capstone-day-3]: NS_ARGO_WORKFLOWS preserved; NS_ARGO=argo added as canonical Phase 4 namespace per Argo Workflows chart defaults
 - [Phase 04-production-ops-capstone-day-3]: KEDA Prometheus service name explicitly kps-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090 in COURSE_VERSIONS.md for student copy-paste
+- [Phase 04-production-ops-capstone-day-3]: Helm install timeout recovery: helm uninstall + re-run after image cached when quay.io pull takes > 10min on slow networks
+- [Phase 04-production-ops-capstone-day-3]: ArgoCD chart 9.5.11 applicationSet.enabled=false controls CRD scope not controller deployment — applicationset-controller pod still appears but flag is correctly applied
 
 ### Pending Todos
 
@@ -149,7 +152,7 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-04T03:03:23.138Z
+Last session: 2026-05-04T12:04:48.772Z
 Last activity: 2026-05-04
-Stopped at: Completed 04-01-PLAN.md
+Stopped at: Completed 04-04-PLAN.md
 Resume file: None

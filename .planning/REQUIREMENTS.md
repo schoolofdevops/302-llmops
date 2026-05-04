@@ -84,7 +84,7 @@ Requirements for initial course release. Each maps to roadmap phases.
 
 ### GitOps & Pipelines
 
-- [ ] **GITOPS-01**: ArgoCD deployed and managing all components via App-of-Apps pattern
+- [x] **GITOPS-01**: ArgoCD deployed and managing all components via App-of-Apps pattern
 - [ ] **GITOPS-02**: Model promotion by updating ImageVolume tag in Git (ArgoCD syncs automatically)
 - [ ] **GITOPS-03**: Argo Workflows DAG automating the LLM pipeline (data → train → package → deploy)
 
@@ -182,7 +182,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SCALE-01 | Phase 4 | Pending |
 | SCALE-02 | Phase 4 | Pending |
 | SCALE-03 | Phase 4 | Pending |
-| GITOPS-01 | Phase 4 | Pending |
+| GITOPS-01 | Phase 4 | Complete |
 | GITOPS-02 | Phase 4 | Pending |
 | GITOPS-03 | Phase 4 | Pending |
 | EVAL-01 | Phase 4 | Pending |
