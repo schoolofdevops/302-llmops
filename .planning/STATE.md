@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v0.19.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 04-04-PLAN.md
-last_updated: "2026-05-04T12:04:48.775Z"
+stopped_at: Completed 04-02-PLAN.md
+last_updated: "2026-05-04T12:15:48.171Z"
 last_activity: 2026-05-04
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 29
-  completed_plans: 22
+  completed_plans: 23
 ---
 
 # Project State
@@ -25,7 +25,7 @@ See: .planning/PROJECT.md (updated 2026-04-12)
 ## Current Position
 
 Phase: 04 (production-ops-capstone-day-3) — EXECUTING
-Plan: 2 of 9
+Plan: 3 of 9
 
 ## Performance Metrics
 
@@ -69,6 +69,7 @@ Plan: 2 of 9
 | Phase 03-agentops-labs-day-2 P07 | 12min | 1 tasks | 1 files |
 | Phase 04-production-ops-capstone-day-3 P01 | 14min | 2 tasks | 8 files |
 | Phase 04-production-ops-capstone-day-3 P04 | 36min | 1 tasks | 4 files |
+| Phase 04-production-ops-capstone-day-3 P02 | 47min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -131,6 +132,8 @@ Recent decisions affecting current work:
 - [Phase 04-production-ops-capstone-day-3]: KEDA Prometheus service name explicitly kps-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090 in COURSE_VERSIONS.md for student copy-paste
 - [Phase 04-production-ops-capstone-day-3]: Helm install timeout recovery: helm uninstall + re-run after image cached when quay.io pull takes > 10min on slow networks
 - [Phase 04-production-ops-capstone-day-3]: ArgoCD chart 9.5.11 applicationSet.enabled=false controls CRD scope not controller deployment — applicationset-controller pod still appears but flag is correctly applied
+- [Phase 04-production-ops-capstone-day-3]: verify-prometheus-svc.sh uses app=kube-prometheus-stack-prometheus label (not app.kubernetes.io/name=prometheus) — kube-prometheus-stack 83.4.2 uses older non-namespaced label form
+- [Phase 04-production-ops-capstone-day-3]: KEDA ScaledObject minReplicaCount=1 + cooldownPeriod=300s confirmed correct for vLLM 0.9.1 CPU workload; direct 1→3 replica jump during 8 RPS loadgen (queue saturates immediately with max-num-seqs=1)
 
 ### Pending Todos
 
@@ -152,7 +155,7 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-04T12:04:48.772Z
+Last session: 2026-05-04T12:15:48.167Z
 Last activity: 2026-05-04
-Stopped at: Completed 04-04-PLAN.md
+Stopped at: Completed 04-02-PLAN.md
 Resume file: None

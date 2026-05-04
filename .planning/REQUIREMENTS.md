@@ -78,9 +78,9 @@ Requirements for initial course release. Each maps to roadmap phases.
 
 ### Autoscaling
 
-- [ ] **SCALE-01**: HPA on Chat API (CPU-based scaling)
-- [ ] **SCALE-02**: KEDA ScaledObject for Prometheus-driven scaling (RPS-based)
-- [ ] **SCALE-03**: Load generator job to demonstrate scaling behavior
+- [x] **SCALE-01**: HPA on Chat API (CPU-based scaling)
+- [x] **SCALE-02**: KEDA ScaledObject for Prometheus-driven scaling (RPS-based)
+- [x] **SCALE-03**: Load generator job to demonstrate scaling behavior
 
 ### GitOps & Pipelines
 
@@ -179,9 +179,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | OBS-05 | Phase 3 | Complete |
 | OBS-06 | Phase 3 | Complete |
 | OBS-07 | Phase 3 | Complete |
-| SCALE-01 | Phase 4 | Pending |
-| SCALE-02 | Phase 4 | Pending |
-| SCALE-03 | Phase 4 | Pending |
+| SCALE-01 | Phase 4 | Complete |
+| SCALE-02 | Phase 4 | Complete |
+| SCALE-03 | Phase 4 | Complete |
 | GITOPS-01 | Phase 4 | Complete |
 | GITOPS-02 | Phase 4 | Pending |
 | GITOPS-03 | Phase 4 | Pending |

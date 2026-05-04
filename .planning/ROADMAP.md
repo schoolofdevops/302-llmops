@@ -110,7 +110,7 @@ Plans:
 
 Plans:
 - [x] 04-01-PLAN.md — Phase 4 foundation (COURSE_VERSIONS pins, config.env, cleanup-phase4.sh, vLLM scale-back-up prereq, starter READMEs)
-- [ ] 04-02-PLAN.md — Lab 10 autoscaling code (KEDA + metrics-server install, ScaledObject on vLLM, HPA on RAG retriever, hey loadgen Job, Grafana dashboard)
+- [x] 04-02-PLAN.md — Lab 10 autoscaling code (KEDA + metrics-server install, ScaledObject on vLLM, HPA on RAG retriever, hey loadgen Job, Grafana dashboard)
 - [ ] 04-03-PLAN.md — Lab 10 doc page (autoscaling walkthrough with embedded live evidence)
 - [x] 04-04-PLAN.md — Lab 11 ArgoCD install (control-plane only — chart 9.5.11, NodePort 30700, 3 bootstrap scripts, namespace YAML)
 - [ ] 04-05-PLAN.md — Lab 11 doc page (GitOps walkthrough, App-of-Apps narrative, GITOPS-02 promotion demo evidence)
@@ -130,4 +130,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 2. LLMOps Labs (Day 1) | 7/7 | Complete   | 2026-04-23 |
 | 2.1 Flatten workspace + uv | 0/1 | Not started | - |
 | 3. AgentOps Labs (Day 2) | 5/7 | In Progress|  |
-| 4. Production Ops + Capstone (Day 3) | 0/9 | Not started | - |
+| 4. Production Ops + Capstone (Day 3) | 3/9 | In Progress|  |
