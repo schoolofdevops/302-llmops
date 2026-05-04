@@ -18,9 +18,11 @@ spec:
       containers:
       - name: treatment-lookup
         image: localhost:5001/mcp-treatment_lookup:v1.0.0
-        # Always re-pull from kind-registry on rollout — avoids stale cached :v1.0.0 layers
-        # after a learner edits a tool and rebuilds.
-        imagePullPolicy: Always
+        # GitOps note: IfNotPresent (not Always) — localhost:5001 is KIND-local and not
+        # reachable from pods with imagePullPolicy Always. To use a new image tag after
+        # rebuilding a tool: `kind load docker-image`, update the image tag in gitops-repo,
+        # then git commit + push → ArgoCD auto-sync picks up the new tag.
+        imagePullPolicy: IfNotPresent
         ports:
         - name: mcp
           containerPort: 8020
