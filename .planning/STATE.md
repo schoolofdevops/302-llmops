@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v0.19.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 04-02-PLAN.md
-last_updated: "2026-05-04T12:15:48.171Z"
+stopped_at: Completed 04-06-PLAN.md
+last_updated: "2026-05-04T12:21:33.930Z"
 last_activity: 2026-05-04
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 29
-  completed_plans: 23
+  completed_plans: 24
 ---
 
 # Project State
@@ -25,7 +25,7 @@ See: .planning/PROJECT.md (updated 2026-04-12)
 ## Current Position
 
 Phase: 04 (production-ops-capstone-day-3) — EXECUTING
-Plan: 3 of 9
+Plan: 4 of 9
 
 ## Performance Metrics
 
@@ -70,6 +70,7 @@ Plan: 3 of 9
 | Phase 04-production-ops-capstone-day-3 P01 | 14min | 2 tasks | 8 files |
 | Phase 04-production-ops-capstone-day-3 P04 | 36min | 1 tasks | 4 files |
 | Phase 04-production-ops-capstone-day-3 P02 | 47min | 2 tasks | 8 files |
+| Phase 04-production-ops-capstone-day-3 P06 | 150min | 2 tasks | 18 files |
 
 ## Accumulated Context
 
@@ -134,6 +135,9 @@ Recent decisions affecting current work:
 - [Phase 04-production-ops-capstone-day-3]: ArgoCD chart 9.5.11 applicationSet.enabled=false controls CRD scope not controller deployment — applicationset-controller pod still appears but flag is correctly applied
 - [Phase 04-production-ops-capstone-day-3]: verify-prometheus-svc.sh uses app=kube-prometheus-stack-prometheus label (not app.kubernetes.io/name=prometheus) — kube-prometheus-stack 83.4.2 uses older non-namespaced label form
 - [Phase 04-production-ops-capstone-day-3]: KEDA ScaledObject minReplicaCount=1 + cooldownPeriod=300s confirmed correct for vLLM 0.9.1 CPU workload; direct 1→3 replica jump during 8 RPS loadgen (queue saturates immediately with max-num-seqs=1)
+- [Phase 04-production-ops-capstone-day-3]: sys.exit(0) always from eval step — Argo emissary requires exit 0 to read output parameters for when: conditional; eval pass/fail via file content only
+- [Phase 04-production-ops-capstone-day-3]: deepeval_local package name avoids shadowing installed PyPI deepeval package; no __init__.py in test folder; addopts=-p no:deepeval in pytest.ini
+- [Phase 04-production-ops-capstone-day-3]: Explicit command: in step-eval template — Argo emissary executor cannot inspect HTTP-only kind-registry:5001 for image entrypoint (HTTP vs HTTPS)
 
 ### Pending Todos
 
@@ -155,7 +159,7 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-04T12:15:48.167Z
+Last session: 2026-05-04T12:21:33.926Z
 Last activity: 2026-05-04
-Stopped at: Completed 04-02-PLAN.md
+Stopped at: Completed 04-06-PLAN.md
 Resume file: None

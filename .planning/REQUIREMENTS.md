@@ -86,12 +86,12 @@ Requirements for initial course release. Each maps to roadmap phases.
 
 - [x] **GITOPS-01**: ArgoCD deployed and managing all components via App-of-Apps pattern
 - [ ] **GITOPS-02**: Model promotion by updating ImageVolume tag in Git (ArgoCD syncs automatically)
-- [ ] **GITOPS-03**: Argo Workflows DAG automating the LLM pipeline (data → train → package → deploy)
+- [x] **GITOPS-03**: Argo Workflows DAG automating the LLM pipeline (data → train → package → deploy)
 
 ### Evaluation & Quality Gate
 
-- [ ] **EVAL-01**: DeepEval test suite for RAG quality (faithfulness, context precision/recall)
-- [ ] **EVAL-02**: Evaluation integrated into Argo Workflows as a quality gate before model deployment
+- [x] **EVAL-01**: DeepEval test suite for RAG quality (faithfulness, context precision/recall)
+- [x] **EVAL-02**: Evaluation integrated into Argo Workflows as a quality gate before model deployment
 
 ### Guardrails & Governance
 
@@ -184,9 +184,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SCALE-03 | Phase 4 | Complete |
 | GITOPS-01 | Phase 4 | Complete |
 | GITOPS-02 | Phase 4 | Pending |
-| GITOPS-03 | Phase 4 | Pending |
-| EVAL-01 | Phase 4 | Pending |
-| EVAL-02 | Phase 4 | Pending |
+| GITOPS-03 | Phase 4 | Complete |
+| EVAL-01 | Phase 4 | Complete |
+| EVAL-02 | Phase 4 | Complete |
 | GUARD-01 | Phase 4 | Pending |
 | GUARD-02 | Phase 4 | Pending |
 | GUARD-03 | Phase 4 | Pending |
