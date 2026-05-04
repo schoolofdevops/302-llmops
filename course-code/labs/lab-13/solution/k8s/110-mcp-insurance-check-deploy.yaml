@@ -1,0 +1,88 @@
+# Lab 13 (CAP-01): insurance_check MCP tool — 4th tool in the Smile Dental agent.
+# Mirrors lab-08 mcp-* Deployment pattern. Image built by Task 2 build-and-load-images.sh.
+# Guardrails are baked into the image (GuardrailMiddleware registered in insurance_check_server.py)
+# AND the blocklist.json can be overridden by mounting the guardrails-blocklist ConfigMap at /etc/guardrails/.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-insurance-check
+  namespace: llm-agent
+  labels:
+    app: mcp-insurance-check
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-insurance-check
+  template:
+    metadata:
+      labels:
+        app: mcp-insurance-check
+    spec:
+      containers:
+      - name: insurance-check
+        image: kind-registry:5001/smile-dental-insurance-check:v1.0.0
+        imagePullPolicy: Always
+        ports:
+        - name: mcp
+          containerPort: 8040
+        env:
+        - name: PORT
+          value: "8040"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317"
+        - name: OTEL_SERVICE_NAME
+          value: "mcp-insurance-check"
+        - name: COVERAGE_PATH
+          value: "/app/insurance-coverage.json"
+        - name: BLOCKLIST_PATH
+          value: "/etc/guardrails/blocklist.json"
+        # Optional LLM scope-check (D-16 Layer 2) — disabled by default to save Groq quota
+        - name: GUARDRAIL_LLM_CHECK
+          value: "false"
+        # If GUARDRAIL_LLM_CHECK=true, these are needed:
+        - name: LLM_BASE_URL
+          value: "https://api.groq.com/openai/v1"
+        - name: LLM_MODEL
+          value: "llama-3.3-70b-versatile"
+        - name: LLM_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: llm-api-keys
+              key: groq-api-key
+              optional: true
+        volumeMounts:
+        - name: guardrails-blocklist
+          mountPath: /etc/guardrails
+          readOnly: true
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8040
+          initialDelaySeconds: 5
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+      volumes:
+      - name: guardrails-blocklist
+        configMap:
+          name: guardrails-blocklist
+          # If the ConfigMap is missing at first deploy, fall back to the image-baked default.
+          # We make the mount optional so the pod still starts during the bootstrap window.
+          optional: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-insurance-check
+  namespace: llm-agent
+spec:
+  selector:
+    app: mcp-insurance-check
+  ports:
+  - port: 8040
+    targetPort: 8040
