@@ -1,0 +1,29 @@
+{
+  "input_patterns": [
+    "\\bprescribe\\b",
+    "\\bdose of\\b",
+    "\\bdosage\\b",
+    "\\bmilligrams\\b",
+    "\\bdiagnose me\\b",
+    "\\bmedication for\\b",
+    "\\bMRI\\b",
+    "\\bCT scan\\b",
+    "\\bantibiotic\\b",
+    "\\bibuprofen\\b",
+    "\\bamoxicillin\\b",
+    "what should I take for",
+    "is it safe to take",
+    "how much .* should I",
+    "my (dog|cat|child|baby) has",
+    "(suicide|self.harm|kill myself|end my life)"
+  ],
+  "output_patterns": [
+    "I recommend you take \\d+",
+    "the diagnosis is",
+    "you should take \\d+ ?(mg|grams|tablets)",
+    "\\b(ibuprofen|amoxicillin|paracetamol|aspirin) \\d+\\s?mg\\b"
+  ],
+  "drug_list": ["ibuprofen", "amoxicillin", "paracetamol", "aspirin",
+                "tramadol", "codeine", "oxycodone", "morphine"],
+  "disclaimer": "Smile Dental cannot provide medical advice. For health concerns beyond dental care, please consult your physician."
+}

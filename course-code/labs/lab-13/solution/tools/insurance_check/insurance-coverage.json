@@ -1,0 +1,23 @@
+{
+  "aetna": {
+    "root canal":  {"pct": 80, "notes": "Aetna covers 80% of root canal cost up to ₹15,000."},
+    "cleaning":    {"pct": 100, "notes": "Aetna covers all preventive cleanings (2 per year)."},
+    "crown":       {"pct": 50, "notes": "Aetna covers 50% of crown cost up to ₹20,000."},
+    "extraction":  {"pct": 80, "notes": "Aetna covers 80% of extractions."},
+    "filling":     {"pct": 100, "notes": "Aetna covers 100% of standard fillings."}
+  },
+  "cigna": {
+    "root canal":  {"pct": 75, "notes": "Cigna covers 75% after ₹2,000 deductible."},
+    "cleaning":    {"pct": 100, "notes": "Cigna covers all preventive cleanings."},
+    "crown":       {"pct": 50, "notes": "Cigna covers 50%, lifetime max ₹50,000."}
+  },
+  "maxbupa": {
+    "root canal":  {"pct": 60, "notes": "MaxBupa covers 60% under hospitalization rider only."},
+    "cleaning":    {"pct": 0,  "notes": "MaxBupa does not cover preventive cleanings."},
+    "extraction":  {"pct": 70, "notes": "MaxBupa covers 70% of surgical extractions."}
+  },
+  "star health": {
+    "root canal":  {"pct": 50, "notes": "Star Health covers 50% under accident-only dental rider."},
+    "filling":     {"pct": 80, "notes": "Star Health covers 80% of fillings if accident-related."}
+  }
+}
