@@ -1,0 +1,77 @@
+# Lab 04: vLLM Serving — Plain K8s Deployment (no KServe per D-10)
+# Image: schoolofdevops/vllm-cpu-nonuma:0.9.1 (official CPU image)
+# Model: mounted via ImageVolume from kind-registry:5001
+# WARNING: VLLM_CPU_KVCACHE_SPACE=2 (NOT 4) — default 4 causes OOM on 5Gi nodes
+# Readiness probe: 120s initial delay — SmolLM2-135M takes 60-180s to load on CPU
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm-smollm2
+  namespace: llm-serving
+  labels:
+    app: vllm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vllm
+  template:
+    metadata:
+      labels:
+        app: vllm
+    spec:
+      nodeName: llmops-kind-worker
+      containers:
+      - name: vllm
+        image: schoolofdevops/vllm-cpu-nonuma:0.9.1
+        args:
+          - --model=/models/model
+          - --host=0.0.0.0
+          - --port=8000
+          - --max-model-len=4096
+          - --served-model-name=smollm2-135m-finetuned
+          - --dtype=float32
+          - --disable-frontend-multiprocessing
+          - --max-num-seqs=1
+        env:
+          - name: VLLM_TARGET_DEVICE
+            value: "cpu"
+          - name: VLLM_CPU_KVCACHE_SPACE
+            value: "2"    # NOT 4 — OOM risk on 5Gi KIND nodes
+          - name: OMP_NUM_THREADS
+            value: "4"
+          - name: VLLM_CPU_OMP_THREADS_BIND
+            value: "auto"
+        ports:
+          - containerPort: 8000
+            name: http
+        resources:
+          requests:
+            cpu: "4"
+            memory: "4Gi"
+          limits:
+            cpu: "4"
+            memory: "5Gi"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 120
+          periodSeconds: 10
+          failureThreshold: 18
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 180
+          periodSeconds: 15
+          failureThreshold: 10
+        volumeMounts:
+          - name: model
+            mountPath: /models
+            readOnly: true
+      volumes:
+        - name: model
+          image:
+            reference: kind-registry:5001/smollm2-135m-finetuned:v1.0.0
+            pullPolicy: IfNotPresent

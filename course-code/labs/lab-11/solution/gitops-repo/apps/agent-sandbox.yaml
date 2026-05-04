@@ -1,0 +1,37 @@
+# Lab 11: Child Application — agent Sandbox + SandboxWarmPool + 3 MCP tool Deployments
+# + bookings-cm + booking-rbac + network-policy + Day-2 Chainlit (which Sandbox depends on).
+#
+# IMPORTANT (Open Q5): the Agent Sandbox CRDs (sandboxtemplates, sandboxwarmpools, etc.)
+# were installed imperatively in Lab 08 and are NOT in this gitops-repo. Removing this
+# Application via ArgoCD prune does NOT garbage-collect the CRDs.
+#
+# IMPORTANT: 60-hermes-secret.yaml (the LLM API key Secret) was created imperatively in
+# Lab 08 with student-supplied GROQ_API_KEY/GOOGLE_API_KEY values. It stays out of GitOps
+# (no plaintext secrets in git). The 60-mcp-*-deploy.yaml manifests reference this Secret
+# by name (`hermes-secret`) — ArgoCD will sync the Deployments, and they pull the existing
+# Secret from the cluster. If the Secret is missing, the pods fail; recreate it with
+# `kubectl apply -f course-code/labs/lab-08/solution/k8s/60-hermes-secret.yaml.example` (after editing).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: agent-sandbox
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "20"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/schoolofdevops/302-llmops.git
+    path: course-code/labs/lab-11/solution/gitops-repo/bases/agent-sandbox
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: llm-agent
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

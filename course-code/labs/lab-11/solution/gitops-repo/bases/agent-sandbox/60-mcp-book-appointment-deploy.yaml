@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-book-appointment
+  namespace: llm-agent
+  labels:
+    app: mcp-book-appointment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-book-appointment
+  template:
+    metadata:
+      labels:
+        app: mcp-book-appointment
+    spec:
+      serviceAccountName: mcp-booking-sa
+      containers:
+      - name: book
+        image: localhost:5001/mcp-book_appointment:v1.0.0
+        imagePullPolicy: Always
+        ports:
+        - name: mcp
+          containerPort: 8030
+        env:
+        - name: PORT
+          value: "8030"
+        - name: BOOKING_BACKEND
+          value: "configmap"
+        - name: BOOKING_NAMESPACE
+          value: "llm-app"
+        - name: BOOKING_CM_NAME
+          value: "bookings"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317"
+        - name: OTEL_SERVICE_NAME
+          value: "mcp-book-appointment"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8030
+          initialDelaySeconds: 5
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-book-appointment
+  namespace: llm-agent
+spec:
+  selector:
+    app: mcp-book-appointment
+  ports:
+  - port: 8030
+    targetPort: 8030

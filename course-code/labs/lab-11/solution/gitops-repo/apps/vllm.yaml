@@ -1,0 +1,29 @@
+# Lab 11: Child Application — vLLM Deployment + Service.
+# Sync wave 10 = workloads tier. The KEDA ScaledObject from Lab 10 stays imperative
+# (KEDA controller is not under GitOps, neither is its CR — D-06).
+# D-10: vLLM is the promotion target for Lab 12 — image tag in
+# course-code/labs/lab-11/solution/gitops-repo/bases/vllm/30-deploy-vllm.yaml is what gets bumped.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vllm
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/schoolofdevops/302-llmops.git
+    path: course-code/labs/lab-11/solution/gitops-repo/bases/vllm
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: llm-serving
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

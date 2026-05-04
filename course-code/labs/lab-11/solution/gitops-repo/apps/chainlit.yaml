@@ -1,0 +1,27 @@
+# Lab 11: Child Application — Chainlit Day-1 Deployment + Service.
+# Sync wave 30 = last (Chainlit depends on agent-sandbox being ready first).
+# Uses Lab 05 Service (NodePort 30300) + Lab 08 Day-2 Deployment (routes through Hermes).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chainlit
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "30"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/schoolofdevops/302-llmops.git
+    path: course-code/labs/lab-11/solution/gitops-repo/bases/chainlit
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: llm-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
