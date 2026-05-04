@@ -101,9 +101,12 @@ spec:
 
   # Eval step: runs DeepEval FaithfulnessMetric via Groq judge
   # Writes /tmp/eval-pass.txt = 'true' or 'false'
+  # NOTE: explicit command required — Argo emissary executor cannot inspect
+  # kind-registry:5001 (HTTP) for image entrypoint discovery (HTTPS expected).
   - name: step-eval
     container:
       image: kind-registry:5001/smile-dental-deepeval:v1.0.0
+      command: [python, -m, deepeval_local.run_eval]
       env:
       - name: LLM_BASE_URL
         value: "https://api.groq.com/openai/v1"

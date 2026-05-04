@@ -1,0 +1,96 @@
+# Lab 10: Grafana dashboard for autoscaling visibility (D-04 demo win — split-screen
+# pod count + queue depth). Auto-discovered by kube-prometheus-stack Grafana via the
+# `grafana_dashboard: '1'` ConfigMap label (Phase 2 D-09 pattern).
+# Mirror of lab-06/solution/k8s/observability/50-grafana-dashboard-cm.yaml label convention.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-autoscaling-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  autoscaling.json: |
+    {
+      "title": "Smile Dental — Autoscaling (Lab 10)",
+      "uid": "smile-dental-autoscaling",
+      "schemaVersion": 39,
+      "version": 1,
+      "refresh": "5s",
+      "time": { "from": "now-15m", "to": "now" },
+      "panels": [
+        {
+          "type": "timeseries",
+          "id": 1,
+          "title": "vLLM replicas (KEDA scale events)",
+          "description": "Pod count for vllm-smollm2 Deployment in llm-serving. Watch this climb from 1 → 2+ during loadgen, then cool down to 1 after 5 min (cooldownPeriod=300s).",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+          "targets": [
+            {
+              "expr": "kube_deployment_status_replicas{namespace=\"llm-serving\",deployment=\"vllm-smollm2\"}",
+              "legendFormat": "vllm-smollm2 replicas",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": { "unit": "none", "min": 0, "max": 4 }
+          }
+        },
+        {
+          "type": "timeseries",
+          "id": 2,
+          "title": "vLLM queue depth (KEDA trigger)",
+          "description": "vllm:num_requests_waiting is the KEDA trigger. When this value exceeds threshold=1 for pollingInterval=15s, KEDA adds a replica. vllm:num_requests_running shows in-flight requests (max-num-seqs=1 on CPU, so normally 0 or 1).",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+          "targets": [
+            {
+              "expr": "vllm:num_requests_waiting",
+              "legendFormat": "{{model_name}} waiting",
+              "refId": "A"
+            },
+            {
+              "expr": "vllm:num_requests_running",
+              "legendFormat": "{{model_name}} running",
+              "refId": "B"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": { "unit": "none", "min": 0 }
+          }
+        },
+        {
+          "type": "timeseries",
+          "id": 3,
+          "title": "RAG retriever CPU (HPA target)",
+          "description": "CPU usage for rag-retriever pods in llm-app. HPA fires when average CPU utilization exceeds 60% of the requested 500m (= 300m). Contrast with vLLM: RAG retriever is stateless and CPU-driven, so HPA is the right tool here.",
+          "gridPos": { "h": 8, "w": 24, "x": 0, "y": 8 },
+          "targets": [
+            {
+              "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"llm-app\",pod=~\"rag-retriever-.*\"}[1m])) by (pod)",
+              "legendFormat": "{{pod}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": { "unit": "percentunit", "min": 0 }
+          }
+        },
+        {
+          "type": "timeseries",
+          "id": 4,
+          "title": "RAG retriever replicas (HPA decisions)",
+          "description": "Replica count for rag-retriever. The HPA scales between 1 and 2 replicas based on CPU utilization. Compare to vLLM panel 1 — same mechanism, different signal.",
+          "gridPos": { "h": 6, "w": 24, "x": 0, "y": 16 },
+          "targets": [
+            {
+              "expr": "kube_deployment_status_replicas{namespace=\"llm-app\",deployment=\"rag-retriever\"}",
+              "legendFormat": "rag-retriever replicas",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": { "unit": "none", "min": 0, "max": 3 }
+          }
+        }
+      ]
+    }

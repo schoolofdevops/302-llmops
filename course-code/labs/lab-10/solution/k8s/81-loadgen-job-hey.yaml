@@ -1,0 +1,32 @@
+# Lab 10: hey loadgen Job (SCALE-03).
+# Targets vLLM /v1/completions for 3 minutes at 8 RPS (4 workers × 2 RPS).
+# Pitfall 3: model name MUST be smollm2-135m-finetuned (matches --served-model-name
+# from lab-04/solution/k8s/30-deploy-vllm.yaml); using `smollm2` returns 404.
+# williamyeh/hey is scratch-based — entrypoint is /hey, no shell available, args via array only.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: vllm-loadgen
+  namespace: llm-serving
+spec:
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: hey
+        image: williamyeh/hey:latest
+        args:
+        - "-z"
+        - "180s"
+        - "-c"
+        - "4"
+        - "-q"
+        - "2"
+        - "-m"
+        - "POST"
+        - "-H"
+        - "Content-Type: application/json"
+        - "-d"
+        - '{"model":"smollm2-135m-finetuned","prompt":"What treatments does Smile Dental offer?","max_tokens":32}'
+        - "http://vllm-smollm2.llm-serving.svc.cluster.local:8000/v1/completions"

@@ -130,7 +130,11 @@ def main():
     )
     args = p.parse_args()
     ok = run(args.eval_set, args.out, args.threshold, args.sleep, args.vllm_url, args.vllm_model)
-    sys.exit(0 if ok else 1)
+    # Always exit 0 — the pass/fail gate is the Argo `when:` clause reading the
+    # output parameter from OUT_PATH, not the process exit code.
+    # Exiting 1 would cause Argo to mark the step as Error (not Succeeded),
+    # which prevents the output parameter from being read by commit-tag's `when:`.
+    sys.exit(0)
 
 
 if __name__ == "__main__":

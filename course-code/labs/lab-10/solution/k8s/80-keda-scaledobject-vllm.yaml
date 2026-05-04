@@ -1,0 +1,25 @@
+# Lab 10: KEDA ScaledObject for vLLM Deployment
+# D-02: scale on Prometheus metric vllm:num_requests_waiting (queue depth) — vLLM
+# stays high-CPU regardless of load, so plain HPA-on-CPU thrashes (RESEARCH.md Anti-Patterns).
+# D-21: minReplicaCount=1 (vLLM cold start is 60-180s on CPU; replicas=0 = bad UX).
+# Pitfall 2: serverAddress uses the kube-prometheus-stack release name `kps`. If your
+# release name differs, run scripts/verify-prometheus-svc.sh and update this serverAddress.
+# Confirmed live (2026-05-04): kps-kube-prometheus-stack-prometheus matches on this cluster.
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: vllm-smollm2
+  namespace: llm-serving
+spec:
+  scaleTargetRef:
+    name: vllm-smollm2          # Matches lab-04/solution/k8s/30-deploy-vllm.yaml
+  pollingInterval: 15           # Check Prometheus every 15s
+  cooldownPeriod: 300           # Wait 5 min after triggers stop before scaling down
+  minReplicaCount: 1            # NOT 0 — cold start would block first request 60-180s
+  maxReplicaCount: 3            # 3 fits 12-16GB Docker Desktop budget (D-21)
+  triggers:
+  - type: prometheus
+    metadata:
+      serverAddress: http://kps-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
+      threshold: '1'             # Sustained 1+ requests waiting → add replica
+      query: vllm:num_requests_waiting
