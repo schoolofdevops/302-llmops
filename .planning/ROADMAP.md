@@ -106,7 +106,18 @@ Plans:
   3. Argo Workflows DAG runs the full data → train → package → deploy pipeline and halts on eval failure
   4. DeepEval quality gate blocks a deployment when RAG faithfulness drops below threshold
   5. Agent input and output guardrails block out-of-scope medical advice and the capstone exercise completes successfully end to end
-**Plans**: TBD
+**Plans**: 9 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Phase 4 foundation (COURSE_VERSIONS pins, config.env, cleanup-phase4.sh, vLLM scale-back-up prereq, starter READMEs)
+- [ ] 04-02-PLAN.md — Lab 10 autoscaling code (KEDA + metrics-server install, ScaledObject on vLLM, HPA on RAG retriever, hey loadgen Job, Grafana dashboard)
+- [ ] 04-03-PLAN.md — Lab 10 doc page (autoscaling walkthrough with embedded live evidence)
+- [ ] 04-04-PLAN.md — Lab 11 ArgoCD install (control-plane only — chart 9.5.11, NodePort 30700, 3 bootstrap scripts, namespace YAML)
+- [ ] 04-05-PLAN.md — Lab 11 doc page (GitOps walkthrough, App-of-Apps narrative, GITOPS-02 promotion demo evidence)
+- [ ] 04-06-PLAN.md — Lab 12 pipeline + eval gate code (Argo Workflows + DeepEval container TDD + WorkflowTemplate DAG with conditional commit-tag step)
+- [ ] 04-07-PLAN.md — Lab 12 doc page (pipeline walkthrough, PASS path + FAIL path demo)
+- [ ] 04-08-PLAN.md — Lab 13 guardrails + capstone code (GuardrailMiddleware TDD, insurance_check MCP tool, GitOps integration, governance source artifacts for GUARD-03)
+- [ ] 04-10-PLAN.md — Lab 11 gitops-repo + App-of-Apps + GITOPS-02 demo (29 files split out from original 04-04 per scope_sanity revision; gitops-repo/bases verbatim copies, 5 child Applications + root, SSH deploy-key template, demo-promote-vllm-tag.sh)
 
 ## Progress
 
@@ -119,4 +130,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 2. LLMOps Labs (Day 1) | 7/7 | Complete   | 2026-04-23 |
 | 2.1 Flatten workspace + uv | 0/1 | Not started | - |
 | 3. AgentOps Labs (Day 2) | 5/7 | In Progress|  |
-| 4. Production Ops + Capstone (Day 3) | 0/TBD | Not started | - |
+| 4. Production Ops + Capstone (Day 3) | 0/9 | Not started | - |
