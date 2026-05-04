@@ -117,7 +117,7 @@ Plans:
 - [x] 04-06-PLAN.md — Lab 12 pipeline + eval gate code (Argo Workflows + DeepEval container TDD + WorkflowTemplate DAG with conditional commit-tag step)
 - [x] 04-07-PLAN.md — Lab 12 doc page (pipeline walkthrough, PASS path + FAIL path demo)
 - [ ] 04-08-PLAN.md — Lab 13 guardrails + capstone code (GuardrailMiddleware TDD, insurance_check MCP tool, GitOps integration, governance source artifacts for GUARD-03)
-- [ ] 04-10-PLAN.md — Lab 11 gitops-repo + App-of-Apps + GITOPS-02 demo (29 files split out from original 04-04 per scope_sanity revision; gitops-repo/bases verbatim copies, 5 child Applications + root, SSH deploy-key template, demo-promote-vllm-tag.sh)
+- [x] 04-10-PLAN.md — Lab 11 gitops-repo + App-of-Apps + GITOPS-02 demo (29 files split out from original 04-04 per scope_sanity revision; gitops-repo/bases verbatim copies, 5 child Applications + root, SSH deploy-key template, demo-promote-vllm-tag.sh)
 
 ## Progress
 

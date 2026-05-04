@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v0.19.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 04-03-PLAN.md
-last_updated: "2026-05-04T12:27:33.101Z"
+stopped_at: Completed 04-10-PLAN.md
+last_updated: "2026-05-04T12:49:56.470Z"
 last_activity: 2026-05-04
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 29
-  completed_plans: 26
+  completed_plans: 27
 ---
 
 # Project State
@@ -25,7 +25,7 @@ See: .planning/PROJECT.md (updated 2026-04-12)
 ## Current Position
 
 Phase: 04 (production-ops-capstone-day-3) — EXECUTING
-Plan: 6 of 9
+Plan: 7 of 9
 
 ## Performance Metrics
 
@@ -73,6 +73,7 @@ Plan: 6 of 9
 | Phase 04-production-ops-capstone-day-3 P06 | 150min | 2 tasks | 18 files |
 | Phase 04-production-ops-capstone-day-3 P07 | 15min | 1 tasks | 1 files |
 | Phase 04-production-ops-capstone-day-3 P03 | 12min | 1 tasks | 1 files |
+| Phase 04-production-ops-capstone-day-3 P10 | 24min | 2 tasks | 27 files |
 
 ## Accumulated Context
 
@@ -142,6 +143,8 @@ Recent decisions affecting current work:
 - [Phase 04-production-ops-capstone-day-3]: Explicit command: in step-eval template — Argo emissary executor cannot inspect HTTP-only kind-registry:5001 for image entrypoint (HTTP vs HTTPS)
 - [Phase 04-production-ops-capstone-day-3]: TEST_COUNT=8 actual (not 9 estimated); COMMIT_SHA=164ac67 from 04-06; DRY_RUN_RPM=14 derived from rate math; PASS ~3m40s / FAIL ~3m30s from 04-06 SUMMARY component timings
 - [Phase 04-production-ops-capstone-day-3]: ROLLOUT_SECONDS used 60-180s range not single number — 04-01 cluster was unresponsive; 04-02 had vLLM already running; range is more instructive for students
+- [Phase 04-production-ops-capstone-day-3]: kind-registry:5001 (not localhost:5001) for KIND-local images in gitops-repo — localhost:5001 not accessible from pods; kind-registry:5001 has containerd mirror configured
+- [Phase 04-production-ops-capstone-day-3]: imagePullPolicy: IfNotPresent in gitops-repo MCP tool bases — Always causes ArgoCD sync to re-pull from inaccessible localhost:5001
 
 ### Pending Todos
 
@@ -163,7 +166,7 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-04T12:27:33.098Z
+Last session: 2026-05-04T12:49:56.466Z
 Last activity: 2026-05-04
-Stopped at: Completed 04-03-PLAN.md
+Stopped at: Completed 04-10-PLAN.md
 Resume file: None
