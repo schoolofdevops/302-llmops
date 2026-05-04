@@ -1,0 +1,8 @@
+# Lab 11: ArgoCD namespace (Helm install --create-namespace will create this if missing,
+# but we declare it explicitly so the namespace can be applied independently if needed).
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: argocd
+  labels:
+    app.kubernetes.io/name: argocd
