@@ -1,0 +1,199 @@
+# Lab 12: WorkflowTemplate `llm-pipeline` (D-11 + D-14).
+# 6-step DAG: data-gen -> train -> merge -> package -> eval -> commit-tag.
+# Lab demo SHORT-CIRCUITS data-gen/train/merge/package (no real fine-tune; Lab 02 already trained).
+# eval + commit-tag are REAL.
+# Shared PVC at /workspace replaces S3/MinIO (Pitfall 5).
+# `when:` clause on commit-tag implements the EVAL-02 quality gate.
+# Custom argo-workflow ServiceAccount has RBAC for Secret access (Pitfall 10).
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: llm-pipeline
+  namespace: argo
+spec:
+  entrypoint: pipeline
+  serviceAccountName: argo-workflow
+  arguments:
+    parameters:
+    - name: vllm-url
+      value: "http://vllm-smollm2.llm-serving.svc.cluster.local:8000"
+    - name: vllm-model
+      value: "smollm2-135m-finetuned"
+    - name: threshold
+      value: "0.7"
+    - name: gitops-vllm-manifest
+      value: "course-code/labs/lab-11/solution/gitops-repo/bases/vllm/30-deploy-vllm.yaml"
+    - name: companion-repo-ssh
+      value: "git@github.com:initcron/llmops.git"   # TODO: students change to their fork
+    - name: image-tag-prefix
+      value: "smollm2-135m-finetuned"
+  volumes:
+  - name: workspace
+    persistentVolumeClaim:
+      claimName: pipeline-workspace
+  - name: ssh-key
+    secret:
+      secretName: git-deploy-key
+      defaultMode: 0400
+  templates:
+
+  # ---- DAG definition ----
+  - name: pipeline
+    dag:
+      tasks:
+      - name: data-gen
+        template: step-noop
+        arguments:
+          parameters:
+          - name: msg
+            value: "data-gen: re-using Lab 01 datasets already on /workspace (short-circuited for lab demo)"
+
+      - name: train
+        template: step-noop
+        dependencies: [data-gen]
+        arguments:
+          parameters:
+          - name: msg
+            value: "train: short-circuited for lab demo (Lab 02 already trained — max_steps=50 CPU LoRA)"
+
+      - name: merge
+        template: step-noop
+        dependencies: [train]
+        arguments:
+          parameters:
+          - name: msg
+            value: "merge: short-circuited (merged LoRA adapter exists from Lab 02)"
+
+      - name: package
+        template: step-noop
+        dependencies: [merge]
+        arguments:
+          parameters:
+          - name: msg
+            value: "package: short-circuited (OCI model image already exists from Lab 03)"
+
+      - name: eval
+        template: step-eval
+        dependencies: [package]
+
+      # EVAL-02 gate: commit-tag runs ONLY when eval passes
+      # `when:` clause compares the eval output parameter against 'true'
+      - name: commit-tag
+        template: step-commit-tag
+        dependencies: [eval]
+        when: "{{tasks.eval.outputs.parameters.pass}} == true"
+
+  # ---- Step templates ----
+
+  # Short-circuit noop step (for data-gen, train, merge, package)
+  - name: step-noop
+    inputs:
+      parameters:
+      - name: msg
+    container:
+      image: alpine:3.20
+      command: [sh, -c]
+      args:
+      - echo '{{inputs.parameters.msg}}'
+      volumeMounts:
+      - name: workspace
+        mountPath: /workspace
+
+  # Eval step: runs DeepEval FaithfulnessMetric via Groq judge
+  # Writes /tmp/eval-pass.txt = 'true' or 'false'
+  - name: step-eval
+    container:
+      image: kind-registry:5001/smile-dental-deepeval:v1.0.0
+      env:
+      - name: LLM_BASE_URL
+        value: "https://api.groq.com/openai/v1"
+      - name: GROQ_API_KEY
+        valueFrom:
+          secretKeyRef:
+            name: llm-api-keys
+            key: groq-api-key
+      - name: LLM_MODEL
+        value: "llama-3.3-70b-versatile"
+      - name: VLLM_URL
+        value: "{{workflow.parameters.vllm-url}}"
+      - name: VLLM_MODEL
+        value: "{{workflow.parameters.vllm-model}}"
+      - name: THRESHOLD
+        value: "{{workflow.parameters.threshold}}"
+      - name: SLEEP_BETWEEN_CASES
+        value: "2.0"
+      - name: EVAL_SET
+        value: "/app/eval-set.jsonl"   # baked into image; mount workspace to override
+      - name: OUT_PATH
+        value: "/tmp/eval-pass.txt"
+      volumeMounts:
+      - name: workspace
+        mountPath: /workspace
+    outputs:
+      parameters:
+      - name: pass
+        valueFrom:
+          path: /tmp/eval-pass.txt   # contents: 'true' or 'false'
+
+  # Commit-tag step: bumps gitops/model-version annotation and git-pushes
+  # Conditioned on eval pass (when: clause in DAG above)
+  # Uses python:3.11-slim because BusyBox (alpine/git) lacks python3 for heredoc
+  - name: step-commit-tag
+    container:
+      image: python:3.11-slim
+      env:
+      - name: NEW_TAG
+        value: "{{workflow.parameters.image-tag-prefix}}-{{workflow.creationTimestamp}}"
+      - name: GIT_REMOTE
+        value: "{{workflow.parameters.companion-repo-ssh}}"
+      - name: TARGET_FILE
+        value: "{{workflow.parameters.gitops-vllm-manifest}}"
+      command: [sh, -c]
+      args:
+      - |
+        set -euo pipefail
+        # Install git + openssh-client (python:3.11-slim is minimal — no git pre-installed)
+        apt-get update -qq
+        apt-get install -y --no-install-recommends git openssh-client >/dev/null
+        # Configure SSH using the mounted deploy key
+        mkdir -p /root/.ssh
+        cp /etc/ssh-key/id_rsa /root/.ssh/id_rsa
+        chmod 600 /root/.ssh/id_rsa
+        ssh-keyscan -H github.com >> /root/.ssh/known_hosts
+        # Configure git identity
+        git config --global user.email "argo@smile-dental-course.local"
+        git config --global user.name "Argo Workflows"
+        # Clone the companion repo via SSH
+        git clone "${GIT_REMOTE}" /repo
+        cd /repo
+        # Bump the gitops/model-version annotation (D-14 mechanic).
+        # Uses annotation (not image tag) to avoid ImagePullBackOff from non-existent tags.
+        # ArgoCD still detects the annotation change and re-syncs the Application.
+        if grep -q "gitops/model-version" "${TARGET_FILE}"; then
+          sed -i "s|gitops/model-version: \".*\"|gitops/model-version: \"${NEW_TAG}\"|" "${TARGET_FILE}"
+        else
+          # Insert annotation block under Deployment metadata using python3
+          python3 - "${TARGET_FILE}" "${NEW_TAG}" <<'PY'
+        import sys, pathlib, re
+        p = pathlib.Path(sys.argv[1])
+        ts = sys.argv[2]
+        s = p.read_text()
+        # Insert annotations block after the metadata name/namespace block
+        new = re.sub(
+            r"(kind: Deployment\nmetadata:\n  name: [^\n]+\n  namespace: [^\n]+\n)",
+            lambda m: m.group(0) + f'  annotations:\n    gitops/model-version: "{ts}"\n',
+            s, count=1
+        )
+        p.write_text(new)
+        PY
+        fi
+        git add "${TARGET_FILE}"
+        git commit -m "ci(lab-12): bump model-version to ${NEW_TAG} (eval gate passed)"
+        git push origin main
+        echo "Committed model-version=${NEW_TAG} — ArgoCD will auto-sync within 3 minutes."
+      volumeMounts:
+      - name: workspace
+        mountPath: /workspace
+      - name: ssh-key
+        mountPath: /etc/ssh-key
+        readOnly: true

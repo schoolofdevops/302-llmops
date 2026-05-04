@@ -1,0 +1,42 @@
+# Lab 12: Custom ServiceAccount for Workflow step pods.
+# Default `argo` ServiceAccount in `argo` namespace lacks `get` on Secrets — Pitfall 10.
+# This SA can read `llm-api-keys` (Groq) and `git-deploy-key` (SSH) Secrets.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argo-workflow
+  namespace: argo
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: argo-workflow-secrets
+  namespace: argo
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  resourceNames: ["llm-api-keys", "git-deploy-key"]
+  verbs: ["get"]
+- apiGroups: [""]
+  resources: ["pods", "pods/log"]
+  verbs: ["create", "get", "list", "watch", "delete", "patch"]
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create"]
+- apiGroups: [""]
+  resources: ["persistentvolumeclaims"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: argo-workflow-secrets
+  namespace: argo
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: argo-workflow-secrets
+subjects:
+- kind: ServiceAccount
+  name: argo-workflow
+  namespace: argo
