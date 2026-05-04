@@ -8,6 +8,8 @@ kind: Deployment
 metadata:
   name: vllm-smollm2
   namespace: llm-serving
+  annotations:
+    gitops/deployed-at: "20260504T124530Z"
   labels:
     app: vllm
 spec:
