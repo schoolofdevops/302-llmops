@@ -1,0 +1,81 @@
+# Lab 01: RAG Retriever Deployment — namespace: llm-app
+# In production: use PVC or OCI ImageVolume for the clinic data
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rag-retriever
+  namespace: llm-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rag-retriever
+  template:
+    metadata:
+      labels:
+        app: rag-retriever
+    spec:
+      initContainers:
+      - name: build-index
+        image: python:3.11-slim
+        command: ["/bin/sh", "-c"]
+        args:
+          - pip install fastembed faiss-cpu numpy --quiet &&
+            python /app/build_index.py
+        env:
+        - name: DATA_DIR
+          value: /data/clinic
+        - name: INDEX_DIR
+          value: /data/index
+        - name: EMBEDDING_MODEL
+          value: sentence-transformers/all-MiniLM-L6-v2
+        volumeMounts:
+        - name: clinic-data
+          mountPath: /data/clinic
+        - name: index-storage
+          mountPath: /data/index
+        - name: app-code
+          mountPath: /app
+      containers:
+      - name: retriever
+        image: python:3.11-slim
+        command: ["/bin/sh", "-c"]
+        args:
+          - pip install fastembed faiss-cpu fastapi[standard] prometheus-client numpy --quiet &&
+            python /app/retriever.py
+        env:
+        - name: INDEX_PATH
+          value: /data/index/faiss.index
+        - name: META_PATH
+          value: /data/index/metadata.json
+        - name: EMBEDDING_MODEL
+          value: sentence-transformers/all-MiniLM-L6-v2
+        ports:
+        - containerPort: 8001
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8001
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+        volumeMounts:
+        - name: index-storage
+          mountPath: /data/index
+        - name: app-code
+          mountPath: /app
+      volumes:
+      - name: clinic-data
+        configMap:
+          name: clinic-data
+      - name: index-storage
+        emptyDir: {}
+      - name: app-code
+        configMap:
+          name: retriever-code

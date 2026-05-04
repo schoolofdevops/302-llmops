@@ -1,0 +1,25 @@
+# Lab 11: Root App-of-Apps Application (D-06 Hybrid scope, D-07 sub-folder).
+# Watches gitops-repo/apps/ recursively; ArgoCD treats every Application CR found
+# as a child Application and creates it in the argocd namespace.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: smile-dental-apps
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/schoolofdevops/302-llmops.git    # TODO: students replace with their fork URL
+    path: course-code/labs/lab-11/solution/gitops-repo/apps
+    targetRevision: main
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

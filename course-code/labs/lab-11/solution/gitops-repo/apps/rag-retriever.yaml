@@ -1,0 +1,27 @@
+# Lab 11: Child Application — RAG Retriever Deployment + Service.
+# Sync wave 10 = workloads tier (same wave as vllm — neither depends on the other).
+# The HPA on RAG retriever from Lab 10 stays imperative (D-06).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rag-retriever
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/schoolofdevops/302-llmops.git
+    path: course-code/labs/lab-11/solution/gitops-repo/bases/rag-retriever
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: llm-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

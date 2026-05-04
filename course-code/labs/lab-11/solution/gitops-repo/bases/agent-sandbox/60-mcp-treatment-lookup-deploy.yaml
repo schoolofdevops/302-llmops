@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-treatment-lookup
+  namespace: llm-agent
+  labels:
+    app: mcp-treatment-lookup
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-treatment-lookup
+  template:
+    metadata:
+      labels:
+        app: mcp-treatment-lookup
+    spec:
+      containers:
+      - name: treatment-lookup
+        image: localhost:5001/mcp-treatment_lookup:v1.0.0
+        # Always re-pull from kind-registry on rollout — avoids stale cached :v1.0.0 layers
+        # after a learner edits a tool and rebuilds.
+        imagePullPolicy: Always
+        ports:
+        - name: mcp
+          containerPort: 8020
+        env:
+        - name: PORT
+          value: "8020"
+        - name: RETRIEVER_URL
+          value: "http://rag-retriever.llm-app.svc.cluster.local:8001"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317"
+        - name: OTEL_SERVICE_NAME
+          value: "mcp-treatment-lookup"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8020
+          initialDelaySeconds: 5
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-treatment-lookup
+  namespace: llm-agent
+spec:
+  selector:
+    app: mcp-treatment-lookup
+  ports:
+  - port: 8020
+    targetPort: 8020

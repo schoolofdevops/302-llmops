@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mcp-booking-sa
+  namespace: llm-agent
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: configmap-booking-editor
+  namespace: llm-app
+rules:
+- apiGroups: [""]
+  resources: ["configmaps"]
+  resourceNames: ["bookings"]
+  verbs: ["get", "patch", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: mcp-booking-binding
+  namespace: llm-app
+subjects:
+- kind: ServiceAccount
+  name: mcp-booking-sa
+  namespace: llm-agent
+roleRef:
+  kind: Role
+  name: configmap-booking-editor
+  apiGroup: rbac.authorization.k8s.io

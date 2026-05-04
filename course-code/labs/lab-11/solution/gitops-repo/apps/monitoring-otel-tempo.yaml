@@ -1,0 +1,28 @@
+# Lab 11: Child Application — monitoring add-ons (Tempo datasource ConfigMap only).
+# Tempo + OTEL Collector are Helm releases (Lab 09); they stay Helm-managed (D-06).
+# This Application syncs the Grafana Tempo datasource ConfigMap so Grafana picks up Tempo
+# on first sync. Sync wave 0 = run before workloads.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring-otel-tempo
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/schoolofdevops/302-llmops.git
+    path: course-code/labs/lab-11/solution/gitops-repo/bases/monitoring
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

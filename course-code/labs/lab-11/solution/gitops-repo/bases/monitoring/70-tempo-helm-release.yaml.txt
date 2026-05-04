@@ -1,0 +1,27 @@
+# WHY THIS FILE IS NOT A YAML MANIFEST
+# ======================================
+# Tempo and the OTEL Collector are deployed via Helm in Lab 09 (kube-prometheus-stack
+# pulls in Prometheus + Grafana; separate Helm releases add Tempo and OTEL Collector).
+#
+# D-06 Hybrid scope decision: kube-prometheus-stack, Tempo, and OTEL Collector stay
+# Helm-managed for footprint reasons. Rolling them all into ArgoCD would require
+# ArgoCD ApplicationSet + Helm values override — scope creep for Lab 11.
+#
+# What IS under GitOps here (monitoring/):
+#   - 70-grafana-tempo-datasource-cm.yaml  ← ConfigMap that tells Grafana where Tempo lives
+#
+# What stays IMPERATIVE (NOT in this gitops-repo/):
+#   - Helm release: kube-prometheus-stack (Prometheus + Grafana + AlertManager)
+#   - Helm release: grafana/tempo  → namespace monitoring
+#   - Helm release: opentelemetry-collector  → namespace monitoring
+#
+# Lab 09 install commands (reference):
+#   helm upgrade --install tempo grafana/tempo --namespace monitoring \
+#     -f course-code/labs/lab-09/solution/helm/values-tempo.yaml
+#   helm upgrade --install otel-collector open-telemetry/opentelemetry-collector \
+#     --namespace monitoring \
+#     -f course-code/labs/lab-09/solution/helm/values-otel-collector.yaml
+#
+# D-20 honest scoping note: Lab 11 page documents this gap explicitly so students
+# understand the teaching choice (App-of-Apps pattern is shown end-to-end; retrofitting
+# the Helm releases into GitOps was deemed scope creep for a 1-day lab).

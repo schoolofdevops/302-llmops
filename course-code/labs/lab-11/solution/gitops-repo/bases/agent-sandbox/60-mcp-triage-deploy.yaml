@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-triage
+  namespace: llm-agent
+  labels:
+    app: mcp-triage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-triage
+  template:
+    metadata:
+      labels:
+        app: mcp-triage
+    spec:
+      containers:
+      - name: triage
+        image: localhost:5001/mcp-triage:v1.0.0
+        imagePullPolicy: Always
+        ports:
+        - name: mcp
+          containerPort: 8010
+        env:
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317"
+        - name: OTEL_SERVICE_NAME
+          value: "mcp-triage"
+        - name: PORT
+          value: "8010"
+        # Default values match the Gemini path (most students have GOOGLE_API_KEY available).
+        # For Groq path: change LLM_BASE_URL/LLM_MODEL and the secret key reference below to groq-api-key.
+        - name: LLM_BASE_URL
+          value: "https://generativelanguage.googleapis.com/v1beta/openai"
+        - name: LLM_MODEL
+          value: "gemini-2.5-flash"
+        - name: LLM_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: llm-api-keys
+              key: google-api-key
+              optional: true
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8010
+          initialDelaySeconds: 5
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-triage
+  namespace: llm-agent
+spec:
+  selector:
+    app: mcp-triage
+  ports:
+  - port: 8010
+    targetPort: 8010

@@ -1,0 +1,105 @@
+apiVersion: extensions.agents.x-k8s.io/v1alpha1
+kind: SandboxTemplate
+metadata:
+  name: hermes-agent-template
+  namespace: llm-agent
+spec:
+  # Course-managed NetworkPolicy lives in 60-network-policy.yaml.
+  # Setting Unmanaged prevents the controller from auto-creating a restrictive default NP
+  # that would block cost-middleware (Lab 09) from reaching Hermes pods.
+  networkPolicyManagement: Unmanaged
+  podTemplate:
+    metadata:
+      labels:
+        app: hermes-agent
+    spec:
+      # NO runtimeClassName: gvisor — KIND does not support it (RESEARCH.md note).
+      automountServiceAccountToken: false
+      # The hermes-agent image overwrites /etc/resolv.conf with 8.8.8.8/1.1.1.1.
+      # We must force ClusterFirst so in-cluster MCP tool DNS names resolve.
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+        - "10.96.0.10"   # CoreDNS ClusterIP (default for kubeadm clusters incl. KIND)
+        searches:
+        - "llm-agent.svc.cluster.local"
+        - "svc.cluster.local"
+        - "cluster.local"
+        options:
+        - name: ndots
+          value: "5"
+      initContainers:
+      # Copy config files from ConfigMap into the writable emptyDir so entrypoint
+      # can manage them (ConfigMap mounts are read-only; entrypoint.sh writes to HERMES_HOME).
+      - name: config-init
+        image: busybox:1.36
+        command: ["sh", "-c", "cp /configmap/config.yaml /hermes-home/config.yaml && cp /configmap/SOUL.md /hermes-home/SOUL.md"]
+        volumeMounts:
+        - name: hermes-config-cm
+          mountPath: /configmap
+          readOnly: true
+        - name: hermes-home
+          mountPath: /hermes-home
+      containers:
+      - name: hermes
+        image: nousresearch/hermes-agent:latest
+        # Invoke the image's own entrypoint.sh with 'gateway' as the subcommand.
+        # entrypoint.sh bootstraps config dirs, activates .venv, then execs: hermes gateway
+        command: ["/opt/hermes/docker/entrypoint.sh", "gateway"]
+        ports:
+        - name: api
+          containerPort: 8642
+        env:
+        - name: API_SERVER_ENABLED
+          value: "true"
+        - name: API_SERVER_HOST
+          value: "0.0.0.0"
+        - name: API_SERVER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: hermes-api-secret
+              key: api-key
+        - name: GROQ_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: llm-api-keys
+              key: groq-api-key
+              optional: true
+        - name: GOOGLE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: llm-api-keys
+              key: google-api-key
+              optional: true
+        # GEMINI_BASE_URL is required when Hermes uses bare model `gemini-2.5-flash`
+        # (Gemini OpenAI-compat endpoint). Required for the Gemini path even on Groq Tab.
+        - name: GEMINI_BASE_URL
+          value: "https://generativelanguage.googleapis.com/v1beta/openai"
+        volumeMounts:
+        - name: hermes-home
+          mountPath: /opt/data
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "1.5Gi"
+          limits:
+            cpu: "1"
+            memory: "2Gi"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8642
+          initialDelaySeconds: 20
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8642
+          initialDelaySeconds: 60
+          periodSeconds: 30
+      volumes:
+      - name: hermes-config-cm
+        configMap:
+          name: hermes-config
+      - name: hermes-home
+        emptyDir: {}
