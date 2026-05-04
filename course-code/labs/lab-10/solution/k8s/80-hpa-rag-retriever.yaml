@@ -1,0 +1,25 @@
+# Lab 10: HPA on RAG retriever — SCALE-01 contrast moment.
+# D-02: HPA on CPU is fine for stateless web services (RAG retriever is one);
+# it's the WRONG tool for vLLM (queue depth, not CPU, is the saturation signal).
+# Lab page narrates this contrast.
+# Prereq: metrics-server installed via scripts/install-metrics-server.sh.
+# RAG retriever resource request: cpu=500m (see lab-01/solution/k8s/10-retriever-deployment.yaml)
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: rag-retriever
+  namespace: llm-app
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: rag-retriever
+  minReplicas: 1
+  maxReplicas: 2          # Conservative for KIND footprint
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 60
