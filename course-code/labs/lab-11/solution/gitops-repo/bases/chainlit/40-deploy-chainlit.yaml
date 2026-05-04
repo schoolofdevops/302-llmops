@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: chainlit
-        image: localhost:5001/smile-dental-ui-day2:v1.0.0
+        image: kind-registry:5001/smile-dental-ui-day2:v1.0.0    # GitOps: use kind-registry:5001 not localhost:5001
         env:
         - name: AGENT_URL
           value: "http://hermes-agent.llm-agent.svc.cluster.local:8642"
