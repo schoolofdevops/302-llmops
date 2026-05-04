@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: triage
-        image: localhost:5001/mcp-triage:v1.0.0
+        image: kind-registry:5001/mcp-triage:v1.0.0    # GitOps: use kind-registry:5001 not localhost:5001
         imagePullPolicy: IfNotPresent
         ports:
         - name: mcp

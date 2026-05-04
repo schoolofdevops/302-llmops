@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: treatment-lookup
-        image: localhost:5001/mcp-treatment_lookup:v1.0.0
+        image: kind-registry:5001/mcp-treatment_lookup:v1.0.0    # GitOps: use kind-registry:5001 not localhost:5001
         # GitOps note: IfNotPresent (not Always) — localhost:5001 is KIND-local and not
         # reachable from pods with imagePullPolicy Always. To use a new image tag after
         # rebuilding a tool: `kind load docker-image`, update the image tag in gitops-repo,
