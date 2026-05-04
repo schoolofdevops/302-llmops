@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v0.19.0
 milestone_name: milestone
-status: Ready to plan
-stopped_at: Phase 4 context gathered
-last_updated: "2026-05-03T17:34:06.770Z"
-last_activity: "2026-05-03 - Completed quick task 260503-pse: NodePort 31001 bridge for Lab 7"
+status: Ready to execute
+stopped_at: Completed 04-01-PLAN.md
+last_updated: "2026-05-04T03:03:23.141Z"
+last_activity: 2026-05-04
 progress:
   total_phases: 5
   completed_phases: 4
-  total_plans: 20
-  completed_plans: 20
+  total_plans: 29
+  completed_plans: 21
 ---
 
 # Project State
@@ -20,12 +20,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-12)
 
 **Core value:** Teach practitioners how to take AI systems (LLMs + agents) from prototype to production on Kubernetes — the only course covering the full journey from RAG to agentic deployments with K8s Agent Sandbox.
-**Current focus:** Phase 03 — agentops-labs-day-2
+**Current focus:** Phase 04 — production-ops-capstone-day-3
 
 ## Current Position
 
-Phase: 4
-Plan: Not started
+Phase: 04 (production-ops-capstone-day-3) — EXECUTING
+Plan: 2 of 9
 
 ## Performance Metrics
 
@@ -67,6 +67,7 @@ Plan: Not started
 | Phase 03-agentops-labs-day-2 P05 | 5min | 1 tasks | 1 files |
 | Phase 03-agentops-labs-day-2 P06 | 50min | 3 tasks | 26 files |
 | Phase 03-agentops-labs-day-2 P07 | 12min | 1 tasks | 1 files |
+| Phase 04-production-ops-capstone-day-3 P01 | 14min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -125,6 +126,8 @@ Recent decisions affecting current work:
 - [Phase 03-agentops-labs-day-2]: kind load docker-image required for new images — KIND worker nodes cannot resolve localhost:5001
 - [Phase 03-agentops-labs-day-2]: OTEL Collector chart 0.153.0 requires explicit image.repository=otel/opentelemetry-collector-contrib (breaking change)
 - [Phase 03-agentops-labs-day-2]: Lab 09 page embeds 0.000613 USD as agent_llm_cost_usd_total from 03-06 live run; D-18 partial compliance disclosed (closed binary / do not fork) with Tempo time-window workaround
+- [Phase 04-production-ops-capstone-day-3]: NS_ARGO_WORKFLOWS preserved; NS_ARGO=argo added as canonical Phase 4 namespace per Argo Workflows chart defaults
+- [Phase 04-production-ops-capstone-day-3]: KEDA Prometheus service name explicitly kps-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090 in COURSE_VERSIONS.md for student copy-paste
 
 ### Pending Todos
 
@@ -146,7 +149,7 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-03T17:34:06.767Z
-Last activity: 2026-05-03 - Completed quick task 260503-pse: NodePort 31001 bridge for Lab 7
-Stopped at: Phase 4 context gathered
-Resume file: .planning/phases/04-production-ops-capstone-day-3/04-CONTEXT.md
+Last session: 2026-05-04T03:03:23.138Z
+Last activity: 2026-05-04
+Stopped at: Completed 04-01-PLAN.md
+Resume file: None

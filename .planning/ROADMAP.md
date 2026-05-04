@@ -109,7 +109,7 @@ Plans:
 **Plans**: 9 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Phase 4 foundation (COURSE_VERSIONS pins, config.env, cleanup-phase4.sh, vLLM scale-back-up prereq, starter READMEs)
+- [x] 04-01-PLAN.md — Phase 4 foundation (COURSE_VERSIONS pins, config.env, cleanup-phase4.sh, vLLM scale-back-up prereq, starter READMEs)
 - [ ] 04-02-PLAN.md — Lab 10 autoscaling code (KEDA + metrics-server install, ScaledObject on vLLM, HPA on RAG retriever, hey loadgen Job, Grafana dashboard)
 - [ ] 04-03-PLAN.md — Lab 10 doc page (autoscaling walkthrough with embedded live evidence)
 - [ ] 04-04-PLAN.md — Lab 11 ArgoCD install (control-plane only — chart 9.5.11, NodePort 30700, 3 bootstrap scripts, namespace YAML)
