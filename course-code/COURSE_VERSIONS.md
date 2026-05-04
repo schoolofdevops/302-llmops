@@ -70,6 +70,22 @@ All versions verified on macOS Apple Silicon and x86-64 Windows.
 | Docusaurus | 3.10.0 | npm latest as of 2026-04-12; MDX 3, dark/light toggle, versioning |
 | Node.js | 22.x LTS | For Docusaurus build only; 18+ required by Docusaurus 3 |
 
+## Production Ops + Capstone (Day 3)
+
+| Component | Pinned Version | Compatibility Reason |
+|-----------|---------------|----------------------|
+| KEDA (Helm chart `kedacore/keda`) | 2.19.0 | Latest stable as of 2026-05-03; supports Prometheus scaler; works with K8s 1.30+ (we run 1.34). Controller image v2.19.x. Footprint ~150 MB across operator + metrics-apiserver + admission-webhooks pods. |
+| metrics-server | latest from `https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml` | Required for SCALE-01 HPA on CPU. Patch with `--kubelet-insecure-tls` for KIND. |
+| ArgoCD (Helm chart `argo/argo-cd`) | 9.5.11 (deploys ArgoCD v3.3.9) | Latest stable as of 2026-05-01. Supports K8s 1.32-1.35. Default values overridden: `dex.enabled=false`, `notifications.enabled=false`, `applicationSet.enabled=false`, `server.service.type=NodePort`, `server.service.nodePortHttp=30700`, `configs.params."server\.insecure"=true`. |
+| `argocd` CLI | matches server (3.3.x) | Optional; lab uses `kubectl apply -f` for Application CRs. |
+| Argo Workflows (Helm chart `argo/argo-workflows`) | 1.0.13 (deploys Argo Workflows v4.0.5) | Latest stable as of 2026-04-23. v4 line is the default new-install track. Default values: `server.serviceType=NodePort`, `server.serviceNodePort=30800`, `server.authModes={server}`. |
+| `argo` CLI | matches server (4.0.x) | Optional; lab uses `kubectl create -f` for Workflow CRs. |
+| `deepeval` (pip, used in Lab 12 eval container) | 3.9.9 | Latest stable as of 2026-04-28. `FaithfulnessMetric` works with custom Groq judge via `DeepEvalBaseLLM` wrapper. Python >= 3.9. |
+| `openai` (pip, used in DeepEval custom judge + scope-check guardrail) | 1.x latest | OpenAI-compatible client for Groq endpoint. |
+| `williamyeh/hey:latest` (Docker Hub) | latest | scratch-based Go binary (rakyll/hey 0.1.4); image last updated ~7y but stable. Entrypoint `/hey`. Fallback: build from `https://github.com/rakyll/hey/blob/master/Dockerfile` and push to `kind-registry:5001/hey:v1.0.0`. |
+| `alpine/git:latest` (Docker Hub) | latest | Used by Argo Workflows git-commit-step. Includes ssh-keyscan, git, openssh-client. |
+| `python:3.11-slim` (Docker Hub) | latest | Base for data-gen, train, merge, package, eval Python steps. Already used in Phase 2. |
+
 ## Notes
 
 - vLLM CPU image: `schoolofdevops/vllm-cpu-nonuma:0.9.1` — custom stripped-down image for CPU-only inference without GPU on mac/windows
@@ -79,3 +95,10 @@ All versions verified on macOS Apple Silicon and x86-64 Windows.
 - Kubernetes Agent Sandbox v0.4.3 is alpha (`v1alpha1`). KIND default kindnet does NOT enforce NetworkPolicy — Lab 08 applies it as a documented production pattern only.
 - The Sandbox Router image (`us-central1-docker.pkg.dev/k8s-staging-images/agent-sandbox/sandbox-router:latest-main`) is on GCR. Pullability without GCP credentials is verified at start of Lab 08; fallback is `kubectl port-forward` mode.
 - vLLM image stays at the existing pin; Day 2 scales the Deployment to 0 (manifest preserved for Day 3 autoscaling labs).
+- Day 3 (Phase 4) installs KEDA + metrics-server + ArgoCD + Argo Workflows alongside the Day 1+2 stack. Verify Docker Desktop allocation is at least 14 GB (preferably 16 GB) before starting Lab 10 — combined footprint is ~10-12 GB.
+- Phase 3 D-19/D-20 scaled `vllm-smollm2` Deployment to 0 at end of Lab 06. Lab 10 reverses this with `course-code/labs/lab-10/solution/scripts/00-prereq-scale-vllm-up.sh` as its first action (D-05).
+- KEDA Prometheus trigger uses Service name `kps-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090`. Project Helm release name is `kps` (per Lab 06 ServiceMonitor `release: kps` selector); verify with `kubectl get svc -n monitoring -l app.kubernetes.io/name=prometheus -o name` before writing the ScaledObject (RESEARCH.md Open Q1).
+- ArgoCD default sync interval is 3 minutes; instructor can force with `argocd app sync <name>` for live demos. GitHub webhook setup requires public ingress and is OUT OF SCOPE for the workshop (RESEARCH.md Pitfall 6 alternative; D-09 Claude's discretion → polling).
+- Argo Workflows artifact passing on KIND uses a shared PVC at `/workspace` mounted into every DAG step — NO MinIO/S3 (RESEARCH.md Pitfall 5).
+- DeepEval `FaithfulnessMetric` makes 2 LLM calls per test case. With 20 cases and Groq free tier (30 RPM / 6K TPM), run sequentially with `time.sleep(2.0)` between cases (RESEARCH.md Pitfall 6 / Open Q4).
+- `kind load docker-image` is required for every new local-built image (DeepEval, insurance_check) — KIND worker nodes cannot resolve `localhost:5001` (Phase 3 D-? finding).
