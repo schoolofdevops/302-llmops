@@ -18,7 +18,7 @@ spec:
       containers:
       - name: triage
         image: localhost:5001/mcp-triage:v1.0.0
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         ports:
         - name: mcp
           containerPort: 8010
