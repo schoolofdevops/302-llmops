@@ -1,0 +1,33 @@
+# Learner workspace — created in Lab 00, mounted into KIND cluster
+llmops-project/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# Build artifacts
+*.faiss
+*.pkl
+*.bin
+*.safetensors
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# MkDocs / Docusaurus build output
+site/
+.docusaurus/
