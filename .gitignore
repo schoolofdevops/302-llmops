@@ -31,3 +31,21 @@ Thumbs.db
 # MkDocs / Docusaurus build output
 site/
 .docusaurus/
+
+# Video production assets
+course-content/explainers/
+
+# Claude Code working dirs — never commit
+.claude/
+.planning/
+memory/
+
+# Course slides — managed separately, not in learner repo
+slides/
+
+# Companion repos / submodules
+llmops-labuide/
+
+# Runtime artifacts
+.clean_shutdown
+*.lock
