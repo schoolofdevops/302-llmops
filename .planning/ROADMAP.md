@@ -42,7 +42,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Estimated complexity**: M (2 repos + Docusaurus redirects; high-risk if context-transfer is mishandled — see Pitfall 9)
 
 Plans:
-- [ ] 01-01-PLAN.md — Freeze v0.19.0: push tag + create v0.19.x maintenance branch
+- [x] 01-01-PLAN.md — Freeze v0.19.0: push tag + create v0.19.x maintenance branch
 - [ ] 01-02-PLAN.md — Bootstrap 303-agentops: create repo + copy labs + write dossier + push
 - [ ] 01-03-PLAN.md — Docusaurus redirects + title rename + CHANGELOG + repo-root README
 - [ ] 01-04-PLAN.md — Delete AgentOps from 302 main + verify Docusaurus build
@@ -118,7 +118,7 @@ Phases execute in numeric order: 01 → 02 → 03 → 04 → 05 → 06
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 01. Curriculum Migration to 303-agentops | 0/4 | Not started | - |
+| 01. Curriculum Migration to 303-agentops | 1/4 | In Progress|  |
 | 02. Modernize LLMOps Spine (Labs 00-05) | 0/TBD | Not started | - |
 | 03. Disk-Based Model Loading (MinIO + initContainer) | 0/TBD | Not started | - |
 | 04. vLLM Router Multi-Pod Serving | 0/TBD | Not started | - |
