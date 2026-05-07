@@ -20,13 +20,6 @@ const sidebars: SidebarsConfig = {
         'labs/lab-04-model-packaging',
         'labs/lab-05-model-serving',
         'labs/lab-06-web-ui',
-        'labs/lab-07-agent-core',
-        'labs/lab-08-agent-sandbox',
-        'labs/lab-09-observability',
-        'labs/lab-10-autoscaling',
-        'labs/lab-11-gitops',
-        'labs/lab-12-pipelines',
-        'labs/lab-13-capstone',
       ],
     },
     {

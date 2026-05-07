@@ -7,6 +7,36 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ---
 
+## v1.0.0 — split from v0.19.0
+
+_Released: 2026-05-07_
+
+### Changed
+
+- **Course split:** AgentOps content (Labs 07-13: Hermes Agent, MCP tools, Kubernetes Agent Sandbox, OTEL/Tempo observability, cost middleware, guardrails, eval gate, capstone) removed from this repo and migrated to the companion course `schoolofdevops/303-agentops`.
+- **Course title renamed:** "LLMOps & AgentOps with Kubernetes" → "LLMOps with Kubernetes" — this course is now focused solely on LLMOps.
+- **Lab URLs redirected:** `/docs/labs/lab-07-*` through `/docs/labs/lab-13-*` now redirect to `https://github.com/schoolofdevops/303-agentops` via `@docusaurus/plugin-client-redirects`.
+
+### Removed
+
+- Lab 07 (Agent Core / Hermes Agent)
+- Lab 08 (Agent Sandbox)
+- Lab 09 (Agent Observability / OTEL Tempo)
+- Lab 10 (Agent Autoscaling)
+- Lab 11 (Agent GitOps)
+- Lab 12 (Agent Training Pipeline with Eval Gate)
+- Lab 13 (Capstone)
+
+### For v0.19.0 students
+
+If you were following the combined LLMOps + AgentOps course, your content is preserved at:
+
+- **Git tag:** https://github.com/schoolofdevops/302-llmops/tree/v0.19.0 (SHA `3c4e0b120efd93a147d61f916a943e6a775ec717`)
+- **Maintenance branch:** https://github.com/schoolofdevops/302-llmops/tree/v0.19.x (receives bug fixes)
+- **AgentOps content:** https://github.com/schoolofdevops/303-agentops
+
+---
+
 ## [v0.1.0] — 2026-05-02
 
 First release. Labs 00–06 verified end-to-end on a KIND cluster (macOS, CPU-only, 16 GB RAM).
