@@ -16,7 +16,7 @@ Foundational; gates all other v1.0.0 work. v0.19.0 must be tagged + 303-agentops
 - [x] **MIGRATE-02**: Bootstrap `schoolofdevops/303-agentops` repo with PROJECT.md, README, MIGRATION-FROM-302-LLMOPS.md, and `.planning/` baseline
 - [x] **MIGRATE-03**: Transfer AgentOps code (Labs 7-13: Hermes Agent, MCP tools, Sandbox, OTEL/Tempo, guardrails, eval gate, capstone) to 303-agentops with git history preserved (git filter-repo)
 - [x] **MIGRATE-04**: Transfer AgentOps planning context (.planning/phases/03-* and 04-* archives, decisions log, accumulated context, validated configs) to 303-agentops as durable handoff
-- [ ] **MIGRATE-05**: Delete AgentOps content from 302-llmops; configure Docusaurus `@docusaurus/plugin-client-redirects` for renumbered/removed labs; set `onBrokenLinks: 'throw'`
+- [x] **MIGRATE-05**: Delete AgentOps content from 302-llmops; configure Docusaurus `@docusaurus/plugin-client-redirects` for renumbered/removed labs; set `onBrokenLinks: 'throw'`
 
 ### SPINE — Restore + modernize LLMOps Labs 00-06
 
