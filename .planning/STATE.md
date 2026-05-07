@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v1.0.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Completed 01-curriculum-migration-to-303-agentops/01-03-PLAN.md (redirects + title rename + CHANGELOG + README)
-last_updated: "2026-05-07T08:19:15.256Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 01-curriculum-migration-to-303-agentops/01-04-PLAN.md (AgentOps deletion + build verify — Phase 01 COMPLETE)
+last_updated: "2026-05-07T08:24:25.781Z"
 last_activity: 2026-05-07
 progress:
   total_phases: 6
@@ -50,6 +50,7 @@ Plan: 4 of 4
 | Phase 01-curriculum-migration-to-303-agentops P01 | 2 | 2 tasks | 0 files |
 | Phase 01-curriculum-migration-to-303-agentops P02 | 6 | 5 tasks | 216 files |
 | Phase 01-curriculum-migration-to-303-agentops P03 | 199 | 4 tasks | 6 files |
+| Phase 01-curriculum-migration-to-303-agentops P04 | 12 | 3 tasks | 181 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,8 @@ Decisions are logged in PROJECT.md Key Decisions table. Recent decisions affecti
 - [Phase 01-curriculum-migration-to-303-agentops]: Task 1 automated (repo already existed empty+public) — no human action required for checkpoint:human-action
 - [Phase 01-curriculum-migration-to-303-agentops]: Redirects use single landing page target (303-agentops) for all 7 lab URLs per D-05 default
 - [Phase 01-curriculum-migration-to-303-agentops]: logo.alt updated from 'LLMOps & AgentOps Logo' to 'LLMOps Logo' alongside title rename (D-06)
+- [Phase 01-curriculum-migration-to-303-agentops]: Untracked runtime artifacts in lab-07 dirs (sqlite, pytest caches) left on disk — gitignored, never tracked, no action needed
+- [Phase 01-curriculum-migration-to-303-agentops]: D-10 order complete: tag→branch→303-bootstrap→redirects→delete→build-verify — all 8 steps done across plans 01-01..01-04
 
 ### Reusable from v0.19.0
 
@@ -113,8 +116,8 @@ None. (Roadmapper flagged stale concern about phase archive; verified — `.plan
 
 ## Session Continuity
 
-Last session: 2026-05-07T08:19:15.251Z
+Last session: 2026-05-07T08:24:25.778Z
 Last activity: 2026-05-07
-Stopped at: Completed 01-curriculum-migration-to-303-agentops/01-03-PLAN.md (redirects + title rename + CHANGELOG + README)
+Stopped at: Completed 01-curriculum-migration-to-303-agentops/01-04-PLAN.md (AgentOps deletion + build verify — Phase 01 COMPLETE)
 Resume file: None
 Next command: `/gsd:plan-phase 01`

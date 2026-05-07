@@ -19,7 +19,7 @@ Phase numbering starts at 01 (`--reset-phase-numbers` mode for v1.0.0). Old v0.1
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 01: Curriculum Migration to 303-agentops** — Tag v0.19.0, baseline 303-agentops with full context, transfer AgentOps code + planning artifacts, delete from this repo, configure Docusaurus redirects (foundational gate; nothing else can begin until this lands)
+- [x] **Phase 01: Curriculum Migration to 303-agentops** — Tag v0.19.0, baseline 303-agentops with full context, transfer AgentOps code + planning artifacts, delete from this repo, configure Docusaurus redirects (foundational gate; nothing else can begin until this lands) (completed 2026-05-07)
 - [ ] **Phase 02: Modernize LLMOps Spine (Labs 00-05)** — Carry-forward + end-to-end verification of Labs 00-05 (KIND, RAG, LoRA, OCI packaging, plain vLLM Deployment + Chainlit, Prometheus/Grafana) on the post-migration cluster, with 2026 dependency refresh
 - [ ] **Phase 03: Disk-Based Model Loading (MinIO + initContainer)** — Add MinIO in-cluster object store + disk-loading vLLM Deployment with sentinel + sha256 verification + sized emptyDir; publish OCI-vs-disk decision lab page
 - [ ] **Phase 04: vLLM Router Multi-Pod Serving** — Add vLLM Production Stack router (vllm-stack 0.1.10, pinned dev-tag) fronting two CPU backend pods with session/prefix-aware routing default; KEDA scales backends, not router
@@ -45,7 +45,7 @@ Plans:
 - [x] 01-01-PLAN.md — Freeze v0.19.0: push tag + create v0.19.x maintenance branch
 - [x] 01-02-PLAN.md — Bootstrap 303-agentops: create repo + copy labs + write dossier + push
 - [x] 01-03-PLAN.md — Docusaurus redirects + title rename + CHANGELOG + repo-root README
-- [ ] 01-04-PLAN.md — Delete AgentOps from 302 main + verify Docusaurus build
+- [x] 01-04-PLAN.md — Delete AgentOps from 302 main + verify Docusaurus build
 
 ### Phase 02: Modernize LLMOps Spine (Labs 00-05)
 **Goal**: Students can run Labs 00 through 05 end-to-end on a fresh post-migration KIND cluster and arrive at a Smile Dental assistant served via plain vLLM Deployment with Chainlit UI and Prometheus/Grafana observability
@@ -118,7 +118,7 @@ Phases execute in numeric order: 01 → 02 → 03 → 04 → 05 → 06
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 01. Curriculum Migration to 303-agentops | 3/4 | In Progress|  |
+| 01. Curriculum Migration to 303-agentops | 4/4 | Complete   | 2026-05-07 |
 | 02. Modernize LLMOps Spine (Labs 00-05) | 0/TBD | Not started | - |
 | 03. Disk-Based Model Loading (MinIO + initContainer) | 0/TBD | Not started | - |
 | 04. vLLM Router Multi-Pod Serving | 0/TBD | Not started | - |
