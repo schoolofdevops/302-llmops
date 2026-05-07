@@ -1,7 +1,0 @@
-# Generated runtime files
-.deepeval/
-__pycache__/
-*.pyc
-*.pyo
-/tmp/
-
