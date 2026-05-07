@@ -3,8 +3,8 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
-  title: 'LLMOps & AgentOps with Kubernetes',
-  tagline: 'From RAG to production agents on Kubernetes',
+  title: 'LLMOps with Kubernetes',
+  tagline: 'Production LLM serving on Kubernetes',
   favicon: 'img/favicon.ico',
 
   future: {
@@ -23,6 +23,44 @@ const config: Config = {
     defaultLocale: 'en',
     locales: ['en'],
   },
+
+  plugins: [
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        redirects: [
+          {
+            from: '/docs/labs/lab-07-agent-core',
+            to: 'https://github.com/schoolofdevops/303-agentops',
+          },
+          {
+            from: '/docs/labs/lab-08-agent-sandbox',
+            to: 'https://github.com/schoolofdevops/303-agentops',
+          },
+          {
+            from: '/docs/labs/lab-09-observability',
+            to: 'https://github.com/schoolofdevops/303-agentops',
+          },
+          {
+            from: '/docs/labs/lab-10-autoscaling',
+            to: 'https://github.com/schoolofdevops/303-agentops',
+          },
+          {
+            from: '/docs/labs/lab-11-gitops',
+            to: 'https://github.com/schoolofdevops/303-agentops',
+          },
+          {
+            from: '/docs/labs/lab-12-pipelines',
+            to: 'https://github.com/schoolofdevops/303-agentops',
+          },
+          {
+            from: '/docs/labs/lab-13-capstone',
+            to: 'https://github.com/schoolofdevops/303-agentops',
+          },
+        ],
+      },
+    ],
+  ],
 
   presets: [
     [
@@ -50,7 +88,7 @@ const config: Config = {
     navbar: {
       title: 'LLMOps',
       logo: {
-        alt: 'LLMOps & AgentOps Logo',
+        alt: 'LLMOps Logo',
         src: 'img/logo.svg',
       },
       items: [
