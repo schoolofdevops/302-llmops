@@ -1,11 +1,11 @@
 ---
-sidebar_position: 5
+sidebar_position: 4
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Lab 04: Model Packaging (OCI Image)
+# Lab 03: Model Packaging (OCI Image)
 
 **Day 1 | Duration: ~20 minutes**
 
@@ -42,7 +42,7 @@ FROM alpine:3.20
 COPY merged-model/ /model/
 
 # No CMD or ENTRYPOINT — this image is a data volume, not a runnable service
-# vLLM reads from /models (mounted via ImageVolume, see lab-04 Deployment YAML)
+# vLLM reads from /models (mounted via ImageVolume, see lab-04 Deployment YAML in Lab 04)
 ```
 
 Key design decisions:
@@ -52,7 +52,7 @@ Key design decisions:
 
 ## How ImageVolume Mounting Works
 
-In the vLLM Deployment YAML (from Lab 04), the volume spec looks like:
+In the vLLM Deployment YAML (from Lab 04 serving), the volume spec looks like:
 
 ```yaml
 volumes:
@@ -79,7 +79,7 @@ All commands assume you are in the **repository root** (`302-llmops/`).
 
 ### Step 1: Verify the merged model exists
 
-The model packaging step depends on the merge step completing successfully in Lab 03:
+The model packaging step depends on the merge step completing successfully in Lab 02:
 
 ```bash
 ls -lh llmops-project/training/merged-model/
@@ -97,7 +97,7 @@ total 514M
 -rw-r--r--  tokenizer_config.json          3KB
 ```
 
-If `model.safetensors` is missing, the merge step in Lab 03 did not complete. Check the merge container logs and retry.
+If `model.safetensors` is missing, the merge step in Lab 02 did not complete. Check the merge container logs and retry.
 
 ### Step 2: Run the build script
 
@@ -181,4 +181,6 @@ Expected: two layers — the alpine base (~5 MB) and the COPY layer (~520 MB).
 | Model OCI image | `kind-registry:5001/smollm2-135m-finetuned:v1.0.0` |
 | Source model | `llmops-project/training/merged-model/` |
 
-**Continue to Lab 05** to deploy vLLM using this image as an ImageVolume. The Deployment YAML references `kind-registry:5001/smollm2-135m-finetuned:v1.0.0` — if the image is not in the registry, the pod will fail to start with `ImagePullBackOff`.
+**Continue to Lab 04** to deploy vLLM using this image as an ImageVolume. The Deployment YAML references `kind-registry:5001/smollm2-135m-finetuned:v1.0.0` — if the image is not in the registry, the pod will fail to start with `ImagePullBackOff`.
+
+{/* D-18 PATTERN-A TEASER PLACEHOLDER (final wording lands in plan 02-06 task 3) */}

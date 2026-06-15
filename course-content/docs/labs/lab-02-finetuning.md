@@ -1,11 +1,11 @@
 ---
-sidebar_position: 4
+sidebar_position: 3
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Lab 03: CPU LoRA Fine-Tuning
+# Lab 02: CPU LoRA Fine-Tuning
 
 **Day 1 | Duration: ~60 minutes (15-20 min active + 40 min training wait)**
 
@@ -266,4 +266,4 @@ The real validation happens in Lab 05 when vLLM serves the model. This local tes
 | LoRA adapter checkpoint | `llmops-project/training/runs/run-*/checkpoint-50/` | ~3 MB |
 | Merged model | `llmops-project/training/merged-model/` | ~520 MB |
 
-**Continue to Lab 04** to package the merged model as an OCI container image and push it to the KIND registry.
+**Continue to Lab 03** to package the merged model as an OCI container image and push it to the KIND registry.
