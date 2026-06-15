@@ -22,7 +22,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 01: Curriculum Migration to 303-agentops** — Tag v0.19.0, baseline 303-agentops with full context, transfer AgentOps code + planning artifacts, delete from this repo, configure Docusaurus redirects (foundational gate; nothing else can begin until this lands) (completed 2026-05-07)
 - [ ] **Phase 02: Modernize LLMOps Spine (Labs 00-05)** — Carry-forward + end-to-end verification of Labs 00-05 (KIND, RAG, LoRA, OCI packaging, plain vLLM Deployment + Chainlit, Prometheus/Grafana) on the post-migration cluster, with 2026 dependency refresh
 - [x] **Phase 03: Disk-Based Model Loading (MinIO + initContainer)** (completed 2026-06-15) — Add MinIO in-cluster object store + disk-loading vLLM Deployment with sentinel + sha256 verification + sized emptyDir; publish OCI-vs-disk decision lab page
-- [ ] **Phase 04: vLLM Router Multi-Pod Serving** — Add vLLM Production Stack router (vllm-stack 0.1.10, pinned dev-tag) fronting two CPU backend pods with session/prefix-aware routing default; KEDA scales backends, not router
+- [ ] **Phase 04: vLLM Router Multi-Pod Serving** — Add vLLM Production Stack router (vllm-stack 0.1.11, lmcache/lmstack-router:v0.1.11) fronting two CPU backend pods with session routing default; KEDA scales backends, not router
 - [ ] **Phase 05: KServe InferenceService + Serving Decision Lab** — Restore KServe `InferenceService` (v0.18.0 Standard/RawDeployment mode) with custom CPU `ClusterServingRuntime`; close out with side-by-side serving-pattern comparison/decision lab (when to use each)
 - [ ] **Phase 06: Production Operations Layer** — Re-validate HPA + KEDA, ArgoCD App-of-Apps, and Argo Workflows training pipeline (data → index → train → merge, no eval gate) against all three serving patterns
 
@@ -90,17 +90,23 @@ Plans:
 - [x] 03-04-PLAN.md — Lab 06 doc page (PACKAGE-02 + PACKAGE-03 decision tree) + sidebars.ts + COURSE_VERSIONS.md
 
 ### Phase 04: vLLM Router Multi-Pod Serving
-**Goal**: Students can deploy the same fine-tuned model behind a vLLM Production Stack router with two CPU backend pods, observe session/prefix-aware routing preserving KV cache, and watch KEDA scale the backends (not the router)
-**Depends on**: Phase 02 (needs working plain vLLM lab as the "before" comparison)
+**Goal**: Students can deploy the same fine-tuned model behind a vLLM Production Stack router with two CPU backend pods, observe session routing preserving KV cache affinity, and watch KEDA scale the backends (not the router)
+**Depends on**: Phase 03 (needs MinIO running for initContainer model download; Phase 02 plain vLLM is the "before" comparison)
 **Requirements**: SERVE-03
 **Success Criteria** (what must be TRUE):
-  1. `vllm-stack` Helm chart 0.1.10 installed with `lmcache/lmstack-router` pinned to a dated dev tag (no `latest`), router pod running with `replicas: 1` and 2 vLLM CPU backends labelled `app=vllm-backend`
+  1. `vllm-stack` Helm chart 0.1.11 installed with `lmcache/lmstack-router:v0.1.11` (pinned), router pod running with `replicas: 1` and 2 vLLM CPU backends
   2. Router service at NodePort 30201 returns identical chat responses to the existing plain-vLLM NodePort 30200 (router is transparent), and `kubectl get endpoints` shows both backend IPs
-  3. Lab default routing logic is `session` or `prefixaware` (not round-robin); a benchmark step shows multi-turn chat is faster with session routing than with round-robin (Pitfall 1)
-  4. KEDA ScaledObject targets `Deployment/vllm-backend` (not the router) with metric `sum(vllm:num_requests_waiting{app="vllm-backend"})`, `minReplicaCount: 1`, `maxReplicaCount: 3`, and load-driven scale-up is observable
-  5. Lab teardown command leaves the cluster ready for Phase 05 (16GB headroom restored)
-**Plans**: TBD
-**Estimated complexity**: M (live-cluster-verification gate item: vllm-stack 0.1.10 + `vllm/vllm-openai-cpu` end-to-end on KIND has not been validated upstream)
+  3. Lab default routing logic is `session` (not round-robin); multi-turn chat demo shows session affinity in router logs (requests with same `x-user-id` header route to same backend pod)
+  4. KEDA ScaledObject targets `vllm-stack-smollm2-deployment-vllm` (not the router) with metric `sum(vllm:num_requests_waiting{model="smollm2"})`, `minReplicaCount: 1`, `maxReplicaCount: 3`, and load-driven scale-up is observable
+  5. Lab teardown command leaves the cluster ready for Phase 05 (Pattern A restored to replicas=1, vllm-stack helm release removed)
+**Plans**: 4 plans
+**Estimated complexity**: M (live-cluster-verification gate: vllm-stack 0.1.11 emptyDir initContainer schema + lmstack-router arm64 Rosetta gate + KEDA Prometheus address)
+
+Plans:
+- [ ] 04-01-PLAN.md — GAP-3 fix: add NodePort 30201 to kind-config.yaml + cluster recreate + Phase 02/03 stack redeploy
+- [ ] 04-02-PLAN.md — helm template dry-run + helm install vllm-stack 0.1.11 + verify router + 2 backends + NodePort 30201
+- [ ] 04-03-PLAN.md — Session routing demo + KEDA scale-up demo + resource budget capture
+- [ ] 04-04-PLAN.md — Lab 07 doc page + sidebars.ts + COURSE_VERSIONS.md + teardown + VERIFICATION.md
 
 ### Phase 05: KServe InferenceService + Serving Decision Lab
 **Goal**: Students can deploy the same fine-tuned model via KServe `InferenceService` (Standard/RawDeployment mode, no Knative, no Istio) and choose between plain Deployment, vLLM Router, and KServe based on a published decision tree
@@ -137,7 +143,7 @@ Phases execute in numeric order: 01 → 02 → 03 → 04 → 05 → 06
 | 01. Curriculum Migration to 303-agentops | 4/4 | Complete    | 2026-05-07 |
 | 02. Modernize LLMOps Spine (Labs 00-05) | 0/8 | Not started | - |
 | 03. Disk-Based Model Loading (MinIO + initContainer) | 0/4 | Not started | - |
-| 04. vLLM Router Multi-Pod Serving | 0/TBD | Not started | - |
+| 04. vLLM Router Multi-Pod Serving | 0/4 | Planned | - |
 | 05. KServe InferenceService + Serving Decision Lab | 0/TBD | Not started | - |
 | 06. Production Operations Layer | 0/TBD | Not started | - |
 
