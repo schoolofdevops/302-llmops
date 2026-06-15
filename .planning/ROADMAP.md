@@ -52,14 +52,24 @@ Plans:
 **Depends on**: Phase 01
 **Requirements**: SPINE-01, SPINE-02, SPINE-03, SPINE-04, SPINE-05, SPINE-06, SERVE-01 *(alias — delivered by SPINE-05 as "Pattern A")*, PACKAGE-01 *(alias — delivered by SPINE-04 as "Pattern A")*
 **Success Criteria** (what must be TRUE):
-  1. Lab 00 brings up a KIND cluster on KIND 1.34 + Docker Desktop on both macOS (arm64 + amd64) and Windows with ImageVolume feature gate enabled and dual ImageVolume gates verified
+  1. Lab 00 brings up a KIND cluster on KIND 1.34 + Docker Desktop on macOS arm64 (verified) and Windows amd64 (attestation pending) with ImageVolume feature gate enabled and dual ImageVolume gates verified (functional alpine ImageVolume test)
   2. Student can run Lab 01 (synthetic data + FAISS RAG) and Lab 02 (CPU LoRA fine-tune of SmolLM2-135M, max_steps=50) and produce a merged model artifact
   3. Lab 03 packages the merged model as an OCI image, and Lab 04 serves it via plain vLLM K8s Deployment + Chainlit chat UI accessible at `localhost:30300` (this Deployment is documented in Lab 04 as "Serving Pattern A")
   4. Lab 05 (Prometheus + Grafana) shows live `vllm:` metrics (TTFT, latency histogram, token throughput) on a dashboard scraped from the running vLLM pod
   5. All six labs use 2026-pinned dependency versions in `COURSE_VERSIONS.md` and verified end-to-end on a single KIND cluster session within the 16GB-RAM budget
-**Plans**: TBD
+**Plans**: 8 plans
 **Estimated complexity**: M (mostly verification of carry-forward content; six labs is the ceiling on size)
 **UI hint**: yes
+
+Plans:
+- [ ] 02-01-PLAN.md — Phase prep: orphan cleanup + COURSE_VERSIONS.md edits + cross-platform claim alignment (D-05, D-08, D-09, D-15, D-16, D-17)
+- [ ] 02-02-PLAN.md — Structural changes: kind-config.yaml NodePort fix (GAP-1) + lab dir restructure + doc page merges + sidebars + Docusaurus build (D-01..D-04)
+- [ ] 02-03-PLAN.md — Lab 00 cluster setup: bring up KIND, verify dual ImageVolume gates functionally, capture baseline budget (SPINE-01)
+- [ ] 02-04-PLAN.md — Lab 01: synth data + FAISS RAG retriever; capture budget (SPINE-02)
+- [ ] 02-05-PLAN.md — Lab 02: CPU LoRA fine-tune Job; capture PEAK + POST budget (SPINE-03)
+- [ ] 02-06-PLAN.md — Lab 03: OCI model packaging + ImageVolume mount verify + D-18 Pattern-A teaser (SPINE-04, PACKAGE-01)
+- [ ] 02-07-PLAN.md — Lab 04: plain vLLM Deployment + Chainlit UI + D-13 /metrics verify + D-19 Pattern-A teaser (SPINE-05, SERVE-01)
+- [ ] 02-08-PLAN.md — Lab 05: kube-prometheus-stack 83.4.2 + ServiceMonitors + Grafana dashboard + cumulative budget + 02-VERIFICATION.md (SPINE-06)
 
 ### Phase 03: Disk-Based Model Loading (MinIO + initContainer)
 **Goal**: Students can deploy the same fine-tuned model via runtime initContainer download from in-cluster MinIO instead of OCI ImageVolume, and choose between the two patterns based on model size and update cadence
@@ -118,8 +128,8 @@ Phases execute in numeric order: 01 → 02 → 03 → 04 → 05 → 06
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 01. Curriculum Migration to 303-agentops | 4/4 | Complete   | 2026-05-07 |
-| 02. Modernize LLMOps Spine (Labs 00-05) | 0/TBD | Not started | - |
+| 01. Curriculum Migration to 303-agentops | 4/4 | Complete    | 2026-05-07 |
+| 02. Modernize LLMOps Spine (Labs 00-05) | 0/8 | Not started | - |
 | 03. Disk-Based Model Loading (MinIO + initContainer) | 0/TBD | Not started | - |
 | 04. vLLM Router Multi-Pod Serving | 0/TBD | Not started | - |
 | 05. KServe InferenceService + Serving Decision Lab | 0/TBD | Not started | - |

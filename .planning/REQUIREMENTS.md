@@ -108,11 +108,11 @@ Every v1.0.0 requirement is mapped to exactly one phase. SERVE-01 and PACKAGE-01
 
 | REQ-ID | Phase | Plan | Status |
 |--------|-------|------|--------|
-| MIGRATE-01 | 01 | TBD | Not started |
-| MIGRATE-02 | 01 | TBD | Not started |
-| MIGRATE-03 | 01 | TBD | Not started |
-| MIGRATE-04 | 01 | TBD | Not started |
-| MIGRATE-05 | 01 | TBD | Not started |
+| MIGRATE-01 | 01 | 01-01 | Validated 2026-05-07 |
+| MIGRATE-02 | 01 | 01-02 | Validated 2026-05-07 |
+| MIGRATE-03 | 01 | 01-02 | Validated 2026-05-07 (fresh-copy per D-01) |
+| MIGRATE-04 | 01 | 01-02 | Validated 2026-05-07 |
+| MIGRATE-05 | 01 | 01-03 + 01-04 | Validated 2026-05-07 |
 | SPINE-01 | 02 | TBD | Not started |
 | SPINE-02 | 02 | TBD | Not started |
 | SPINE-03 | 02 | TBD | Not started |
