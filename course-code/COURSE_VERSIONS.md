@@ -3,7 +3,7 @@
 Tested combination for this course delivery.
 All versions verified on macOS Apple Silicon; Windows x86-64 verification follows the same Docker Desktop + KIND path documented per-lab.
 
-**Last verified:** 2026-05-08 (v1.0.0 Phase 02)
+**Last verified:** 2026-06-15 (v1.0.0 Phase 03)
 **Workshop delivery:** v1.0.0
 
 ## Core Infrastructure
@@ -36,6 +36,13 @@ All versions verified on macOS Apple Silicon; Windows x86-64 verification follow
 | vLLM | 0.9.1 | Custom CPU image: `schoolofdevops/vllm-cpu-nonuma:0.9.1` — stripped-down, no NUMA, CPU-only inference on mac/windows |
 | KServe | N/A (Phase 2) | Not used in Day 1 labs; plain K8s Deployment used for vLLM serving (Phase 3+ only) |
 | kube-prometheus-stack | 83.4.2 (Helm chart) | Reproducibility for workshop delivery; verified on KIND 1.34.0 |
+
+## Object Storage (Phase 03+)
+
+| Component | Pinned Version | Compatibility Reason |
+|-----------|---------------|----------------------|
+| MinIO Helm chart (minio-official/minio) | 5.4.0 (app: RELEASE.2024-12-18T13-15-44Z) | Standalone mode confirmed; Deployment (not StatefulSet) with mode=standalone, replicas=1; multi-arch arm64+amd64 |
+| MinIO client (mc) | quay.io/minio/mc:RELEASE.2024-11-21T17-21-54Z | Used in initContainer + model-uploader Job; 78 MB, multi-arch arm64+amd64 verified |
 
 ## Web UI
 
@@ -74,3 +81,4 @@ All versions verified on macOS Apple Silicon; Windows x86-64 verification follow
 - ArgoCD default sync interval is 3 minutes; instructor can force with `argocd app sync <name>` for live demos. GitHub webhook setup requires public ingress and is OUT OF SCOPE for the workshop.
 - Argo Workflows artifact passing on KIND uses a shared PVC at `/workspace` mounted into every DAG step — NO MinIO/S3.
 - `kind load docker-image` is required for every new local-built image — KIND worker nodes cannot resolve `localhost:5001`.
+- MinIO standalone install: `helm install minio minio-official/minio --namespace minio -f k8s/10-minio-values.yaml`. Must pass `mode=standalone` AND `replicas=1` to get a single-pod Deployment (not a 16-pod StatefulSet, chart v5.4.0 default).

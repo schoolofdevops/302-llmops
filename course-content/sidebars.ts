@@ -19,6 +19,7 @@ const sidebars: SidebarsConfig = {
         'labs/lab-03-model-packaging',
         'labs/lab-04-serving-and-ui',
         'labs/lab-05-observability',
+        'labs/lab-06-disk-model-loading',
       ],
     },
     {
