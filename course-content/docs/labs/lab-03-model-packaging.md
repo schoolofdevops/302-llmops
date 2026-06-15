@@ -183,4 +183,11 @@ Expected: two layers — the alpine base (~5 MB) and the COPY layer (~520 MB).
 
 **Continue to Lab 04** to deploy vLLM using this image as an ImageVolume. The Deployment YAML references `kind-registry:5001/smollm2-135m-finetuned:v1.0.0` — if the image is not in the registry, the pod will fail to start with `ImagePullBackOff`.
 
-{/* D-18 PATTERN-A TEASER PLACEHOLDER (final wording lands in plan 02-06 task 3) */}
+## What's Next: Two Model-Packaging Patterns
+
+This lab built **Pattern A — OCI ImageVolume packaging**: the merged model is shipped as a container image and mounted into the serving pod via Kubernetes ImageVolume. This is one of two model-packaging patterns covered in the v1.0.0 LLMOps curriculum:
+
+- **Pattern A — OCI ImageVolume** (this lab): The model travels as an OCI image. Pulled by the kubelet at pod start, mounted as a read-only filesystem volume. Best for ≤2GB models with immutable promotion via image tag.
+- **Pattern B — Disk-based loading via MinIO + initContainer** (covered in a later phase): The model lives in object storage; an initContainer downloads it into a sized emptyDir at pod startup with sentinel + sha256 verification. Best for >2GB models, frequent updates, or object-store-backed workflows.
+
+The decision lab — when to use which packaging pattern based on model size, registry constraints, and startup-time tradeoffs — lands in the same later phase that introduces Pattern B.

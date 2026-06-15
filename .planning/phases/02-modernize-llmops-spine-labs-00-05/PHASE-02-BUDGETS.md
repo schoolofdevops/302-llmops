@@ -99,3 +99,32 @@ kind-registry               28.35MiB / 9.705GiB
 - Cumulative after cleanup: ~2 GB (training pod terminated, lower than Lab 01 because retriever pod idle)
 
 ---
+
+## Lab 03 — OCI model packaging (Pattern A)
+
+**Captured:** 2026-06-15T08:20:00Z
+**New artifacts since Lab 02:** OCI image kind-registry:5001/smollm2-135m-finetuned:v1.0.0 (524.9 MB)
+
+### Docker container memory (after OCI build, no new pods)
+```
+llmops-kind-worker         503.5MiB / 9.705GiB
+llmops-kind-control-plane  973MiB / 9.705GiB
+llmops-kind-worker2        558.1MiB / 9.705GiB
+kind-registry               51.83MiB / 9.705GiB
+```
+
+### kubectl top nodes
+```
+error: Metrics API not available
+metrics-server not installed yet
+```
+
+### Key observations
+- smollm2-lora-merge Job (merge step) ran in 101s within 3Gi limit — no OOM.
+- Model OCI image: alpine:3.20 base + model.safetensors (538 MB) + tokenizers = 524.9 MB total.
+- ImageVolume smoke-test PASSED: /mnt/model/model/ shows config.json, model.safetensors, tokenizer.json, tokenizer_config.json.
+- Important layout: OCI image has COPY merged-model/ /model/; when mounted at /models (vLLM), files are at /models/model/ — matches --model=/models/model arg in lab-04 Deployment YAML.
+- kind-registry grew from ~28 MB → ~52 MB (now holds smollm2-trainer + smollm2-135m-finetuned layers).
+- Lab 04 vLLM Deployment will consume this image via the same ImageVolume mechanism.
+
+---
