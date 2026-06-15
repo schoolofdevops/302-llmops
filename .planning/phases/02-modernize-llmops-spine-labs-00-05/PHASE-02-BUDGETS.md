@@ -50,3 +50,31 @@ metrics-server not installed yet (expected at Lab 00; available after kube-prome
 - ⚠️ Docker Desktop memory is 9.705 GiB — below the 14 GB recommendation. Increase before Lab 02 (training job).
 
 ---
+
+## Lab 01 — Synth data + RAG retriever deployed
+
+**Captured:** 2026-06-15T07:32:12Z
+**New since Lab 00:** rag-retriever (1 pod, llm-app namespace)
+
+### Docker container memory
+```
+llmops-kind-worker 5.51% 140.9MiB /
+llmops-kind-control-plane 17.26% 729.3MiB /
+llmops-kind-worker2 4.55% 453.3MiB /
+kind-registry 0.05% 9.09MiB /
+```
+
+### kubectl top nodes
+```
+error: Metrics API not available
+metrics-server not installed yet
+```
+
+### Key observations
+- retriever pod: 512Mi/1Gi memory request/limit, 500m/1 CPU (per 10-retriever-deployment.yaml)
+- initContainer built FAISS index from clinic data (fastembed + faiss-cpu)
+- /search verified: 3 hits for "dental cleaning" query, latency ~0.56s
+- Docker Desktop memory: 9.705 GiB (⚠️ below 14 GB recommended — optimize manifests before Lab 02)
+- Cumulative estimate: ~3-3.5 GB total RSS
+
+---
