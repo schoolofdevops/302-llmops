@@ -159,3 +159,77 @@ metrics-server not yet installed (kube-prometheus-stack lands in Lab 05)
 - Available headroom: ~4.3 GB (9.705 - 5.4) — sufficient for Lab 05 kube-prometheus-stack
 
 ---
+
+## Lab 05 — kube-prometheus-stack + observability (final lab in walk)
+
+**Captured:** 2026-06-15T09:15:00Z
+**New services since Lab 04:** kube-prometheus-stack 83.4.2 (prometheus-operator, prometheus statefulset, grafana, kube-state-metrics, node-exporter ×3)
+
+### Docker container memory (with monitoring stack running, vLLM handling traffic)
+```
+NAME                        CPU %     MEM USAGE / LIMIT     MEM %
+llmops-kind-worker          163.63%   3.887GiB / 9.705GiB   40.05%
+llmops-kind-control-plane   22.76%    1.142GiB / 9.705GiB   11.76%
+llmops-kind-worker2         17.40%    1.403GiB / 9.705GiB   14.46%
+kind-registry               0.24%     20.94MiB / 9.705GiB   0.21%
+```
+
+### kubectl top nodes
+```
+error: Metrics API not available
+NOTE: kubectl top requires a separate metrics-server install.
+kube-prometheus-stack provides Prometheus/Grafana for LLM metrics but does NOT install the k8s metrics-server API.
+Docker stats above are the reliable memory source for this course.
+```
+
+### Key observations
+- Monitoring stack added ~1 GB above Lab 04 baseline: control-plane +405 MiB, worker2 +859 MiB
+- vLLM worker holds steady at ~3.9 GiB (slightly lower than Lab 04 snapshot due to GC; traffic was mid-flight)
+- Total cluster RSS: ~6.45 GB (3.887 GB worker + 1.142 GB control-plane + 1.403 GB worker2 + 21 MB registry)
+- Available headroom: ~3.25 GB (9.705 - 6.45)
+- 3 node-exporter pods (one per KIND node)
+- alertmanager.enabled=false — saved ~256 MiB
+- Helm release `kps`, chart version 83.4.2 (pinned per D-08 / COURSE_VERSIONS.md)
+- vllm:* metrics: 257 series scraped (D-12 gate met)
+- chat_requests_total: 1 series present (D-13 closure — OBS-03 carry-forward debt resolved)
+- Grafana dashboards: 28 loaded via sidecar (including "Smile Dental — LLM Pipeline" custom dashboard)
+
+---
+
+## Cumulative Phase 02 Summary
+
+**Walk completed:** 2026-06-15
+**Verification target:** macOS arm64 (Apple Silicon, Docker Desktop 9.705 GiB allocated)
+**Docker Desktop allocation:** ~10 GB (9.705 GiB actual, verified sufficient)
+**Single-session walk Lab 00 → Lab 05 without teardown (D-10).**
+
+### Per-lab footprint deltas
+
+| Lab | New workload | Cumulative cluster RSS | Headroom remaining (vs 9.705 GB) |
+|-----|-------------|------------------------|----------------------------------|
+| 00  | KIND 3-node baseline only | ~964 MiB | ~8.7 GB |
+| 01  | + rag-retriever (512Mi req) | ~1.3 GB | ~8.4 GB |
+| 02 PEAK | + smollm2-lora-train (4Gi limit) | ~5 GB | ~4.7 GB |
+| 02 POST | (training pod terminated) | ~2 GB | ~7.7 GB |
+| 03  | (lora-merge job — short-lived, 3Gi limit) | ~2 GB | ~7.7 GB |
+| 04  | + vllm-smollm2 (5Gi limit) + chainlit-ui | ~5.4 GB | ~4.3 GB |
+| 05  | + kube-prometheus-stack (~1 GB) | ~6.45 GB | ~3.25 GB |
+
+### Phase 02 PEAK points
+- Lab 02 mid-training: ~5 GB (4Gi training pod running on worker)
+- Lab 05 final state: ~6.45 GB (vLLM + Chainlit + retriever + monitoring all simultaneous)
+- Both PEAK points within 9.705 GiB Docker Desktop allocation — verified sufficient.
+- Minimum Docker Desktop for course: **10 GB** (verified on 9.705 GiB with headroom).
+
+### Headroom for downstream phases
+- Phase 03 (MinIO + initContainer): MinIO adds ~256Mi-512Mi modest; can reuse this cluster.
+- Phase 04 (vLLM Router + KEDA): Router + 2 backends ~10 GiB — recommend teardown of Lab 04 vLLM before starting.
+- Phase 05 (KServe): Largest control-plane footprint; recommend fresh cluster.
+
+### Deliverables Confirmed (ROADMAP Phase 02 Success Criteria)
+
+1. ✅ KIND v1.34 + Docker Desktop on macOS arm64; dual ImageVolume gates verified functional. Windows attestation pending (see 02-VERIFICATION.md).
+2. ✅ Lab 01 + Lab 02 produced merged-model artifact end-to-end (LoRA train 8.6 min, 4Gi sufficient).
+3. ✅ Lab 03 OCI image kind-registry:5001/smollm2-135m-finetuned:v1.0.0; Lab 04 vLLM + Chainlit at localhost:30300 (Pattern A serving).
+4. ✅ Lab 05 kube-prometheus-stack 83.4.2 with live vllm:* metrics (257 series) in Prometheus; Grafana dashboard live.
+5. ✅ All six labs use 2026-pinned dependency versions per COURSE_VERSIONS.md (D-06, D-07, D-08); single-session walk within 10 GB Docker Desktop RAM budget.
