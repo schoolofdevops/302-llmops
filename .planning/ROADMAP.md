@@ -21,7 +21,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 01: Curriculum Migration to 303-agentops** — Tag v0.19.0, baseline 303-agentops with full context, transfer AgentOps code + planning artifacts, delete from this repo, configure Docusaurus redirects (foundational gate; nothing else can begin until this lands) (completed 2026-05-07)
 - [ ] **Phase 02: Modernize LLMOps Spine (Labs 00-05)** — Carry-forward + end-to-end verification of Labs 00-05 (KIND, RAG, LoRA, OCI packaging, plain vLLM Deployment + Chainlit, Prometheus/Grafana) on the post-migration cluster, with 2026 dependency refresh
-- [ ] **Phase 03: Disk-Based Model Loading (MinIO + initContainer)** — Add MinIO in-cluster object store + disk-loading vLLM Deployment with sentinel + sha256 verification + sized emptyDir; publish OCI-vs-disk decision lab page
+- [x] **Phase 03: Disk-Based Model Loading (MinIO + initContainer)** (completed 2026-06-15) — Add MinIO in-cluster object store + disk-loading vLLM Deployment with sentinel + sha256 verification + sized emptyDir; publish OCI-vs-disk decision lab page
 - [ ] **Phase 04: vLLM Router Multi-Pod Serving** — Add vLLM Production Stack router (vllm-stack 0.1.10, pinned dev-tag) fronting two CPU backend pods with session/prefix-aware routing default; KEDA scales backends, not router
 - [ ] **Phase 05: KServe InferenceService + Serving Decision Lab** — Restore KServe `InferenceService` (v0.18.0 Standard/RawDeployment mode) with custom CPU `ClusterServingRuntime`; close out with side-by-side serving-pattern comparison/decision lab (when to use each)
 - [ ] **Phase 06: Production Operations Layer** — Re-validate HPA + KEDA, ArgoCD App-of-Apps, and Argo Workflows training pipeline (data → index → train → merge, no eval gate) against all three serving patterns
@@ -84,10 +84,10 @@ Plans:
 **Estimated complexity**: S (single new infra component; pattern is straightforward; pitfalls 6 + 7 are well-known)
 
 Plans:
-- [ ] 03-01-PLAN.md — GAP-2 fix: add NodePorts 30203/30900/30901 to kind-config.yaml + cluster recreate + Phase 02 stack redeploy
-- [ ] 03-02-PLAN.md — MinIO install (chart 5.4.0, standalone, NodePort 30900/30901) + model-uploader Job (mc upload to s3://models/smollm2-finetuned/)
-- [ ] 03-03-PLAN.md — vllm-smollm2-disk Deployment: initContainer + emptyDir sizeLimit:1Gi + sha256 + sentinel + NodePort 30203
-- [ ] 03-04-PLAN.md — Lab 06 doc page (PACKAGE-02 + PACKAGE-03 decision tree) + sidebars.ts + COURSE_VERSIONS.md
+- [x] 03-01-PLAN.md — GAP-2 fix: add NodePorts 30203/30900/30901 to kind-config.yaml + cluster recreate + Phase 02 stack redeploy
+- [x] 03-02-PLAN.md — MinIO install (chart 5.4.0, standalone, NodePort 30900/30901) + model-uploader Job (mc upload to s3://models/smollm2-finetuned/)
+- [x] 03-03-PLAN.md — vllm-smollm2-disk Deployment: initContainer + emptyDir sizeLimit:1Gi + sha256 + sentinel + NodePort 30203
+- [x] 03-04-PLAN.md — Lab 06 doc page (PACKAGE-02 + PACKAGE-03 decision tree) + sidebars.ts + COURSE_VERSIONS.md
 
 ### Phase 04: vLLM Router Multi-Pod Serving
 **Goal**: Students can deploy the same fine-tuned model behind a vLLM Production Stack router with two CPU backend pods, observe session/prefix-aware routing preserving KV cache, and watch KEDA scale the backends (not the router)

@@ -43,8 +43,8 @@ Same fine-tuned model, three deployment styles. Side-by-side comparison.
 OCI image (existing) + disk-based loading (new). Decision tree.
 
 - [ ] **PACKAGE-01**: Pattern A — OCI ImageVolume packaging baseline (already delivered by SPINE-04; documented as "Pattern A" in comparison)
-- [ ] **PACKAGE-02**: Pattern B — disk-based loading lab via MinIO + initContainer download; explicit `sizeLimit` on emptyDir; matching `ephemeral-storage` requests; sentinel file + sha256 verification
-- [ ] **PACKAGE-03**: Comparison/decision lab page — when to use OCI ImageVolume vs disk-based (model size, registry constraints, startup time tradeoffs)
+- [x] **PACKAGE-02**: Pattern B — disk-based loading lab via MinIO + initContainer download; explicit `sizeLimit` on emptyDir; matching `ephemeral-storage` requests; sentinel file + sha256 verification *(Validated Phase 03, 2026-06-15)*
+- [x] **PACKAGE-03**: Comparison/decision lab page — when to use OCI ImageVolume vs disk-based (model size, registry constraints, startup time tradeoffs) *(Validated Phase 03, 2026-06-15)*
 
 ### OPS — Production operations layer
 
