@@ -14,12 +14,11 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       items: [
         'labs/lab-00-cluster-setup',
-        'labs/lab-01-synthetic-data',
-        'labs/lab-02-rag-retriever',
-        'labs/lab-03-finetuning',
-        'labs/lab-04-model-packaging',
-        'labs/lab-05-model-serving',
-        'labs/lab-06-web-ui',
+        'labs/lab-01-synthetic-data-and-rag',
+        'labs/lab-02-finetuning',
+        'labs/lab-03-model-packaging',
+        'labs/lab-04-serving-and-ui',
+        'labs/lab-05-observability',
       ],
     },
     {

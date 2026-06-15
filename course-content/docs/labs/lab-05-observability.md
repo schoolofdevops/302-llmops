@@ -1,152 +1,23 @@
 ---
-sidebar_position: 7
+sidebar_position: 6
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Lab 06: Chainlit Web UI + Observability
+# Lab 05: LLM Observability with Prometheus and Grafana
 
 **Day 1 | Duration: ~45 minutes**
 
 ## Learning Objectives
 
-- Deploy the Smile Dental Chainlit chat interface to Kubernetes
-- Understand Chainlit's "glass-box" mode — expandable steps that reveal each pipeline stage
 - Install Prometheus and Grafana via kube-prometheus-stack Helm chart
 - Configure ServiceMonitors to scrape vLLM, the retriever, and Chainlit metrics
 - Observe LLM-specific metrics (Time to First Token, request count) in a pre-built Grafana dashboard
 
-This is the final Day 1 lab. By the end, you'll have a fully running Smile Dental assistant — accessible in a browser, backed by the RAG retriever and vLLM you deployed in Labs 01-05, with real-time metrics visible in Grafana.
+This is the final Day 1 lab. By the end, you'll have a fully running Smile Dental assistant — accessible in a browser, backed by the RAG retriever and vLLM you deployed in Labs 01-04, with real-time metrics visible in Grafana.
 
----
-
-## Part A: Smile Dental Chat UI
-
-### Why Chainlit for This Course?
-
-Chainlit is a Python-native chat framework that integrates directly with async Python code. No frontend JavaScript, no separate REST layer — your `on_message` handler is also the API handler. For this course, the key feature is **Steps**: collapsible panels in the chat UI that reveal what each pipeline stage received and produced.
-
-This makes the Chainlit UI "glass-box" rather than "black-box" — a deliberate pedagogical choice. Students can see exactly which documents the RAG retriever returned, what prompt was assembled and sent to vLLM, and how long each stage took. This visibility is essential for understanding LLMOps: when a response is wrong, you can trace back to see whether the retriever found relevant documents, whether the prompt was correctly constructed, or whether vLLM generated something unexpected.
-
-### How app.py Works
-
-Open `course-code/labs/lab-05/solution/ui/app.py`. The handler for incoming messages (`on_message`) runs three pipeline stages, each wrapped in a `cl.Step`:
-
-**Step 1 — RAG Retrieval:**
-```python
-async with cl.Step(name="Retrieving clinic documents", type="tool") as s:
-    s.input = message.content
-    resp = await client.post(f"{RETRIEVER_URL}/search",
-                             json={"query": message.content, "k": TOP_K})
-    hits = resp.json().get("hits", [])
-    s.output = f"Found {len(hits)} relevant chunks in {elapsed:.2f}s"
-```
-
-When you expand this step in the browser, `s.input` shows the user's raw question, and `s.output` shows how many clinic documents matched and how quickly.
-
-**Step 2 — Prompt Construction:**
-```python
-async with cl.Step(name="Building prompt", type="run", show_input="json") as s:
-    messages = build_messages(message.content, hits)
-    s.input = messages   # shows full message list as JSON
-    s.output = f"Constructed {len(messages)}-message prompt..."
-```
-
-Expand this step to see the exact system prompt + context chunks + user question that was sent to vLLM. This is the most educational step — students can see the full RAG-augmented prompt.
-
-**Step 3 — LLM Generation:**
-```python
-# Streaming message created BEFORE the step, so tokens appear in main chat thread
-response_msg = cl.Message(content="")
-await response_msg.send()
-
-async with cl.Step(name="LLM generation", type="run") as s:
-    async with client.stream("POST", f"{VLLM_URL}/v1/chat/completions", ...) as stream:
-        async for line in stream.aiter_lines():
-            token = parse_sse(line)
-            if token:
-                await response_msg.stream_token(token)
-```
-
-:::note Why the streaming message is created before the step
-If you create `response_msg` inside the `cl.Step` context, streaming tokens appear inside the collapsed step rather than in the main chat thread. By creating the message before entering the step, tokens stream visibly to the user while the step records generation metadata.
-:::
-
-All commands assume you are in the **repository root** (`302-llmops/`).
-
-### Step A1: Build the Chainlit Docker image
-
-```bash
-docker build \
-  -t kind-registry:5001/smile-dental-ui:v1.0.0 \
-  course-code/labs/lab-05/solution/ui/
-```
-
-```bash
-docker push kind-registry:5001/smile-dental-ui:v1.0.0
-```
-
-Build time: 2-3 minutes (installs Chainlit, httpx, and dependencies).
-
-### Step A2: Deploy to Kubernetes
-
-```bash
-kubectl apply -f course-code/labs/lab-05/solution/k8s/
-```
-
-Expected output:
-```
-deployment.apps/chainlit-ui created
-service/chainlit-ui created
-```
-
-Check pod status:
-
-```bash
-kubectl get pods -n llm-app -l app=chainlit-ui
-```
-
-The pod should be `Running 1/1` within about 30 seconds.
-
-:::warning Chainlit requires --host 0.0.0.0
-The Chainlit container image CMD includes `--host 0.0.0.0`. Without this flag, Chainlit binds to `127.0.0.1` inside the container, and the NodePort cannot forward traffic to it (WebSocket connections will fail with HTTP 403). The provided Dockerfile already includes this — do not remove it if you rebuild.
-:::
-
-### Step A3: Open the Smile Dental chat interface
-
-Open your browser and navigate to:
-
-```
-http://localhost:30300
-```
-
-You should see the Smile Dental Clinic assistant welcome message:
-> Welcome to **Smile Dental Clinic** assistant!
-
-### Step A4: Try a dental query and explore glass-box mode
-
-Send a question such as:
-> How much does teeth whitening cost at Smile Dental?
-
-After the response appears:
-
-1. **Click on "Retrieving clinic documents"** — expand this step to see which dental documents scored highest in FAISS retrieval. Look for `TX-WHITE-01` (Teeth Whitening treatment) in the hits.
-
-2. **Click on "Building prompt"** — expand to see the exact JSON messages array sent to vLLM. You'll see the system prompt, the retrieved context chunks injected as context, and the user's question.
-
-3. **Click on "LLM generation"** — shows generation metadata.
-
-Try a policy question next:
-> What happens if I cancel my appointment?
-
-Expand the retrieval step — you should see policy documents (`POLICY-*`) scoring highest rather than treatment documents. This confirms the semantic retrieval is working correctly.
-
----
-
-## Part B: LLM Observability
-
-### Why Observability Matters for LLMs
+## Why Observability Matters for LLMs
 
 Traditional application metrics (CPU, memory, request rate) don't tell you what matters most for LLMs:
 
@@ -169,7 +40,7 @@ If you see "No data" in a Grafana panel, check that your PromQL query uses `vllm
 The KV Cache panel queries `vllm:gpu_cache_usage_perc`. Despite running on CPU, vLLM 0.9.1 uses this same metric name for both GPU and CPU backends. There is no separate `vllm:cpu_cache_usage_perc` metric. The value correctly reflects your CPU KV cache utilization (set by `VLLM_CPU_KVCACHE_SPACE=2`).
 :::
 
-### Architecture
+## Architecture
 
 ```
 vLLM Pod → :8000/metrics → Prometheus (scrapes every 30s) → Grafana (queries every 30s)
@@ -184,10 +55,12 @@ Grafana loads dashboards from ConfigMaps labeled grafana_dashboard: "1"
 Chainlit registers a catch-all route `/{full_path:path}` that intercepts any `/metrics` path on port 8000. The `app.py` in this lab works around this by starting a standalone `prometheus_client` HTTP server on port **9090**. The Deployment exposes both ports, and the ServiceMonitor scrapes port 9090 for `chat_requests_total` and `chat_latency_seconds`.
 :::
 
+## Lab Steps
+
 ### Step B1: Install kube-prometheus-stack
 
 ```bash
-bash course-code/labs/lab-06/solution/scripts/install-monitoring.sh
+bash course-code/labs/lab-05/solution/scripts/install-monitoring.sh
 ```
 
 This installs `prometheus-community/kube-prometheus-stack` chart version 83.4.2 with:
@@ -205,7 +78,7 @@ kubectl get pods -n monitoring
 ### Step B2: Apply ServiceMonitors and the Grafana dashboard
 
 ```bash
-kubectl apply -f course-code/labs/lab-06/solution/k8s/observability/
+kubectl apply -f course-code/labs/lab-05/solution/k8s/observability/
 ```
 
 This creates:
@@ -240,7 +113,7 @@ Grafana discovers dashboard ConfigMaps via a sidecar running every 60 seconds. I
 Two traffic generator scripts are provided. Run the **full pipeline script** to populate all panels — it calls the RAG retriever and vLLM in sequence, exactly as Chainlit does internally:
 
 ```bash
-bash course-code/labs/lab-06/solution/scripts/generate-traffic-full.sh localhost 31001 30200 3
+bash course-code/labs/lab-05/solution/scripts/generate-traffic-full.sh localhost 31001 30200 3
 ```
 
 This sends 30 requests total (3 rounds × 10 queries), calling the RAG retriever for each query before sending the result to vLLM. While it runs (~5 minutes), open Grafana and watch the panels update.
@@ -336,11 +209,11 @@ kubectl get deployment vllm-smollm2 -n llm-serving -o jsonpath='{.spec.replicas}
 ```
 
 :::warning Skipping the wind-down
-If you jump directly from Lab 06 to Lab 07 without scaling vLLM down, your KIND cluster may run out of memory partway through Lab 07. The Hermes Agent container alone needs ~1.5 GB; the SandboxWarmPool in Lab 08 needs ~3-4 GB. If you skipped this step, run the `kubectl scale` command above before starting Lab 07.
+If you jump directly from Lab 05 to Lab 06 without scaling vLLM down, your KIND cluster may run out of memory partway through Lab 06. The Hermes Agent container alone needs ~1.5 GB; the SandboxWarmPool in later labs needs ~3-4 GB. If you skipped this step, run the `kubectl scale` command above before starting Lab 06.
 :::
 
 :::tip Coming back later
-On Day 3 (Lab 10 — Autoscaling), you will scale vLLM back up with `kubectl scale deployment vllm-smollm2 --replicas=1 -n llm-serving` and watch HPA grow it under load.
+On Day 3 (Autoscaling labs), you will scale vLLM back up with `kubectl scale deployment vllm-smollm2 --replicas=1 -n llm-serving` and watch HPA grow it under load.
 :::
 
 ## After This Lab
