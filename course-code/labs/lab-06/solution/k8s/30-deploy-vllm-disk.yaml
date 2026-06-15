@@ -24,7 +24,6 @@ spec:
       labels:
         app: vllm-disk
     spec:
-      nodeName: llmops-kind-worker
       initContainers:
       - name: model-download
         image: quay.io/minio/mc:RELEASE.2024-11-21T17-21-54Z
