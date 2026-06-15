@@ -1,0 +1,122 @@
+# Pattern B: disk-based model loading via MinIO initContainer
+# MEMORY BUDGET: scale vllm-smollm2 to 0 before deploying this:
+#   kubectl scale deployment vllm-smollm2 -n llm-serving --replicas=0
+# After Pattern B demo, restore Pattern A:
+#   kubectl scale deployment vllm-smollm2 -n llm-serving --replicas=1
+#
+# sha256 is pinned to the Lab 02 merged-model; update if model is retrained:
+#   shasum -a 256 ./llmops-project/training/merged-model/model.safetensors
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm-smollm2-disk
+  namespace: llm-serving
+  labels:
+    app: vllm-disk
+    course: llmops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vllm-disk
+  template:
+    metadata:
+      labels:
+        app: vllm-disk
+    spec:
+      nodeName: llmops-kind-worker
+      initContainers:
+      - name: model-download
+        image: quay.io/minio/mc:RELEASE.2024-11-21T17-21-54Z
+        command:
+          - sh
+          - -c
+          - |
+            set -euo pipefail
+            echo "Configuring MinIO alias..."
+            mc alias set minio http://minio.minio:9000 minio minio123
+            echo "Downloading model from MinIO..."
+            mc cp --recursive minio/models/smollm2-finetuned/ /model/
+            echo "Verifying sha256..."
+            EXPECTED="4a946ea7a4550946a9ac38a302cfe2703b6724e9e1392fb32c30f32d0a9c5108"
+            ACTUAL=$(sha256sum /model/model.safetensors | awk '{print $1}')
+            if [ "$ACTUAL" != "$EXPECTED" ]; then
+              echo "ERROR: sha256 mismatch! expected=$EXPECTED actual=$ACTUAL"
+              exit 1
+            fi
+            echo "sha256 verified. Writing sentinel..."
+            touch /model/READY
+            echo "Model download complete."
+        resources:
+          requests:
+            cpu: 200m
+            memory: 128Mi
+            ephemeral-storage: 1Gi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+            ephemeral-storage: 2Gi
+        volumeMounts:
+        - name: model
+          mountPath: /model
+      containers:
+      - name: vllm
+        image: schoolofdevops/vllm-cpu-nonuma:0.9.1
+        command:
+          - sh
+          - -c
+          - |
+            until [ -f /model/READY ]; do
+              echo "Waiting for model download..."; sleep 2;
+            done
+            exec python3 -m vllm.entrypoints.openai.api_server \
+              --model=/model \
+              --host=0.0.0.0 \
+              --port=8000 \
+              --max-model-len=4096 \
+              --served-model-name=smollm2-135m-finetuned \
+              --dtype=float32 \
+              --disable-frontend-multiprocessing \
+              --max-num-seqs=1
+        env:
+        - name: VLLM_TARGET_DEVICE
+          value: "cpu"
+        - name: VLLM_CPU_KVCACHE_SPACE
+          value: "2"    # CRITICAL: NOT 4 — OOM on 5Gi KIND nodes
+        - name: OMP_NUM_THREADS
+          value: "4"
+        - name: VLLM_CPU_OMP_THREADS_BIND
+          value: "auto"
+        ports:
+        - containerPort: 8000
+          name: http
+        resources:
+          requests:
+            cpu: "4"
+            memory: 4Gi
+            ephemeral-storage: 1Gi
+          limits:
+            cpu: "4"
+            memory: 5Gi
+            ephemeral-storage: 2Gi
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 120
+          periodSeconds: 10
+          failureThreshold: 18
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 180
+          periodSeconds: 15
+          failureThreshold: 10
+        volumeMounts:
+        - name: model
+          mountPath: /model
+      volumes:
+      - name: model
+        emptyDir:
+          sizeLimit: 1Gi
