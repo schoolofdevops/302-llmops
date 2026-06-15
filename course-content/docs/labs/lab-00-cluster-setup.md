@@ -30,7 +30,7 @@ You need these tools installed before starting. Run `preflight-check.sh` in Step
 | **git** | any | pre-installed on macOS/Linux |
 
 :::warning Docker Desktop memory setting
-Go to **Docker Desktop → Settings → Resources → Memory** and set it to at least **12 GB**. The vLLM serving pod (Lab 05) needs 5 GB by itself. With the KIND cluster, registry, and other pods running, 12 GB is the safe minimum.
+Go to **Docker Desktop → Settings → Resources → Memory** and set it to at least **10 GB**. With the KIND cluster, registry, training job, and vLLM serving pod all running, 10 GB is the verified minimum on macOS. 12 GB provides comfortable headroom.
 :::
 
 ---

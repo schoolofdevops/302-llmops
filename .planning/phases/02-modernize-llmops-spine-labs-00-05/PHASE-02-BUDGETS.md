@@ -1,7 +1,7 @@
 # Phase 02 Resource Budgets — Single-Session Walk
 
 **Methodology:** Single continuous KIND session, Lab 00 → Lab 05, no teardown between labs (D-10, D-11).
-**Verification target:** macOS arm64, Docker Desktop with ≥14 GB RAM allocation.
+**Verification target:** macOS arm64, Docker Desktop with ≥10 GB RAM allocation (verified at 9.7 GB).
 **Cluster:** llmops-kind (3 nodes, KIND v1.34.0).
 
 ---
@@ -24,9 +24,8 @@ CONTAINER ID   NAME                        CPU %     MEM USAGE / LIMIT      MEM 
 ### Docker Desktop VM allocation
 ```
 9.705 GiB allocated to Docker Desktop VM
-⚠️  WARNING: Plan requires ≥14 GB. Current: ~9.7 GB.
-    Lab 02 training job needs ~8 GB headroom. Increase via:
-    Docker Desktop → Settings → Resources → Memory → 14 GB (or more)
+✅ VERIFIED SUFFICIENT: Training job completed with 4Gi memory limit (optimized from 8Gi).
+   Lab 02 fits within 9.7 GB Docker Desktop. 10 GB is the new verified minimum.
 ```
 
 ### kubectl top nodes
@@ -47,7 +46,6 @@ metrics-server not installed yet (expected at Lab 00; available after kube-prome
 - metrics-server NOT installed at this stage; `kubectl top` will succeed once kube-prometheus-stack lands in Lab 05.
 - Both ImageVolume gates verified functional: alpine test pod showed populated /mounted (bin, etc, usr visible).
 - Host extraPortMappings bound: 30200, 30300, 30400, 30500 (verified via docker inspect).
-- ⚠️ Docker Desktop memory is 9.705 GiB — below the 14 GB recommendation. Increase before Lab 02 (training job).
 
 ---
 
@@ -74,7 +72,30 @@ metrics-server not installed yet
 - retriever pod: 512Mi/1Gi memory request/limit, 500m/1 CPU (per 10-retriever-deployment.yaml)
 - initContainer built FAISS index from clinic data (fastembed + faiss-cpu)
 - /search verified: 3 hits for "dental cleaning" query, latency ~0.56s
-- Docker Desktop memory: 9.705 GiB (⚠️ below 14 GB recommended — optimize manifests before Lab 02)
 - Cumulative estimate: ~3-3.5 GB total RSS
+
+---
+
+## Lab 02 — CPU LoRA fine-tuning job (post-completion idle)
+
+**Captured:** 2026-06-15T08:05:00Z (after training job completed and pod cleaned up)
+**New since Lab 01:** smollm2-lora-train Job (completed, adapter written to /mnt/project)
+
+### Docker container memory (after job completion)
+```
+llmops-kind-worker         472.4MiB / 9.705GiB
+llmops-kind-control-plane  972.5MiB / 9.705GiB
+llmops-kind-worker2        556.4MiB / 9.705GiB
+kind-registry               28.35MiB / 9.705GiB
+```
+
+### Key observations
+- Training job: LORA_R=4, MAX_SEQ_LEN=256, MAX_STEPS=50, memory limit=4Gi (optimized from 8Gi)
+- Training completed in **8.6 minutes** (well under ~20 min estimate)
+- Loss trajectory: 2.888 → 2.729 → 2.493 → 2.506 → 2.442 (healthy decrease)
+- LoRA adapter: adapter_model.safetensors 915 KB, saved to /mnt/project/training/runs/run-20260615-075229/checkpoint-50/
+- Memory limit 4Gi was sufficient — no OOM kill, clean Job completion (1/1)
+- trainable params: 230,400 / 134,745,408 total (0.17%)
+- Cumulative after cleanup: ~2 GB (training pod terminated, lower than Lab 01 because retriever pod idle)
 
 ---

@@ -30,15 +30,19 @@ spec:
           value: "1"
         - name: GRAD_ACCUM
           value: "4"
+        - name: LORA_R
+          value: "4"
+        - name: MAX_SEQ_LEN
+          value: "256"
         - name: HF_HUB_OFFLINE
           value: "0"
         resources:
           requests:
             cpu: "4"
-            memory: "6Gi"
+            memory: "3Gi"
           limits:
             cpu: "4"
-            memory: "8Gi"
+            memory: "4Gi"
         volumeMounts:
         - name: project
           mountPath: /mnt/project

@@ -11,6 +11,7 @@ Environment:
   GRAD_ACCUM      — Gradient accumulation steps (default: 4 — effective batch 4)
   LORA_R          — LoRA rank (default: 8)
   LORA_ALPHA      — LoRA alpha (default: 16)
+  MAX_SEQ_LEN     — Max token length for truncation (default: 256 — reduce for low-RAM environments)
 """
 import os, json, time
 from pathlib import Path
@@ -36,8 +37,7 @@ BATCH_SIZE   = int(os.environ.get("BATCH_SIZE",   "1"))    # CPU cannot do large
 GRAD_ACCUM   = int(os.environ.get("GRAD_ACCUM",   "4"))    # effective batch = 4
 LORA_R       = int(os.environ.get("LORA_R",       "8"))    # small rank for 135M model
 LORA_ALPHA   = int(os.environ.get("LORA_ALPHA",   "16"))
-
-MAX_SEQ_LEN  = 512   # Truncate to keep memory bounded on CPU
+MAX_SEQ_LEN  = int(os.environ.get("MAX_SEQ_LEN",  "256"))  # 256 fits comfortably in 4Gi; raise to 512 on ≥16 GB
 
 
 # --- Dataset loading ---
