@@ -128,3 +128,34 @@ metrics-server not installed yet
 - Lab 04 vLLM Deployment will consume this image via the same ImageVolume mechanism.
 
 ---
+
+## Lab 04 — vLLM + Chainlit (full chat stack)
+
+**Captured:** 2026-06-15T08:50:00Z
+**New services since Lab 03:** vllm-smollm2 (llm-serving, 4Gi req/5Gi limit), chainlit-ui (llm-app, 256Mi req/512Mi limit)
+
+### Docker container memory (vLLM model loaded, full stack running)
+```
+llmops-kind-worker         4.082GiB / 9.705GiB   7.51%  (vLLM pod here)
+llmops-kind-control-plane  736.8MiB / 9.705GiB  16.59%
+llmops-kind-worker2        543.7MiB / 9.705GiB   6.87%  (rag-retriever + chainlit-ui here)
+kind-registry               30.08MiB / 9.705GiB   0.00%
+```
+
+### kubectl top nodes
+```
+error: Metrics API not available
+metrics-server not yet installed (kube-prometheus-stack lands in Lab 05)
+```
+
+### Key observations
+- vLLM image pull time: 6m39s for 1.5 GB (schoolofdevops/vllm-cpu-nonuma:0.9.1)
+- vLLM readiness: Available ~9 min after apply (image pull 6m39s + model load ~2m)
+- vLLM verified: /health 200 OK; /v1/chat/completions returns content on NodePort 30200
+- Chainlit verified: homepage 200 OK on NodePort 30300; /metrics on ClusterIP port 9090
+- D-13 verified: chat_requests_total counter + chat_latency_seconds histogram present in /metrics
+- Endpoints: chainlit-ui metrics endpoint backed by port 9090 (confirmed via endpoint slice)
+- Total cluster RSS: ~5.4 GB (4.08 GB worker + 737 MB control-plane + 544 MB worker2 + 30 MB registry)
+- Available headroom: ~4.3 GB (9.705 - 5.4) — sufficient for Lab 05 kube-prometheus-stack
+
+---

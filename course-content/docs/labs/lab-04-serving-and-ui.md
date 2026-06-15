@@ -379,4 +379,12 @@ curl http://localhost:30200/metrics | grep "^vllm:" | head -3
 
 **Continue to Lab 05** to install Prometheus and Grafana and observe LLM-specific metrics (TTFT, KV cache, request throughput) from the vLLM, retriever, and Chainlit services.
 
-{/* D-19 PATTERN-A TEASER PLACEHOLDER (final wording lands in plan 02-07 task 3) */}
+## What's Next: Three Serving Patterns
+
+This lab built **Pattern A — plain vLLM Kubernetes Deployment**: a single vLLM pod serves the fine-tuned model behind a NodePort Service, with the model loaded from the OCI ImageVolume from Lab 03. This is one of three serving patterns covered in the v1.0.0 LLMOps curriculum:
+
+- **Pattern A — plain vLLM Deployment** (this lab): one pod, one Service, no router. Simplest possible serving topology. Best for teaching, demos, and any deployment that doesn't need horizontal scale-out.
+- **Pattern B — vLLM Production Stack router with multiple backend pods** (covered in a later phase): the router fronts multiple vLLM pods with session/prefix-aware routing that preserves KV cache across multi-turn chats. KEDA scales the backends. Best for production scale-out where multi-pod load balancing matters.
+- **Pattern C — KServe `InferenceService` (RawDeployment mode)** (covered in a later phase): managed serving abstraction with a custom CPU `ClusterServingRuntime`. Best for teams already standardized on KServe-managed model lifecycle.
+
+The serving-decision lab — when to use which pattern based on traffic shape, scale-out needs, and ops maturity — lands at the end of the phase that introduces all three patterns coexisting on the same cluster.
