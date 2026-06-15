@@ -38,7 +38,7 @@ spec:
             mc cp --recursive minio/models/smollm2-finetuned/ /model/
             echo "Verifying sha256..."
             EXPECTED="4a946ea7a4550946a9ac38a302cfe2703b6724e9e1392fb32c30f32d0a9c5108"
-            ACTUAL=$(sha256sum /model/model.safetensors | awk '{print $1}')
+            ACTUAL=$(sha256sum /model/model.safetensors | cut -d' ' -f1)
             if [ "$ACTUAL" != "$EXPECTED" ]; then
               echo "ERROR: sha256 mismatch! expected=$EXPECTED actual=$ACTUAL"
               exit 1
