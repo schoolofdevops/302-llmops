@@ -80,8 +80,14 @@ Plans:
   2. A `vllm-smollm2-disk` Deployment serves the model after an initContainer downloads it into a sized emptyDir (sizeLimit + matching ephemeral-storage requests + sentinel file + sha256 verification), accessible at NodePort 30203
   3. Student observes that pod restart re-downloads the model (deliberate emptyDir trade-off) and reads the lab-text contrast with the PVC alternative
   4. A decision-tree lab page documents when to use OCI ImageVolume (≤2GB, immutable promotion) vs disk-based (>2GB, frequent updates, object-store-backed)
-**Plans**: TBD
+**Plans**: 4 plans
 **Estimated complexity**: S (single new infra component; pattern is straightforward; pitfalls 6 + 7 are well-known)
+
+Plans:
+- [ ] 03-01-PLAN.md — GAP-2 fix: add NodePorts 30203/30900/30901 to kind-config.yaml + cluster recreate + Phase 02 stack redeploy
+- [ ] 03-02-PLAN.md — MinIO install (chart 5.4.0, standalone, NodePort 30900/30901) + model-uploader Job (mc upload to s3://models/smollm2-finetuned/)
+- [ ] 03-03-PLAN.md — vllm-smollm2-disk Deployment: initContainer + emptyDir sizeLimit:1Gi + sha256 + sentinel + NodePort 30203
+- [ ] 03-04-PLAN.md — Lab 06 doc page (PACKAGE-02 + PACKAGE-03 decision tree) + sidebars.ts + COURSE_VERSIONS.md
 
 ### Phase 04: vLLM Router Multi-Pod Serving
 **Goal**: Students can deploy the same fine-tuned model behind a vLLM Production Stack router with two CPU backend pods, observe session/prefix-aware routing preserving KV cache, and watch KEDA scale the backends (not the router)
@@ -130,7 +136,7 @@ Phases execute in numeric order: 01 → 02 → 03 → 04 → 05 → 06
 |-------|----------------|--------|-----------|
 | 01. Curriculum Migration to 303-agentops | 4/4 | Complete    | 2026-05-07 |
 | 02. Modernize LLMOps Spine (Labs 00-05) | 0/8 | Not started | - |
-| 03. Disk-Based Model Loading (MinIO + initContainer) | 0/TBD | Not started | - |
+| 03. Disk-Based Model Loading (MinIO + initContainer) | 0/4 | Not started | - |
 | 04. vLLM Router Multi-Pod Serving | 0/TBD | Not started | - |
 | 05. KServe InferenceService + Serving Decision Lab | 0/TBD | Not started | - |
 | 06. Production Operations Layer | 0/TBD | Not started | - |
