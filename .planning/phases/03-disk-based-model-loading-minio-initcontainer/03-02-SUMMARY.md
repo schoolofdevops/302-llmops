@@ -12,7 +12,8 @@ provides:
   - MinIO namespace manifest (00-namespace-minio.yaml) for both solution/ and starter/
   - MinIO Helm values (10-minio-values.yaml) standalone mode NodePort 30900/30901
   - model-uploader Job manifest (20-job-model-uploader.yaml) — solution complete, starter blanked
-  - Checkpoint: human verifies MinIO install + model-uploader Job completion
+  - MinIO 5.4.0 running in minio namespace (1 replica, verified healthy on NodePort 30900)
+  - S3 bucket minio/models/smollm2-finetuned/ populated with merged-model (516.52 MiB, 6 files)
 
 affects: [03-03, 03-04]
 
@@ -48,29 +49,32 @@ patterns-established:
 
 requirements-completed: [PACKAGE-02]
 
-duration: 15min
+duration: 25min
 completed: 2026-06-15
 ---
 
 # Phase 03 Plan 02: MinIO Manifests + Model Uploader Job Summary
 
-**MinIO standalone Helm values and one-shot mc Job manifest to upload merged-model (513 MB) from hostPath to S3 bucket minio/models/smollm2-finetuned/, with starter/solution split**
+**MinIO 5.4.0 standalone installed on KIND with NodePorts 30900/30901; merged-model (516.52 MiB, 6 files) uploaded to minio/models/smollm2-finetuned/ via one-shot mc Job; lab-06 solution/starter manifests created**
 
 ## Performance
 
-- **Duration:** ~15 min
+- **Duration:** ~25 min (Tasks 1+2 automated, Task 3 human-verified)
 - **Started:** 2026-06-15T00:00:00Z
 - **Completed:** 2026-06-15
-- **Tasks:** 2 of 3 (Task 3 is checkpoint:human-verify — paused for human)
+- **Tasks:** 3 of 3 (all complete)
 - **Files created:** 6
 
 ## Accomplishments
 
-- Created lab-06 directory tree (solution/k8s + starter/k8s) with all four manifest files for Task 1 and Task 2
+- Created lab-06 directory tree (solution/k8s + starter/k8s) with six manifest files for Tasks 1 and 2
 - MinIO Helm values file uses standalone mode + replicas=1 (both required per Pitfall 5), NodePort 30900/30901, 2Gi PVC
 - model-uploader Job solution is complete with mc retry loop, mb + cp --recursive, and ls verification
 - Starter Job has mc command body blanked with TODO hint (all other fields complete: image, resources, volumeMounts, volumes)
 - Inline comments document Pitfall 4 (no nodeName needed) and Pitfall 6 (ClusterIP not NodePort) in each manifest
+- MinIO Helm chart 5.4.0 installed: 1 replica pod Running (Pitfall 5 avoided — NOT 16 replicas)
+- curl http://localhost:30900/minio/health/live returned HTTP 200
+- model-uploader Job completed (1/1): 6 files uploaded to minio/models/smollm2-finetuned/ at 89.36 MiB/s (total 516.52 MiB)
 
 ## Task Commits
 
@@ -78,9 +82,9 @@ Each task was committed atomically:
 
 1. **Task 1: Create MinIO namespace manifest and Helm values file (solution + starter)** - `0062e12` (feat)
 2. **Task 2: Create model-uploader Job manifest (solution + starter with blanks)** - `9dccb9f` (feat)
-3. **Task 3: checkpoint:human-verify** — PAUSED (awaiting human install + verification)
+3. **Task 3: Install MinIO and run model-uploader Job; verify model in S3** - human-verified (checkpoint:human-verify APPROVED)
 
-**Plan metadata:** (committed after checkpoint resolves in 03-02 continuation)
+**Plan metadata:** (this SUMMARY.md commit)
 
 ## Files Created/Modified
 
@@ -108,11 +112,20 @@ None.
 
 ## User Setup Required
 
-Task 3 (checkpoint:human-verify) requires the student/instructor to:
-1. Add MinIO Helm repo and install with `helm install minio minio-official/minio --namespace minio -f ...`
-2. Wait for MinIO pod (1/1 Running, NOT 16 — Pitfall 5 check)
-3. Apply model-uploader Job and wait for completion
-4. Run `mc ls minio/models/smollm2-finetuned/` from inside cluster to verify model.safetensors (513 MB)
+Task 3 was a checkpoint:human-verify gate. The following was confirmed by human verification:
+
+1. MinIO Helm repo added (`helm repo add minio-official https://charts.min.io/`) and chart 5.4.0 installed
+2. MinIO pod: 1/1 Running in minio namespace (NOT 16 replicas — Pitfall 5 confirmed avoided)
+3. `curl http://localhost:30900/minio/health/live` returned HTTP 200
+4. model-uploader Job applied and completed: `kubectl wait --for=condition=complete job/model-uploader -n llm-app` satisfied
+5. 6 files uploaded to minio/models/smollm2-finetuned/ at 89.36 MiB/s:
+   - chat_template.jinja (368 B)
+   - config.json (904 B)
+   - generation_config.json (131 B)
+   - model.safetensors (513 MiB) — key artifact
+   - tokenizer.json (3.4 MiB)
+   - tokenizer_config.json (383 B)
+   - Total: 516.52 MiB transferred
 
 ## Known Stubs
 
@@ -125,10 +138,10 @@ The minio/minio123 credential in the Helm values and Job manifest is accepted pe
 
 ## Next Phase Readiness
 
-After human approves Task 3 checkpoint:
-- MinIO running at NodePort 30900 (S3 API) and 30901 (console) in minio namespace
-- Bucket `models` populated with `smollm2-finetuned/model.safetensors` (513 MB)
-- Ready for 03-03: vLLM initContainer Deployment + NodePort Service (Pattern B)
+All plan acceptance criteria met:
+- MinIO 5.4.0 running at NodePort 30900 (S3 API) and 30901 (console) in minio namespace, 1 replica
+- Bucket `models` populated with `smollm2-finetuned/` containing model.safetensors (513 MiB) + 5 supporting files
+- Ready for 03-03: vLLM initContainer Deployment + NodePort Service (Pattern B — disk-based loading from MinIO)
 
 ---
 *Phase: 03-disk-based-model-loading-minio-initcontainer*
@@ -144,3 +157,4 @@ After human approves Task 3 checkpoint:
 - `course-code/labs/lab-06/starter/k8s/20-job-model-uploader.yaml` — FOUND
 - Task 1 commit `0062e12` — verified
 - Task 2 commit `9dccb9f` — verified
+- Task 3 (checkpoint:human-verify) — APPROVED by human; MinIO healthy + model upload confirmed
