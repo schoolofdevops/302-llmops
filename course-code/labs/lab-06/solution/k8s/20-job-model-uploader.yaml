@@ -1,0 +1,60 @@
+# Lab 06: Model Uploader Job — copies merged-model to MinIO S3
+# Image: quay.io/minio/mc:RELEASE.2024-11-21T17-21-54Z (official MinIO client; multi-arch arm64+amd64)
+#
+# Key design notes:
+#   - No nodeName constraint needed — all KIND nodes share the same macOS host
+#     bind-mount for ./llmops-project → /mnt/project (Docker bind-mount, not hostPath per-node)
+#   - Uses ClusterIP DNS minio.minio:9000 (NOT NodePort 30900) for in-cluster S3 access
+#   - NodePort 30900 is for student host access only (curl/browser)
+#   - ttlSecondsAfterFinished: 300 cleans up the completed Job pod after 5 minutes
+#   - backoffLimit: 2 — retry up to twice if mc upload fails (e.g. MinIO not ready yet)
+#   - namespace: llm-app (Job is in the app namespace, NOT the minio namespace)
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: model-uploader
+  namespace: llm-app
+  labels:
+    app: model-uploader
+    course: llmops
+spec:
+  ttlSecondsAfterFinished: 300
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      # No nodeName constraint — all KIND nodes share the macOS host bind-mount
+      containers:
+      - name: uploader
+        image: quay.io/minio/mc:RELEASE.2024-11-21T17-21-54Z
+        command:
+          - sh
+          - -c
+          - |
+            set -euo pipefail
+            echo "Waiting for MinIO to be ready..."
+            until mc alias set minio http://minio.minio:9000 minio minio123 2>/dev/null; do
+              echo "MinIO not ready yet, retrying in 5s..."; sleep 5;
+            done
+            echo "MinIO ready. Creating bucket..."
+            mc mb --ignore-existing minio/models
+            echo "Uploading model..."
+            mc cp --recursive /mnt/model/ minio/models/smollm2-finetuned/
+            echo "Upload complete. Listing contents..."
+            mc ls minio/models/smollm2-finetuned/
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+        volumeMounts:
+        - name: model
+          mountPath: /mnt/model
+          readOnly: true
+      volumes:
+      - name: model
+        hostPath:
+          path: /mnt/project/training/merged-model
+          type: Directory
