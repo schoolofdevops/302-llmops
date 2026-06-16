@@ -20,6 +20,7 @@ const sidebars: SidebarsConfig = {
         'labs/lab-04-serving-and-ui',
         'labs/lab-05-observability',
         'labs/lab-06-disk-model-loading',
+        'labs/lab-07-vllm-router',
       ],
     },
     {

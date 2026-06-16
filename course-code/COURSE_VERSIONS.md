@@ -3,7 +3,7 @@
 Tested combination for this course delivery.
 All versions verified on macOS Apple Silicon; Windows x86-64 verification follows the same Docker Desktop + KIND path documented per-lab.
 
-**Last verified:** 2026-06-15 (v1.0.0 Phase 03)
+**Last verified:** 2026-06-16 (v1.0.0 Phase 04)
 **Workshop delivery:** v1.0.0
 
 ## Core Infrastructure
@@ -34,6 +34,8 @@ All versions verified on macOS Apple Silicon; Windows x86-64 verification follow
 | Component | Pinned Version | Compatibility Reason |
 |-----------|---------------|----------------------|
 | vLLM | 0.9.1 | Custom CPU image: `schoolofdevops/vllm-cpu-nonuma:0.9.1` — stripped-down, no NUMA, CPU-only inference on mac/windows |
+| vllm-stack Helm chart (lmcache/llm-d-infra) | 0.1.11 | Adds `routerSpec.nodePort` field (absent in 0.1.10); use exactly 0.1.11 for Lab 07 |
+| lmstack-router | v0.1.11 | amd64-only binary; requires Rosetta emulation on Apple Silicon KIND clusters; pre-push to `kind-registry:5001` required |
 | KServe | N/A (Phase 2) | Not used in Day 1 labs; plain K8s Deployment used for vLLM serving (Phase 3+ only) |
 | kube-prometheus-stack | 83.4.2 (Helm chart) | Reproducibility for workshop delivery; verified on KIND 1.34.0 |
 

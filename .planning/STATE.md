@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0.0
 milestone_name: milestone
-status: Phase 04 PLANNED — ready for execute-phase 4
+status: Phase 04 COMPLETE — ready for execute-phase 5
 stopped_at: ""
-last_updated: "2026-06-15T21:00:00.000Z"
-last_activity: 2026-06-15
+last_updated: "2026-06-16T12:45:00.000Z"
+last_activity: 2026-06-16
 progress:
   total_phases: 6
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 16
-  completed_plans: 12
-  percent: 33
+  completed_plans: 16
+  percent: 50
 ---
 
 # Project State
@@ -22,16 +22,15 @@ See: .planning/PROJECT.md (updated 2026-05-07)
 
 **Core value:** Teach practitioners how to deploy and operate LLM serving infrastructure on Kubernetes — full LLMOps lifecycle (data → fine-tune → package → serve → observe → scale → GitOps) with three serving patterns (plain vLLM, vLLM Router, KServe) and two model-packaging patterns (OCI ImageVolume, disk-based) on CPU-only KIND.
 
-**Current focus:** Phase 04 — vLLM Router Multi-Pod Serving (planned, 4 plans ready)
+**Current focus:** Phase 05 — KServe + Serving Pattern Decision Lab
 
 ## Current Position
 
-Phase: 04 (vllm-router-multi-pod-serving) — PLANNED (2026-06-15)
-Plans ready: 04-01 through 04-04 (4 plans, Wave 0-3)
-Chart: vllm-stack 0.1.11; Router: lmcache/lmstack-router:v0.1.11
-Key gate: arm64 Rosetta check + emptyDir initContainer schema verification (CASE 1/2 in 04-02)
+Phase: 04 (vllm-router-multi-pod-serving) — COMPLETE (2026-06-16)
+All 4 plans done: 04-01 (infra), 04-02 (Helm), 04-03 (verify), 04-04 (lab guide + teardown)
+Lab 07 guide written, Docusaurus build passes, Pattern A restored.
 
-Next: /gsd:execute-phase 4
+Next: /gsd:plan-phase 5
 
 ## Performance Metrics
 
@@ -121,8 +120,8 @@ None. (Roadmapper flagged stale concern about phase archive; verified — `.plan
 
 ## Session Continuity
 
-Last session: 2026-06-15T21:00:00.000Z
-Last activity: 2026-06-15
-Stopped at: Phase 04 planned — 4/4 plans ready, vllm-stack 0.1.11 + KEDA + session routing
+Last session: 2026-06-16T12:45:00.000Z
+Last activity: 2026-06-16
+Stopped at: Phase 04 complete — Lab 07 guide committed, Pattern A restored, VERIFICATION.md written
 Resume file: None
-Next command: `/gsd:execute-phase 4`
+Next command: `/gsd:plan-phase 5`
