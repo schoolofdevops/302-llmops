@@ -118,6 +118,27 @@ None. This plan only modifies a YAML config file.
 - After the user completes the cluster recreation (Task 2), Phase 04 Plan 02 (Helm install of vllm-stack) can proceed.
 - Blocker: User must run cluster recreate and confirm via "approved" signal before Plan 04-02 starts.
 
+## Addendum — Checkpoint Resolution (2026-06-16)
+
+Cluster recreate completed. Additional issues found and resolved:
+
+| Issue | Root Cause | Fix | Commit |
+|-------|-----------|-----|--------|
+| `llm-app` namespace missing | Plan omitted create step | User created manually; plan fixed | — |
+| model-uploader stuck ContainerCreating | `./llmops-project` resolves to empty `setup/llmops-project/` | Uploaded model via `aws` CLI to MinIO S3 endpoint; hostPath fixed | e6b1fa1 |
+| `kubectl cp` to MinIO failed | No `tar` in MinIO container | Used `aws s3 cp --endpoint-url http://localhost:30900` | — |
+| monitoring + KEDA missing | All workloads lost on cluster delete | Reinstalled kube-prometheus-stack 83.4.2 + KEDA 2.19.0 | — |
+
+**kind-config.yaml hostPath fix (commit e6b1fa1):** `./llmops-project` → `../../../../../llmops-project` across all 3 node entries. Relative path from `setup/` must traverse up to course root where `llmops-project/` actually lives.
+
+**Final verified state:**
+- 3 nodes Ready; NodePort 30201 mapped in Docker PortBindings
+- MinIO Running; `models/smollm2-finetuned/` bucket with 6 files (513MiB safetensors)
+- `vllm-smollm2` DESIRED=0, `vllm-smollm2-disk` DESIRED=0
+- kube-prometheus-stack Running in `monitoring`; KEDA Running in `keda`
+
+**Plan 04-01 COMPLETE — proceeding to Wave 1 (04-02)**
+
 ---
 *Phase: 04-vllm-router-multi-pod-serving*
 *Completed: 2026-06-16*

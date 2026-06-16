@@ -80,7 +80,7 @@ servingEngineSpec:
 
     keda:
       enabled: true
-      minReplicaCount: 1
+      minReplicaCount: 2
       maxReplicaCount: 3
       pollingInterval: 15
       cooldownPeriod: 360
@@ -96,7 +96,8 @@ servingEngineSpec:
 # Router configuration
 # ---------------------------------------------------------------------------
 routerSpec:
-  repository: "lmcache/lmstack-router"
+  # ARM64 NOTE: pre-push image to kind-registry:5001 first (see lab guide for steps)
+  repository: "kind-registry:5001/lmstack-router"
   tag: "v0.1.11"
   imagePullPolicy: "IfNotPresent"
 
