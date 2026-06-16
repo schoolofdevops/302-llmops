@@ -47,7 +47,7 @@ nodes:
 - role: control-plane
   image: kindest/node:v1.34.0
   extraMounts:
-    - hostPath: ./llmops-project  # relative path — works on macOS and Windows Git Bash; change to absolute if needed
+    - hostPath: ../../../../../llmops-project  # relative to setup/ → course root llmops-project/
       containerPath: /mnt/project
   extraPortMappings:
   - containerPort: 30000
@@ -121,10 +121,10 @@ nodes:
 - role: worker
   image: kindest/node:v1.34.0
   extraMounts:
-    - hostPath: ./llmops-project  # relative path — works on macOS and Windows Git Bash; change to absolute if needed
+    - hostPath: ../../../../../llmops-project  # relative to setup/ → course root llmops-project/
       containerPath: /mnt/project
 - role: worker
   image: kindest/node:v1.34.0
   extraMounts:
-    - hostPath: ./llmops-project  # relative path — works on macOS and Windows Git Bash; change to absolute if needed
+    - hostPath: ../../../../../llmops-project  # relative to setup/ → course root llmops-project/
       containerPath: /mnt/project
