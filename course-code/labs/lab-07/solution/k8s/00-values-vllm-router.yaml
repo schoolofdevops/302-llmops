@@ -15,6 +15,13 @@
 servingEngineSpec:
   runtimeClassName: ""          # No GPU runtime class — CPU-only KIND cluster
 
+  # ServiceMonitor enables Prometheus scraping of backend /metrics endpoint.
+  # additionalLabels must match kube-prometheus-stack's serviceMonitorSelector (release: kps).
+  serviceMonitor:
+    enabled: true
+    additionalLabels:
+      release: kps
+
   modelSpec:
   - name: "smollm2"
     repository: "schoolofdevops/vllm-cpu-nonuma"
@@ -100,7 +107,7 @@ servingEngineSpec:
           metadata:
             serverAddress: "http://kps-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090"
             metricName: "vllm:num_requests_waiting"
-            query: 'sum(vllm:num_requests_waiting{model="smollm2"})'
+            query: 'sum(vllm:num_requests_waiting{model_name="smollm2-135m-finetuned"})'
             threshold: "5"
 
 # ---------------------------------------------------------------------------
@@ -126,6 +133,24 @@ routerSpec:
 
   engineScrapeInterval: 15      # How often router polls backend /metrics (seconds)
   requestStatsWindow: 60        # Rolling window for request stats (seconds)
+
+  # ARM64/Rosetta: amd64 binary under emulation starts slowly; default timeout=1s
+  # causes liveness to SIGKILL the container before it's ready. Set 10s + more failures.
+  startupProbe:
+    initialDelaySeconds: 15
+    periodSeconds: 10
+    failureThreshold: 12
+    timeoutSeconds: 10
+  livenessProbe:
+    initialDelaySeconds: 30
+    failureThreshold: 6
+    periodSeconds: 10
+    timeoutSeconds: 10
+  readinessProbe:
+    initialDelaySeconds: 30
+    failureThreshold: 6
+    periodSeconds: 5
+    timeoutSeconds: 10
 
   resources:
     requests:
