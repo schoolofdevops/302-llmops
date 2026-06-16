@@ -1,0 +1,121 @@
+# vllm-stack Helm chart values — Lab 07: vLLM Router + Multi-Pod Serving
+# Chart version: 0.1.11
+#
+# Fill in each TODO before running helm install.
+# Tip: run `helm template` first to verify your values render correctly.
+
+# ---------------------------------------------------------------------------
+# Backend (serving engine) configuration
+# ---------------------------------------------------------------------------
+servingEngineSpec:
+  runtimeClassName: ""          # No GPU runtime class — CPU-only KIND cluster
+
+  modelSpec:
+  - name: "smollm2"
+    repository: "schoolofdevops/vllm-cpu-nonuma"
+    tag: "0.9.1"
+    modelURL: "/model"          # Local path — model downloaded by initContainer
+
+    replicaCount: 2
+
+    requestCPU: 4
+    requestMemory: "4Gi"
+    requestGPU: 0               # TODO: set to 0 — this is a CPU-only cluster
+
+    vllmConfig:
+      maxModelLen: 4096
+      dtype: "float32"
+      maxNumSeqs: 1
+      extraArgs:
+        - "--disable-frontend-multiprocessing"
+        - "--served-model-name=smollm2-135m-finetuned"
+
+    env:
+    - name: VLLM_TARGET_DEVICE
+      value: "cpu"
+    - name: VLLM_CPU_KVCACHE_SPACE
+      value: "2"
+    - name: OMP_NUM_THREADS
+      value: "4"
+    - name: VLLM_CPU_OMP_THREADS_BIND
+      value: "auto"
+
+    initContainer:
+      name: model-download
+      image: "quay.io/minio/mc:RELEASE.2024-11-21T17-21-54Z"
+      command:
+        - sh
+        - -c
+        - |
+          set -euo pipefail
+          echo "Configuring MinIO alias..."
+          mc alias set minio http://minio.minio:9000 minio minio123
+          echo "Downloading model from MinIO..."
+          mc cp --recursive minio/models/smollm2-finetuned/ /model/
+          echo "Writing sentinel file..."
+          touch /model/READY
+          echo "Model download complete."
+      resources:
+        requests:
+          cpu: 200m
+          memory: 128Mi
+          ephemeral-storage: 1Gi
+        limits:
+          cpu: 500m
+          memory: 256Mi
+          ephemeral-storage: 2Gi
+      mountPvcStorage: false
+      extraVolumeMounts:
+      - name: model
+        mountPath: /model
+
+    extraVolumes:
+    - name: model
+      emptyDir:
+        sizeLimit: 1Gi
+
+    extraVolumeMounts:
+    - name: model
+      mountPath: /model
+
+    keda:
+      enabled: true
+      minReplicaCount: 1
+      maxReplicaCount: 3
+      pollingInterval: 15
+      cooldownPeriod: 360
+      triggers:
+        - type: prometheus
+          metadata:
+            serverAddress: "http://kps-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090"  # TODO: kubectl get svc -n monitoring -l app.kubernetes.io/name=prometheus -o name
+            metricName: "vllm:num_requests_waiting"
+            query: 'sum(vllm:num_requests_waiting{model="smollm2"})'
+            threshold: "5"
+
+# ---------------------------------------------------------------------------
+# Router configuration
+# ---------------------------------------------------------------------------
+routerSpec:
+  repository: "lmcache/lmstack-router"
+  tag: "v0.1.11"
+  imagePullPolicy: "IfNotPresent"
+
+  replicaCount: 1
+
+  routingLogic: "session"       # TODO: choose session, roundrobin, or prefixaware
+  sessionKey: "x-user-id"
+
+  serviceType: NodePort
+  nodePort: 30201               # TODO: which port was added to kind-config.yaml?
+  servicePort: 80
+  containerPort: 8000
+
+  engineScrapeInterval: 15
+  requestStatsWindow: 60
+
+  resources:
+    requests:
+      cpu: 400m
+      memory: 1000Mi
+    limits:
+      memory: 1000Mi
