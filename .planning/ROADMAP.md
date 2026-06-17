@@ -167,8 +167,22 @@ Plans:
   3. Argo Workflows `WorkflowTemplate` runs the full DAG `data → index → train → merge` to completion as a `Workflow` and persists artifacts to MinIO — NO eval gate, NO commit-tag step (those are 303-agentops scope)
   4. End-to-end run shows: a code/config change in Git → ArgoCD reconciles → Argo Workflow re-runs the training pipeline → new model artifact lands in MinIO → vLLM redeploys with the new artifact (closes the LLMOps loop)
 
-**Plans**: TBD
+**Plans**: 4 plans
 **Estimated complexity**: M (mostly carry-forward from v0.19.0 Phase 04 with eval gate removed; the new work is re-validating against three serving patterns and confirming the loop closes end-to-end)
+
+Plans:
+**Wave 1**
+
+- [ ] 06-01-PLAN.md — GAP-5 fix: add NodePorts 30700+30800 to kind-config.yaml files + cluster recreate + stack redeploy + reinstall kube-prometheus-stack 83.4.2 + KEDA 2.19.0 + metrics-server
+
+**Wave 2** *(blocked on Wave 1 completion; Plans 02 and 03 can run in parallel)*
+
+- [ ] 06-02-PLAN.md — HPA on rag-retriever (CPU) + KEDA ScaledObjects for Patterns A and C + hey load test + Lab 10 autoscaling doc page (OPS-01)
+- [ ] 06-03-PLAN.md — ArgoCD 9.5.11 install + gitops/ App-of-Apps structure (Pattern A + MinIO + Chainlit + observability) + model promotion demo + Lab 11 GitOps doc page (OPS-02)
+
+**Wave 3** *(blocked on Plans 02 + 03)*
+
+- [ ] 06-04-PLAN.md — Argo Workflows 1.0.13 install + 4-step DAG WorkflowTemplate + E2E loop demo + Lab 12 doc page + 06-VERIFICATION.md (OPS-03)
 
 ## Progress
 
@@ -182,7 +196,7 @@ Phases execute in numeric order: 01 → 02 → 03 → 04 → 05 → 06
 | 03. Disk-Based Model Loading (MinIO + initContainer) | 0/4 | Not started | - |
 | 04. vLLM Router Multi-Pod Serving | 4/4 | Complete | 2026-06-16 |
 | 05. KServe InferenceService + Serving Decision Lab | 4/4 | Complete | 2026-06-17 |
-| 06. Production Operations Layer | 0/TBD | Not started | - |
+| 06. Production Operations Layer | 0/4 | Not started | - |
 
 ## Coverage
 
