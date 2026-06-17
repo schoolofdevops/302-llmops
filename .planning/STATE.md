@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0.0
 milestone_name: milestone
-status: Phase 04 COMPLETE — ready for execute-phase 5
-stopped_at: ""
-last_updated: "2026-06-16T12:45:00.000Z"
-last_activity: 2026-06-16
+status: Ready to execute
+stopped_at: Phase 05 Plan 01 complete — NodePort 30202 added, KIND cluster recreated, prerequisites at replicas=0
+last_updated: "2026-06-17T00:00:00.000Z"
+last_activity: 2026-06-17
 progress:
   total_phases: 6
   completed_phases: 3
-  total_plans: 16
+  total_plans: 20
   completed_plans: 16
   percent: 50
 ---
@@ -26,11 +26,10 @@ See: .planning/PROJECT.md (updated 2026-05-07)
 
 ## Current Position
 
-Phase: 04 (vllm-router-multi-pod-serving) — COMPLETE (2026-06-16)
-All 4 plans done: 04-01 (infra), 04-02 (Helm), 04-03 (verify), 04-04 (lab guide + teardown)
-Lab 07 guide written, Docusaurus build passes, Pattern A restored.
+Phase: 05 (kserve-inferenceservice-serving-decision-lab) — IN PROGRESS
+Plan 05-01 complete (2026-06-17): NodePort 30202 added to both kind-config.yaml files; KIND cluster recreated; prerequisites (MinIO, Pattern A, Pattern B) at replicas=0 for KServe headroom.
 
-Next: /gsd:plan-phase 5
+Next: Execute Plan 05-02 (cert-manager v1.16.5 + Gateway API CRDs v1.2.1 + KServe v0.18.0 install)
 
 ## Performance Metrics
 
@@ -120,8 +119,8 @@ None. (Roadmapper flagged stale concern about phase archive; verified — `.plan
 
 ## Session Continuity
 
-Last session: 2026-06-16T12:45:00.000Z
-Last activity: 2026-06-16
-Stopped at: Phase 04 complete — Lab 07 guide committed, Pattern A restored, VERIFICATION.md written
+Last session: 2026-06-17T00:35:00.000Z
+Last activity: 2026-06-17
+Stopped at: Phase 05 Plan 01 complete — NodePort 30202 added, KIND cluster recreated, prerequisites at replicas=0
 Resume file: None
-Next command: `/gsd:plan-phase 5`
+Next command: Execute Plan 05-02 (KServe install)
