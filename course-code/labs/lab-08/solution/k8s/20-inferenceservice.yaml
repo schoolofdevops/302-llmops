@@ -1,0 +1,114 @@
+# KServe InferenceService — smollm2 fine-tuned model
+# References: RESEARCH.md Pattern 2, D-04, D-05, D-06, D-09, D-11
+#
+# Model source: emptyDir initContainer (mc cp from MinIO) — same pattern as Lab 06.
+# WHY spec.predictor.containers (not spec.predictor.model):
+#   Using spec.predictor.containers bypasses the storage-initializer webhook entirely.
+#   No storageUri → no storage-initializer sidecar injected (Pitfall 3 mitigation).
+#
+# Probe tuning (D-11): initialDelaySeconds=90 + failureThreshold=30 = 390s total budget
+#   CPU vLLM takes 90-180s to load the model. Default probes (10s delay) crashloop
+#   the pod before model load completes. D-11 values prevent crashloop on first start.
+#
+# NodePort 30202 is NOT set here — KServe auto-creates smollm2-predictor Service as
+# ClusterIP. Patch to NodePort after InferenceService reaches READY=True:
+#   kubectl patch svc smollm2-predictor -n llm-serving \
+#     -p '{"spec":{"type":"NodePort","ports":[{"port":80,"targetPort":8000,"nodePort":30202,"protocol":"TCP"}]}}'
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: smollm2
+  namespace: llm-serving
+  annotations:
+    serving.kserve.io/deploymentMode: RawDeployment  # D-09: per-resource enforcement; no Knative/Istio
+    serving.kserve.io/enable-storage-initialization: "false"  # D-05: belt-and-suspenders; spec.predictor.containers is the primary defense
+spec:
+  predictor:
+    initContainers:
+      - name: model-download
+        image: quay.io/minio/mc:RELEASE.2024-11-21T17-21-54Z
+        command:
+          - sh
+          - -c
+          - |
+            set -euo pipefail
+            echo "Configuring MinIO alias..."
+            mc alias set minio http://minio.minio:9000 minio minio123
+            echo "Downloading model from MinIO..."
+            mc cp --recursive minio/models/smollm2-finetuned/ /mnt/model/
+            touch /mnt/model/READY
+            echo "Model download complete."
+        resources:
+          requests:
+            cpu: 200m
+            memory: 128Mi
+            ephemeral-storage: 1Gi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+            ephemeral-storage: 2Gi
+        volumeMounts:
+          - name: model
+            mountPath: /mnt/model
+    containers:
+      - name: kserve-container  # Must match ClusterServingRuntime container name convention
+        image: schoolofdevops/vllm-cpu-nonuma:0.9.1  # D-01: explicit even with spec.predictor.containers
+        command:
+          - sh
+          - -c
+          - |
+            until [ -f /mnt/model/READY ]; do
+              echo "Waiting for model download..."; sleep 2;
+            done
+            exec python3 -m vllm.entrypoints.openai.api_server \
+              --model=/mnt/model \
+              --host=0.0.0.0 \
+              --port=8000 \
+              --max-model-len=4096 \
+              --served-model-name=smollm2-135m-finetuned \
+              --dtype=float32 \
+              --disable-frontend-multiprocessing \
+              --max-num-seqs=1
+        env:
+          # D-02: CPU tuning — same values as ClusterServingRuntime for consistency
+          - name: VLLM_TARGET_DEVICE
+            value: "cpu"
+          - name: VLLM_CPU_KVCACHE_SPACE
+            value: "2"    # CRITICAL: NOT 4 — OOM on 5Gi KIND nodes
+          - name: OMP_NUM_THREADS
+            value: "4"
+          - name: VLLM_CPU_OMP_THREADS_BIND
+            value: "auto"
+        ports:
+          - containerPort: 8000
+            name: http
+        resources:
+          # D-03: same as Phase 04 backends
+          requests:
+            cpu: "4"
+            memory: 4Gi
+          limits:
+            cpu: "4"
+            memory: 5Gi
+        readinessProbe:
+          # D-11: 90s initial delay + 30 failures × 10s = 390s total budget for CPU model load
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 90
+          periodSeconds: 10
+          failureThreshold: 30
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 180
+          periodSeconds: 15
+          failureThreshold: 10
+        volumeMounts:
+          - name: model
+            mountPath: /mnt/model
+    volumes:
+      - name: model
+        emptyDir:
+          sizeLimit: 1Gi

@@ -1,0 +1,57 @@
+# Pattern: ClusterServingRuntime for vLLM CPU (arm64-compatible)
+# References: RESEARCH.md Pattern 1, D-01, D-02, D-03
+# Image: schoolofdevops/vllm-cpu-nonuma:0.9.1 — verified on KIND arm64 Phase 04
+# Container name MUST be "kserve-container" for KServe webhook recognition.
+#
+# ClusterServingRuntime defines the serving container spec cluster-wide.
+# The InferenceService (20-inferenceservice.yaml) provides initContainers,
+# volumes, and probes at the predictor level — those are per-InferenceService.
+#
+# TODO: fill in the values marked with TODO comments below.
+# Refer to the solution/ directory if you get stuck.
+apiVersion: serving.kserve.io/v1alpha1
+kind: ClusterServingRuntime
+metadata:
+  name: vllm-cpu-smollm2
+spec:
+  supportedModelFormats:
+    - name: vllm-cpu
+      version: "1"
+      autoSelect: false
+  containers:
+    - name: kserve-container  # REQUIRED: must be "kserve-container" for KServe webhook recognition
+      image: ""  # TODO: vLLM CPU image — D-01 (already verified on KIND arm64 in Phase 04)
+      command:
+        - python3
+        - -m
+        - vllm.entrypoints.openai.api_server
+      args:
+        - --model=/mnt/model
+        - --host=0.0.0.0
+        - --port=8000
+        - --max-model-len=4096
+        - --served-model-name=smollm2-135m-finetuned
+        - --dtype=float32
+        - --disable-frontend-multiprocessing
+        - --max-num-seqs=1
+      env:
+        # TODO: fill in the four D-02 CPU tuning env vars (VLLM_TARGET_DEVICE, VLLM_CPU_KVCACHE_SPACE, OMP_NUM_THREADS, VLLM_CPU_OMP_THREADS_BIND)
+        - name: VLLM_TARGET_DEVICE
+          value: ""  # TODO: see D-02 (target device for vLLM on CPU)
+        - name: VLLM_CPU_KVCACHE_SPACE
+          value: ""  # TODO: see D-02 (KV cache space in GB — do NOT set to 4, causes OOM)
+        - name: OMP_NUM_THREADS
+          value: ""  # TODO: see D-02 (number of OpenMP threads)
+        - name: VLLM_CPU_OMP_THREADS_BIND
+          value: ""  # TODO: see D-02 (thread binding strategy)
+      resources:
+        # TODO: see D-03 (match Phase 04 backends — same CPU/memory footprint)
+        requests:
+          cpu: ""   # TODO: see D-03 (match Phase 04 backends)
+          memory: 4Gi
+        limits:
+          cpu: "4"
+          memory: 5Gi
+      ports:
+        - containerPort: 8000
+          protocol: TCP

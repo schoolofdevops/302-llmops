@@ -1,0 +1,105 @@
+# KServe InferenceService — smollm2 fine-tuned model
+# References: RESEARCH.md Pattern 2, D-04, D-05, D-06, D-09, D-11
+#
+# Model source: emptyDir initContainer (mc cp from MinIO) — same pattern as Lab 06.
+# WHY spec.predictor.containers (not spec.predictor.model):
+#   Using spec.predictor.containers bypasses the storage-initializer webhook entirely.
+#
+# TODO: fill in the values marked with TODO comments below.
+# Refer to the solution/ directory if you get stuck.
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: smollm2
+  namespace: llm-serving
+  annotations:
+    serving.kserve.io/deploymentMode: ""  # TODO: D-09 — deployment mode for KIND (no Knative/Istio); hint: RawDeployment
+    serving.kserve.io/enable-storage-initialization: ""  # TODO: D-05 — disable storage-initializer sidecar injection; hint: "false"
+spec:
+  predictor:
+    initContainers:
+      - name: model-download
+        image: quay.io/minio/mc:RELEASE.2024-11-21T17-21-54Z
+        command:
+          - sh
+          - -c
+          - |
+            set -euo pipefail
+            echo "Configuring MinIO alias..."
+            mc alias set minio http://minio.minio:9000 minio minio123
+            echo "Downloading model from MinIO..."
+            mc cp --recursive minio/models/smollm2-finetuned/ /mnt/model/  # TODO: source bucket per D-04
+            touch /mnt/model/READY
+            echo "Model download complete."
+        resources:
+          requests:
+            cpu: 200m
+            memory: 128Mi
+            ephemeral-storage: 1Gi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+            ephemeral-storage: 2Gi
+        volumeMounts:
+          - name: model
+            mountPath: /mnt/model
+    containers:
+      - name: kserve-container
+        image: ""  # TODO: D-01 — same vLLM CPU image as ClusterServingRuntime
+        command:
+          - sh
+          - -c
+          - |
+            until [ -f /mnt/model/READY ]; do
+              echo "Waiting for model download..."; sleep 2;
+            done
+            exec python3 -m vllm.entrypoints.openai.api_server \
+              --model=/mnt/model \
+              --host=0.0.0.0 \
+              --port=8000 \
+              --max-model-len=4096 \
+              --served-model-name=smollm2-135m-finetuned \
+              --dtype=float32 \
+              --disable-frontend-multiprocessing \
+              --max-num-seqs=1
+        env:
+          - name: VLLM_TARGET_DEVICE
+            value: "cpu"
+          - name: VLLM_CPU_KVCACHE_SPACE
+            value: "2"
+          - name: OMP_NUM_THREADS
+            value: "4"
+          - name: VLLM_CPU_OMP_THREADS_BIND
+            value: "auto"
+        ports:
+          - containerPort: 8000
+            name: http
+        resources:
+          requests:
+            cpu: "4"
+            memory: 4Gi
+          limits:
+            cpu: "4"
+            memory: 5Gi
+        readinessProbe:
+          # TODO: D-11 — prevents crashloop on CPU model load (90-180s startup time)
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 0  # TODO: D-11 — prevents crashloop on CPU model load
+          periodSeconds: 10
+          failureThreshold: 0  # TODO: D-11 — total probe budget = initialDelaySeconds + failureThreshold × periodSeconds
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 180
+          periodSeconds: 15
+          failureThreshold: 10
+        volumeMounts:
+          - name: model
+            mountPath: /mnt/model
+    volumes:
+      - name: model
+        emptyDir:
+          sizeLimit: 1Gi

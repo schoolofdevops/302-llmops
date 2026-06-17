@@ -1,0 +1,58 @@
+# Pattern: ClusterServingRuntime for vLLM CPU (arm64-compatible)
+# References: RESEARCH.md Pattern 1, D-01, D-02, D-03
+# Image: schoolofdevops/vllm-cpu-nonuma:0.9.1 — verified on KIND arm64 Phase 04
+# Container name MUST be "kserve-container" for KServe webhook recognition.
+#
+# ClusterServingRuntime defines the serving container spec cluster-wide.
+# The InferenceService (20-inferenceservice.yaml) provides initContainers,
+# volumes, and probes at the predictor level — those are per-InferenceService.
+#
+# autoSelect: false — explicit runtime reference required in InferenceService
+# when using spec.predictor.model. When using spec.predictor.containers
+# (our approach), this runtime defines the image convention only.
+apiVersion: serving.kserve.io/v1alpha1
+kind: ClusterServingRuntime
+metadata:
+  name: vllm-cpu-smollm2
+spec:
+  supportedModelFormats:
+    - name: vllm-cpu
+      version: "1"
+      autoSelect: false   # D-06: explicit runtime reference — avoids auto-select mismatches (Pitfall 6)
+  containers:
+    - name: kserve-container  # REQUIRED: must be "kserve-container" for KServe webhook recognition
+      image: schoolofdevops/vllm-cpu-nonuma:0.9.1  # D-01: verified on KIND arm64 Phase 04
+      command:
+        - python3
+        - -m
+        - vllm.entrypoints.openai.api_server
+      args:
+        - --model=/mnt/model
+        - --host=0.0.0.0
+        - --port=8000
+        - --max-model-len=4096
+        - --served-model-name=smollm2-135m-finetuned
+        - --dtype=float32
+        - --disable-frontend-multiprocessing  # Required for CPU mode — prevents OOM
+        - --max-num-seqs=1
+      env:
+        # D-02: CPU tuning env vars — locked values from Phase 04 validation
+        - name: VLLM_TARGET_DEVICE
+          value: "cpu"
+        - name: VLLM_CPU_KVCACHE_SPACE
+          value: "2"    # CRITICAL: do NOT raise to 4 — OOM on KIND nodes
+        - name: OMP_NUM_THREADS
+          value: "4"
+        - name: VLLM_CPU_OMP_THREADS_BIND
+          value: "auto"
+      resources:
+        # D-03: same resource footprint as Phase 04 backends
+        requests:
+          cpu: "4"
+          memory: 4Gi
+        limits:
+          cpu: "4"
+          memory: 5Gi
+      ports:
+        - containerPort: 8000
+          protocol: TCP
