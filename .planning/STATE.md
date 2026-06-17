@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Phase 05 Plan 02 complete — cert-manager v1.16.5, Gateway API CRDs v1.2.1, KServe v0.18.0 installed; RawDeployment mode; ConfigMap patched; human checkpoint approved
-last_updated: "2026-06-17T07:00:00.000Z"
+stopped_at: Phase 05 Plan 03 complete — ClusterServingRuntime + InferenceService READY=True; smollm2-nodeport Service on 30202; curl verified; separate NodePort Service pattern documented
+last_updated: "2026-06-17T08:00:00.000Z"
 last_activity: 2026-06-17
 progress:
   total_phases: 6
@@ -29,8 +29,9 @@ See: .planning/PROJECT.md (updated 2026-05-07)
 Phase: 05 (kserve-inferenceservice-serving-decision-lab) — IN PROGRESS
 Plan 05-01 complete (2026-06-17): NodePort 30202 added to both kind-config.yaml files; KIND cluster recreated; prerequisites (MinIO, Pattern A, Pattern B) at replicas=0 for KServe headroom.
 Plan 05-02 complete (2026-06-17): cert-manager v1.16.5, Gateway API CRDs v1.2.1, KServe v0.18.0 (CRDs + controller) installed; RawDeployment mode; inferenceservice-config patched with disableIngressCreation=true; human checkpoint approved.
+Plan 05-03 complete (2026-06-17): ClusterServingRuntime vllm-cpu-smollm2 + InferenceService smollm2 READY=True; separate smollm2-nodeport Service on NodePort 30202 (kubectl patch does not persist — KServe controller reconciles); curl localhost:30202/v1/chat/completions verified.
 
-Next: Execute Plan 05-03 (ClusterServingRuntime + InferenceService + NodePort 30202 + /v1/chat/completions verify)
+Next: Execute Plan 05-04 (Lab 08 doc + Lab 09 serving-decision page + sidebars + COURSE_VERSIONS + VERIFICATION.md)
 
 ## Performance Metrics
 
@@ -71,6 +72,8 @@ Decisions are logged in PROJECT.md Key Decisions table. Recent decisions affecti
 - [Pre-milestone 2026-05-07]: Drop eval gate from Argo Workflows pipeline (moves to 303-agentops)
 - [Pre-milestone 2026-05-07]: GPU content as instructor demos (GCP credits), not student labs — DEFERRED to v1.1
 - [Pre-milestone 2026-05-07]: Optional AI API service comparison (Groq/Gemini free tier) — DEFERRED to v1.1
+- [Phase 05-03 2026-06-17]: KServe RawDeployment controller reconciles managed predictor Service back to ClusterIP immediately — kubectl patch does not persist; separate NodePort Service selecting pods via serving.kserve.io/inferenceservice label is the correct exposure pattern
+- [Phase 05-03 2026-06-17]: spec.predictor.initContainers (not podSpec.initContainers) confirmed working on KServe v0.18 live cluster — no podSpec wrapper required
 - [Roadmap 2026-05-07]: Six-phase structure (Migration → Spine → Disk Loading → Router → KServe+Decision → Ops); SERVE-04 absorbed into Phase 05 instead of standalone Phase 07 (decision lab is more meaningful once all three patterns coexist)
 - [Roadmap 2026-05-07]: SERVE-01 aliased to SPINE-05 (same Lab 04, framed as "Pattern A"); PACKAGE-01 aliased to SPINE-04 (same Lab 03, framed as "Pattern A")
 - [Phase 01-curriculum-migration-to-303-agentops]: v0.19.x maintenance branch created from annotated tag commit (0fada73), not tag object — correct Git semantics; branch points to frozen content
@@ -122,6 +125,6 @@ None. (Roadmapper flagged stale concern about phase archive; verified — `.plan
 
 Last session: 2026-06-17T07:00:00.000Z
 Last activity: 2026-06-17
-Stopped at: Phase 05 Plan 02 complete — KServe v0.18.0 control-plane healthy; human checkpoint approved; ready for 05-03
+Stopped at: Phase 05 Plan 03 complete — InferenceService smollm2 READY=True; NodePort 30202 verified; ready for 05-04
 Resume file: None
-Next command: Execute Plan 05-03 (ClusterServingRuntime + InferenceService + NodePort 30202)
+Next command: Execute Plan 05-04 (Lab 08 doc + Lab 09 serving-decision page)

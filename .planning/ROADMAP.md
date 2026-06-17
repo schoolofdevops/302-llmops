@@ -149,7 +149,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 05-03-PLAN.md — Write ClusterServingRuntime + InferenceService YAML (solution + starter); apply; reach READY=True; patch predictor Service to NodePort 30202; verify /v1/chat/completions
+- [x] 05-03-PLAN.md — Write ClusterServingRuntime + InferenceService YAML (solution + starter); apply; reach READY=True; patch predictor Service to NodePort 30202; verify /v1/chat/completions
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
@@ -181,7 +181,7 @@ Phases execute in numeric order: 01 → 02 → 03 → 04 → 05 → 06
 | 02. Modernize LLMOps Spine (Labs 00-05) | 0/8 | Not started | - |
 | 03. Disk-Based Model Loading (MinIO + initContainer) | 0/4 | Not started | - |
 | 04. vLLM Router Multi-Pod Serving | 4/4 | Complete | 2026-06-16 |
-| 05. KServe InferenceService + Serving Decision Lab | 2/4 | In progress | - |
+| 05. KServe InferenceService + Serving Decision Lab | 3/4 | In progress | - |
 | 06. Production Operations Layer | 0/TBD | Not started | - |
 
 ## Coverage
