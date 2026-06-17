@@ -40,20 +40,20 @@ patterns-established:
 requirements-completed: [SERVE-02]
 
 # Metrics
-duration: 5min
+duration: 35min
 completed: 2026-06-17
 ---
 
 # Phase 05 Plan 01: KServe InferenceService + Serving Decision Lab Summary
 
-**NodePort 30202 added to both solution and starter kind-config.yaml files; starter also backfilled with missing 30201 from Phase 04 GAP-3 — cluster ready to recreate for KServe host access.**
+**NodePort 30202 added to both solution and starter kind-config.yaml files; KIND cluster recreated with 30202 bound; Phase 02/03 prerequisite stack redeployed with Patterns A and B at replicas=0, giving >=8GB RAM headroom for KServe.**
 
 ## Performance
 
-- **Duration:** ~5 min
+- **Duration:** ~35 min (5 min automated + 30 min human-action cluster recreate and stack redeploy)
 - **Started:** 2026-06-17T00:00:00Z
-- **Completed:** 2026-06-17T00:05:00Z
-- **Tasks:** 1 auto (complete) + 1 checkpoint:human-action (pending user action)
+- **Completed:** 2026-06-17T00:35:00Z
+- **Tasks:** 2 complete (1 auto + 1 human-action)
 - **Files modified:** 2
 
 ## Accomplishments
@@ -65,8 +65,9 @@ completed: 2026-06-17
 ## Task Commits
 
 1. **Task 1: Add NodePort 30202 to both kind-config.yaml files** - `7ec67e0` (chore)
+2. **Task 2: KIND cluster recreate + Phase 02/03 stack redeploy** - human-action (user-executed; no file-change commit — cluster state only)
 
-**Plan metadata:** (docs commit — pending after checkpoint completes)
+**Plan metadata:** (docs commit — see below)
 
 ## Files Created/Modified
 
@@ -99,23 +100,26 @@ completed: 2026-06-17
 
 None — file edits were straightforward.
 
-## Checkpoint Pending
+## Checkpoint Completed
 
-**Task 2 (checkpoint:human-action)** requires the user to:
-1. `kind delete cluster --name llmops-kind`
-2. `kind create cluster --config course-code/labs/lab-00/solution/setup/kind-config.yaml`
-3. Verify `docker inspect llmops-kind-control-plane` shows 30202/tcp bound
-4. Redeploy Phase 03 stack (MinIO + model-uploader Job + Pattern A + Pattern B)
-5. Scale both Pattern A and Pattern B to replicas=0 to free RAM for KServe install
-6. Verify `kubectl top nodes` shows >=8GB free RAM
-
-See full instructions in 05-01-PLAN.md checkpoint block.
+**Task 2 (checkpoint:human-action)** was completed by the user. Confirmed outcomes:
+1. KIND cluster `llmops-kind` deleted and recreated with updated kind-config.yaml
+2. `docker inspect llmops-kind-control-plane` confirms `30202/tcp` bound on host
+3. Phase 03 stack redeployed: MinIO running in `minio` namespace, model-uploader Job completed (`smollm2-finetuned/` object present)
+4. Pattern A (`vllm-smollm2`) and Pattern B (`vllm-smollm2-disk`) both deployed in `llm-serving` at `replicas=0`
+5. `kubectl top nodes` confirmed >=8GB free RAM across cluster
 
 ## Next Phase Readiness
 
-- Both kind-config.yaml files have 30202 mapped — waiting for human cluster recreate
-- After checkpoint approved: Plan 05-02 (KServe install) can proceed immediately
-- Blocker: KIND cluster must be recreated before any KServe install can succeed
+Plan 05-02 (cert-manager v1.16.5 + Gateway API CRDs v1.2.1 + KServe v0.18.0 install) can begin immediately:
+
+- NodePort 30202 is live on the host (`30202/tcp` visible in docker inspect)
+- 3 nodes Ready (1 control-plane + 2 workers)
+- MinIO healthy in `minio` namespace; `smollm2-finetuned/` model object accessible
+- `llm-serving` namespace has Pattern A and B Deployments at replicas=0 (ready for 05-03 comparison lab)
+- >=8GB free RAM headroom verified for KServe control-plane stack
+
+No blockers for Plan 05-02.
 
 ## Threat Surface Scan
 
