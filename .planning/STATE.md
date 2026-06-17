@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Phase 05 Plan 01 complete — NodePort 30202 added, KIND cluster recreated, prerequisites at replicas=0
-last_updated: "2026-06-17T00:00:00.000Z"
+stopped_at: Phase 05 Plan 02 complete — cert-manager v1.16.5, Gateway API CRDs v1.2.1, KServe v0.18.0 installed; RawDeployment mode; ConfigMap patched; human checkpoint approved
+last_updated: "2026-06-17T07:00:00.000Z"
 last_activity: 2026-06-17
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 20
-  completed_plans: 16
+  completed_plans: 17
   percent: 50
 ---
 
@@ -28,8 +28,9 @@ See: .planning/PROJECT.md (updated 2026-05-07)
 
 Phase: 05 (kserve-inferenceservice-serving-decision-lab) — IN PROGRESS
 Plan 05-01 complete (2026-06-17): NodePort 30202 added to both kind-config.yaml files; KIND cluster recreated; prerequisites (MinIO, Pattern A, Pattern B) at replicas=0 for KServe headroom.
+Plan 05-02 complete (2026-06-17): cert-manager v1.16.5, Gateway API CRDs v1.2.1, KServe v0.18.0 (CRDs + controller) installed; RawDeployment mode; inferenceservice-config patched with disableIngressCreation=true; human checkpoint approved.
 
-Next: Execute Plan 05-02 (cert-manager v1.16.5 + Gateway API CRDs v1.2.1 + KServe v0.18.0 install)
+Next: Execute Plan 05-03 (ClusterServingRuntime + InferenceService + NodePort 30202 + /v1/chat/completions verify)
 
 ## Performance Metrics
 
@@ -119,8 +120,8 @@ None. (Roadmapper flagged stale concern about phase archive; verified — `.plan
 
 ## Session Continuity
 
-Last session: 2026-06-17T00:35:00.000Z
+Last session: 2026-06-17T07:00:00.000Z
 Last activity: 2026-06-17
-Stopped at: Phase 05 Plan 01 complete — NodePort 30202 added, KIND cluster recreated, prerequisites at replicas=0
+Stopped at: Phase 05 Plan 02 complete — KServe v0.18.0 control-plane healthy; human checkpoint approved; ready for 05-03
 Resume file: None
-Next command: Execute Plan 05-02 (KServe install)
+Next command: Execute Plan 05-03 (ClusterServingRuntime + InferenceService + NodePort 30202)

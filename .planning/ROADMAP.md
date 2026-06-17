@@ -145,7 +145,7 @@ Plans:
 **Wave 1**
 
 - [x] 05-01-PLAN.md — GAP-4 fix: add NodePort 30202 to BOTH kind-config.yaml files + cluster recreate + Phase 02/03 stack redeploy (Patterns A and B both scaled to 0 for KServe headroom)
-- [ ] 05-02-PLAN.md — Install cert-manager v1.16.5 + Gateway API CRDs v1.2.1 + KServe v0.18.0 (CRDs + controller, RawDeployment mode) + patch inferenceservice-config to disable ingress creation
+- [x] 05-02-PLAN.md — Install cert-manager v1.16.5 + Gateway API CRDs v1.2.1 + KServe v0.18.0 (CRDs + controller, RawDeployment mode) + patch inferenceservice-config to disable ingress creation
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -181,7 +181,7 @@ Phases execute in numeric order: 01 → 02 → 03 → 04 → 05 → 06
 | 02. Modernize LLMOps Spine (Labs 00-05) | 0/8 | Not started | - |
 | 03. Disk-Based Model Loading (MinIO + initContainer) | 0/4 | Not started | - |
 | 04. vLLM Router Multi-Pod Serving | 4/4 | Complete | 2026-06-16 |
-| 05. KServe InferenceService + Serving Decision Lab | 1/4 | In progress | - |
+| 05. KServe InferenceService + Serving Decision Lab | 2/4 | In progress | - |
 | 06. Production Operations Layer | 0/TBD | Not started | - |
 
 ## Coverage
