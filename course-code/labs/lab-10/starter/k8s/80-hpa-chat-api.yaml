@@ -1,0 +1,24 @@
+# Lab 10: HPA for rag-retriever (CPU-based autoscaling)
+# STARTER FILE — fill in the TODO blank before applying
+#
+# Hint: target 60% average CPU utilization across all rag-retriever pods
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: rag-retriever
+  namespace: llm-app
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: rag-retriever
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          # TODO: set the target CPU utilization percentage
+          averageUtilization: # TODO

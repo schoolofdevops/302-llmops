@@ -1,0 +1,96 @@
+# Lab 10: Grafana Dashboard ConfigMap — Autoscaling Demo
+#
+# This ConfigMap is auto-discovered by the Grafana sidecar provisioner.
+# The label grafana_dashboard: "1" tells the sidecar to import the JSON as a dashboard.
+#
+# Panels:
+#   1. "vLLM Requests Waiting" — shows vllm:num_requests_waiting metric (KEDA trigger signal)
+#   2. "Replica Count" — shows actual Deployment replica count (scale-out response)
+#
+# Together these panels show the cause (queue depth) and effect (replica count increase)
+# of the KEDA autoscaling loop in real time during the load test.
+#
+# Apply: kubectl apply -f 82-grafana-dashboard-autoscaling-cm.yaml
+# Verify: Open Grafana (localhost:30090) → Dashboards → "Autoscaling Demo"
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-autoscaling-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  autoscaling.json: |
+    {
+      "id": null,
+      "uid": "autoscaling-demo",
+      "title": "Autoscaling Demo",
+      "tags": ["llmops", "keda", "autoscaling"],
+      "timezone": "browser",
+      "schemaVersion": 36,
+      "version": 1,
+      "refresh": "10s",
+      "time": {
+        "from": "now-15m",
+        "to": "now"
+      },
+      "panels": [
+        {
+          "id": 1,
+          "title": "vLLM Requests Waiting",
+          "type": "timeseries",
+          "description": "Number of requests queued in vLLM (KEDA trigger signal). When this exceeds threshold=1, KEDA scales up the vllm-smollm2 Deployment.",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+          "targets": [
+            {
+              "expr": "sum(vllm:num_requests_waiting{model_name=\"smollm2-135m-finetuned\"})",
+              "legendFormat": "Requests Waiting",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "palette-classic" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "red", "value": 1 }
+                ]
+              }
+            }
+          },
+          "options": {
+            "tooltip": { "mode": "single" }
+          }
+        },
+        {
+          "id": 2,
+          "title": "Replica Count",
+          "type": "timeseries",
+          "description": "Current number of vllm-smollm2 Deployment replicas (KEDA scale-out response).",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+          "targets": [
+            {
+              "expr": "kube_deployment_status_replicas{namespace=\"llm-serving\",deployment=\"vllm-smollm2\"}",
+              "legendFormat": "Replicas",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "palette-classic" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "blue", "value": null }
+                ]
+              }
+            }
+          },
+          "options": {
+            "tooltip": { "mode": "single" }
+          }
+        }
+      ]
+    }

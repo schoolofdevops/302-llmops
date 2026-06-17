@@ -1,0 +1,47 @@
+# Lab 10: hey load generator Job — Pattern A (vllm-smollm2 Deployment)
+#
+# IMPORTANT: model name MUST be "smollm2-135m-finetuned"
+#   This matches --served-model-name in course-code/labs/lab-04/solution/k8s/30-deploy-vllm.yaml
+#   Sending a different model name returns 404 from vLLM's OpenAI-compatible API.
+#
+# Load profile:
+#   -z 180s  : run for 3 minutes (enough to trigger scale-up and observe it)
+#   -c 4     : 4 concurrent connections (enough to queue requests on a CPU-bound vLLM)
+#   -q 2     : 2 requests per second per worker (total ~8 RPS — moderate load)
+#
+# Expected outcome:
+#   - Within ~30-45s, vllm:num_requests_waiting >= 1
+#   - KEDA polls every 15s and should fire scale-up trigger within 30s
+#   - Second vllm-smollm2-* pod starts within ~60s of load start
+#   - kubectl get pods -n llm-serving -w will show a second pod Pending→ContainerCreating→Running
+#
+# Cleanup (auto after 10 minutes):
+#   spec.ttlSecondsAfterFinished: 600 removes the completed Job automatically.
+#   Manual cleanup: kubectl delete job vllm-loadgen-pattern-a -n llm-serving
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: vllm-loadgen-pattern-a
+  namespace: llm-serving
+spec:
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: hey
+          image: williamyeh/hey:latest
+          args:
+            - "-z"
+            - "180s"
+            - "-c"
+            - "4"
+            - "-q"
+            - "2"
+            - "-m"
+            - "POST"
+            - "-H"
+            - "Content-Type: application/json"
+            - "-d"
+            - '{"model":"smollm2-135m-finetuned","prompt":"What treatments does Smile Dental offer?","max_tokens":32}'
+            - "http://vllm-smollm2.llm-serving.svc.cluster.local:8000/v1/completions"

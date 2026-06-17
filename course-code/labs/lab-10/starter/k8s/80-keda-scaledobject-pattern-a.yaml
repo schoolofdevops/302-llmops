@@ -1,0 +1,29 @@
+# Lab 10: KEDA ScaledObject for Pattern A — plain vLLM Deployment (vllm-smollm2)
+# STARTER FILE — fill in the TODO blanks before applying
+#
+# Hints:
+#   - metric name uses colon prefix: vllm:num_requests_waiting (NOT underscore)
+#   - serverAddress uses the kube-prometheus-stack release name (kps) in the Service FQDN
+#   - threshold: trigger on the first queued request
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: vllm-smollm2
+  namespace: llm-serving
+spec:
+  scaleTargetRef:
+    name: vllm-smollm2
+  minReplicaCount: 1
+  maxReplicaCount: 3
+  pollingInterval: 15
+  cooldownPeriod: 300
+  triggers:
+    - type: prometheus
+      metadata:
+        serverAddress: "http://kps-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090"
+        # TODO: fill in the PromQL query that sums the vLLM requests-waiting metric
+        # filtered by model_name="smollm2-135m-finetuned"
+        query: "# TODO"
+        # TODO: set the threshold value (hint: trigger on the first queued request)
+        threshold: "# TODO"
+        metricName: "vllm_requests_waiting"

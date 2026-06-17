@@ -1,0 +1,36 @@
+# Lab 10: HPA for rag-retriever (CPU-based autoscaling)
+#
+# CPU HPA for stateless FastAPI — contrasts with KEDA queue-depth signal for vLLM.
+#
+# WHY CPU for the retriever, not KEDA?
+#   - rag-retriever is a stateless FastAPI service: horizontal scale-out is safe and fast
+#   - CPU is a reliable proxy for retriever load (embedding + FAISS index search is CPU-bound)
+#   - No Prometheus metric needed — HPA uses metrics-server (lighter-weight requirement)
+#
+# WHY KEDA for vLLM, not CPU?
+#   - vLLM is stateful (KV-cache per session): sudden CPU spike != steady load
+#   - vllm:num_requests_waiting is a semantic signal: it means capacity is exhausted
+#   - CPU can be low while queue is full (batch in progress) — would miss the scale signal
+#
+# Prerequisites:
+#   - metrics-server installed in kube-system (install-metrics-server.sh)
+#   - rag-retriever Deployment deployed in llm-app namespace (from Lab 01)
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: rag-retriever
+  namespace: llm-app
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: rag-retriever
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60

@@ -1,0 +1,35 @@
+# Lab 10: KEDA ScaledObject for Pattern A — plain vLLM Deployment (vllm-smollm2)
+#
+# IMPORTANT metric name: vllm:num_requests_waiting (colon, NOT underscore)
+#   vLLM 0.9.1+ uses the colon-prefix Prometheus metric naming convention.
+#   Old vLLM (<0.15) used vllm_request_ttft_seconds (underscore). Do NOT use underscore.
+#
+# Why minReplicaCount=1: Avoids cold-start penalty. A scale-to-zero would mean
+#   no pods to receive requests, adding 60-180s model load time before first response.
+#   Keep at least 1 replica always warm.
+#
+# Why threshold="1": Trigger on the FIRST queued request. For a CPU-bound
+#   single-threaded LLM server, any queue buildup means the current replica is at
+#   capacity. Scale immediately rather than waiting for a larger backlog.
+#
+# cooldownPeriod=300: Wait 5 minutes after load drops before scaling down.
+#   Prevents rapid scale-up/down thrash (LLM pods take 60-180s to reload).
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: vllm-smollm2
+  namespace: llm-serving
+spec:
+  scaleTargetRef:
+    name: vllm-smollm2
+  minReplicaCount: 1
+  maxReplicaCount: 3
+  pollingInterval: 15      # seconds between Prometheus polls
+  cooldownPeriod: 300      # seconds after load drops before scaling down
+  triggers:
+    - type: prometheus
+      metadata:
+        serverAddress: "http://kps-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090"
+        query: 'sum(vllm:num_requests_waiting{model_name="smollm2-135m-finetuned"})'
+        threshold: "1"
+        metricName: "vllm_requests_waiting"  # Arbitrary label for KEDA internal tracking
