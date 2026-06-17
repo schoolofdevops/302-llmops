@@ -21,6 +21,8 @@ const sidebars: SidebarsConfig = {
         'labs/lab-05-observability',
         'labs/lab-06-disk-model-loading',
         'labs/lab-07-vllm-router',
+        'labs/lab-08-kserve-inferenceservice',
+        'labs/lab-09-serving-decision',
       ],
     },
     {
