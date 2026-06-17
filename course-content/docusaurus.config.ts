@@ -42,10 +42,6 @@ const config: Config = {
             to: 'https://github.com/schoolofdevops/303-agentops',
           },
           {
-            from: '/docs/labs/lab-10-autoscaling',
-            to: 'https://github.com/schoolofdevops/303-agentops',
-          },
-          {
             from: '/docs/labs/lab-11-gitops',
             to: 'https://github.com/schoolofdevops/303-agentops',
           },

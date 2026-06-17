@@ -23,6 +23,7 @@ const sidebars: SidebarsConfig = {
         'labs/lab-07-vllm-router',
         'labs/lab-08-kserve-inferenceservice',
         'labs/lab-09-serving-decision',
+        'labs/lab-10-autoscaling',
       ],
     },
     {
