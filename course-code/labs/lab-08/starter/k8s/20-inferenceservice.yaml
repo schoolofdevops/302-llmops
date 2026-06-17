@@ -86,9 +86,9 @@ spec:
           httpGet:
             path: /health
             port: 8000
-          initialDelaySeconds: 0  # TODO: D-11 — prevents crashloop on CPU model load
+          initialDelaySeconds: 0  # TODO: D-11 — CPU model load takes 90-180s; set to 90
           periodSeconds: 10
-          failureThreshold: 0  # TODO: D-11 — total probe budget = initialDelaySeconds + failureThreshold × periodSeconds
+          failureThreshold: 1  # TODO: D-11 — increase to 30 for CPU model load; total budget = initialDelaySeconds + failureThreshold × periodSeconds (see solution)
         livenessProbe:
           httpGet:
             path: /health
