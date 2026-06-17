@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Phase 05 Plan 03 complete — ClusterServingRuntime + InferenceService READY=True; smollm2-nodeport Service on 30202; curl verified; separate NodePort Service pattern documented
-last_updated: "2026-06-17T08:00:00.000Z"
+stopped_at: Phase 05 Plan 04 complete — Lab 08 + Lab 09 docs written; sidebars + COURSE_VERSIONS updated; KServe stack torn down; Pattern A restored; VERIFICATION.md complete; Phase 05 DONE
+last_updated: "2026-06-17T09:45:00.000Z"
 last_activity: 2026-06-17
 progress:
   total_phases: 6
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 20
-  completed_plans: 17
-  percent: 50
+  completed_plans: 18
+  percent: 60
 ---
 
 # Project State
@@ -26,12 +26,13 @@ See: .planning/PROJECT.md (updated 2026-05-07)
 
 ## Current Position
 
-Phase: 05 (kserve-inferenceservice-serving-decision-lab) — IN PROGRESS
+Phase 05 (kserve-inferenceservice-serving-decision-lab) — COMPLETE (2026-06-17)
 Plan 05-01 complete (2026-06-17): NodePort 30202 added to both kind-config.yaml files; KIND cluster recreated; prerequisites (MinIO, Pattern A, Pattern B) at replicas=0 for KServe headroom.
 Plan 05-02 complete (2026-06-17): cert-manager v1.16.5, Gateway API CRDs v1.2.1, KServe v0.18.0 (CRDs + controller) installed; RawDeployment mode; inferenceservice-config patched with disableIngressCreation=true; human checkpoint approved.
 Plan 05-03 complete (2026-06-17): ClusterServingRuntime vllm-cpu-smollm2 + InferenceService smollm2 READY=True; separate smollm2-nodeport Service on NodePort 30202 (kubectl patch does not persist — KServe controller reconciles); curl localhost:30202/v1/chat/completions verified.
+Plan 05-04 complete (2026-06-17): Lab 08 KServe guide + Lab 09 serving-decision page written; sidebars + COURSE_VERSIONS updated; Docusaurus build passes; KServe stack torn down (kserve+cert-manager ns deleted); Pattern A restored to replicas=1 at NodePort 30200; VERIFICATION.md 5 rows PASS.
 
-Next: Execute Plan 05-04 (Lab 08 doc + Lab 09 serving-decision page + sidebars + COURSE_VERSIONS + VERIFICATION.md)
+Next: Execute Phase 06 (Production Operations Layer — HPA + KEDA, ArgoCD, Argo Workflows)
 
 ## Performance Metrics
 
@@ -123,8 +124,8 @@ None. (Roadmapper flagged stale concern about phase archive; verified — `.plan
 
 ## Session Continuity
 
-Last session: 2026-06-17T07:00:00.000Z
+Last session: 2026-06-17T09:45:00.000Z
 Last activity: 2026-06-17
-Stopped at: Phase 05 Plan 03 complete — InferenceService smollm2 READY=True; NodePort 30202 verified; ready for 05-04
+Stopped at: Phase 05 complete — all 4 plans done; Lab 08 + Lab 09 published; cluster ready for Phase 06
 Resume file: None
-Next command: Execute Plan 05-04 (Lab 08 doc + Lab 09 serving-decision page)
+Next command: Execute Phase 06 (Production Operations Layer)

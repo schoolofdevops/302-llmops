@@ -24,7 +24,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 02: Modernize LLMOps Spine (Labs 00-05)** — Carry-forward + end-to-end verification of Labs 00-05 (KIND, RAG, LoRA, OCI packaging, plain vLLM Deployment + Chainlit, Prometheus/Grafana) on the post-migration cluster, with 2026 dependency refresh
 - [x] **Phase 03: Disk-Based Model Loading (MinIO + initContainer)** (completed 2026-06-15) — Add MinIO in-cluster object store + disk-loading vLLM Deployment with sentinel + sha256 verification + sized emptyDir; publish OCI-vs-disk decision lab page
 - [ ] **Phase 04: vLLM Router Multi-Pod Serving** — Add vLLM Production Stack router (vllm-stack 0.1.11, lmcache/lmstack-router:v0.1.11) fronting two CPU backend pods with session routing default; KEDA scales backends, not router
-- [ ] **Phase 05: KServe InferenceService + Serving Decision Lab** — Restore KServe `InferenceService` (v0.18.0 Standard/RawDeployment mode) with custom CPU `ClusterServingRuntime`; close out with side-by-side serving-pattern comparison/decision lab (when to use each)
+- [x] **Phase 05: KServe InferenceService + Serving Decision Lab** — Restore KServe `InferenceService` (v0.18.0 Standard/RawDeployment mode) with custom CPU `ClusterServingRuntime`; close out with side-by-side serving-pattern comparison/decision lab (when to use each) (completed 2026-06-17)
 - [ ] **Phase 06: Production Operations Layer** — Re-validate HPA + KEDA, ArgoCD App-of-Apps, and Argo Workflows training pipeline (data → index → train → merge, no eval gate) against all three serving patterns
 
 ## Phase Details
@@ -153,7 +153,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 05-04-PLAN.md — Lab 08 doc + Lab 09 serving-decision page + sidebars.ts + COURSE_VERSIONS.md + D-13 teardown + VERIFICATION.md (SERVE-02 + SERVE-04 acceptance)
+- [x] 05-04-PLAN.md — Lab 08 doc + Lab 09 serving-decision page + sidebars.ts + COURSE_VERSIONS.md + D-13 teardown + VERIFICATION.md (SERVE-02 + SERVE-04 acceptance)
 
 ### Phase 06: Production Operations Layer
 
@@ -181,7 +181,7 @@ Phases execute in numeric order: 01 → 02 → 03 → 04 → 05 → 06
 | 02. Modernize LLMOps Spine (Labs 00-05) | 0/8 | Not started | - |
 | 03. Disk-Based Model Loading (MinIO + initContainer) | 0/4 | Not started | - |
 | 04. vLLM Router Multi-Pod Serving | 4/4 | Complete | 2026-06-16 |
-| 05. KServe InferenceService + Serving Decision Lab | 3/4 | In progress | - |
+| 05. KServe InferenceService + Serving Decision Lab | 4/4 | Complete | 2026-06-17 |
 | 06. Production Operations Layer | 0/TBD | Not started | - |
 
 ## Coverage
