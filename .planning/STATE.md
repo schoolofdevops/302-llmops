@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Phase 05 Plan 04 complete — Lab 08 + Lab 09 docs written; sidebars + COURSE_VERSIONS updated; KServe stack torn down; Pattern A restored; VERIFICATION.md complete; Phase 05 DONE
-last_updated: "2026-06-17T09:45:00.000Z"
+status: Executing Phase 06
+stopped_at: Phase 06 Plan 01 complete — KIND cluster with 30700+30800; kps+KEDA+metrics-server installed
+last_updated: "2026-06-17T20:45:00.000Z"
 last_activity: 2026-06-17
 progress:
   total_phases: 6
   completed_phases: 4
-  total_plans: 20
-  completed_plans: 18
-  percent: 60
+  total_plans: 24
+  completed_plans: 21
+  percent: 67
 ---
 
 # Project State
@@ -22,17 +22,26 @@ See: .planning/PROJECT.md (updated 2026-05-07)
 
 **Core value:** Teach practitioners how to deploy and operate LLM serving infrastructure on Kubernetes — full LLMOps lifecycle (data → fine-tune → package → serve → observe → scale → GitOps) with three serving patterns (plain vLLM, vLLM Router, KServe) and two model-packaging patterns (OCI ImageVolume, disk-based) on CPU-only KIND.
 
-**Current focus:** Phase 05 — KServe + Serving Pattern Decision Lab
+**Current focus:** Phase 06 — production-operations-layer
 
 ## Current Position
 
+Phase: 06 (production-operations-layer) — EXECUTING
+Plan: 2 of 4
 Phase 05 (kserve-inferenceservice-serving-decision-lab) — COMPLETE (2026-06-17)
 Plan 05-01 complete (2026-06-17): NodePort 30202 added to both kind-config.yaml files; KIND cluster recreated; prerequisites (MinIO, Pattern A, Pattern B) at replicas=0 for KServe headroom.
 Plan 05-02 complete (2026-06-17): cert-manager v1.16.5, Gateway API CRDs v1.2.1, KServe v0.18.0 (CRDs + controller) installed; RawDeployment mode; inferenceservice-config patched with disableIngressCreation=true; human checkpoint approved.
 Plan 05-03 complete (2026-06-17): ClusterServingRuntime vllm-cpu-smollm2 + InferenceService smollm2 READY=True; separate smollm2-nodeport Service on NodePort 30202 (kubectl patch does not persist — KServe controller reconciles); curl localhost:30202/v1/chat/completions verified.
 Plan 05-04 complete (2026-06-17): Lab 08 KServe guide + Lab 09 serving-decision page written; sidebars + COURSE_VERSIONS updated; Docusaurus build passes; KServe stack torn down (kserve+cert-manager ns deleted); Pattern A restored to replicas=1 at NodePort 30200; VERIFICATION.md 5 rows PASS.
 
-Next: Execute Phase 06 (Production Operations Layer — HPA + KEDA, ArgoCD, Argo Workflows)
+Phase 06 (production-operations-layer) — EXECUTING (2026-06-17)
+Plan 06-01 complete (2026-06-17): NodePorts 30700+30800 added to kind-config.yaml files; KIND cluster recreated; MinIO+vLLM+Chainlit redeployed; kube-prometheus-stack 83.4.2 (release=kps, Grafana:30090), KEDA 2.19.0, metrics-server installed; ServiceMonitors active.
+Plans: 06-02 (HPA + KEDA all 3 patterns + Lab 10), 06-03 (ArgoCD App-of-Apps + Lab 11), 06-04 (Argo Workflows DAG + E2E loop + Lab 12)
+3 waves: Wave 1 (06-01 DONE) → Wave 2 parallel (06-02, 06-03) → Wave 3 (06-04)
+Key decision: D-12 E2E loop is fully automated via alpine/git + SSH deploy key in WorkflowTemplate promote step.
+Key decision: D-13 Lab 10 Grafana on 30090 (not 30400); KEDA ScaledObject serverAddress = kps-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
+
+Next: Execute Phase 06 Plan 02 (HPA + KEDA autoscaling + Lab 10 lab guide)
 
 ## Performance Metrics
 
@@ -85,6 +94,9 @@ Decisions are logged in PROJECT.md Key Decisions table. Recent decisions affecti
 - [Phase 01-curriculum-migration-to-303-agentops]: logo.alt updated from 'LLMOps & AgentOps Logo' to 'LLMOps Logo' alongside title rename (D-06)
 - [Phase 01-curriculum-migration-to-303-agentops]: Untracked runtime artifacts in lab-07 dirs (sqlite, pytest caches) left on disk — gitignored, never tracked, no action needed
 - [Phase 01-curriculum-migration-to-303-agentops]: D-10 order complete: tag→branch→303-bootstrap→redirects→delete→build-verify — all 8 steps done across plans 01-01..01-04
+- [Phase 06-01 2026-06-17]: Lab 10 Grafana uses NodePort 30090 (not 30400 from Lab 06) — 30090 slot already in kind-config.yaml from Phase 05
+- [Phase 06-01 2026-06-17]: KEDA ScaledObject serverAddress: kps-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090 (release=kps prefix determines Service FQDN)
+- [Phase 06-01 2026-06-17]: KIND cluster creation requires absolute hostPath for Docker Desktop; relative paths in kind-config.yaml preserved for students (bootstrap script handles substitution)
 
 ### Reusable from v0.19.0
 
@@ -124,8 +136,8 @@ None. (Roadmapper flagged stale concern about phase archive; verified — `.plan
 
 ## Session Continuity
 
-Last session: 2026-06-17T09:45:00.000Z
+Last session: 2026-06-17T20:45:00.000Z
 Last activity: 2026-06-17
-Stopped at: Phase 05 complete — all 4 plans done; Lab 08 + Lab 09 published; cluster ready for Phase 06
+Stopped at: Phase 06 Plan 01 complete — KIND cluster with 30700+30800; kps+KEDA+metrics-server installed; ready for 06-02
 Resume file: None
-Next command: Execute Phase 06 (Production Operations Layer)
+Next command: Execute Phase 06 Plan 02 (HPA + KEDA + Lab 10)

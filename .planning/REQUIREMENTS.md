@@ -50,7 +50,7 @@ OCI image (existing) + disk-based loading (new). Decision tree.
 
 Re-validate v0.19.0 ops against all 3 serving patterns; drop eval gate.
 
-- [ ] **OPS-01**: Autoscaling lab — HPA on Chat API (CPU-based) + KEDA on vLLM (Prometheus metric `vllm:num_requests_waiting`); validate behavior against all 3 SERVE patterns
+- [x] **OPS-01**: Autoscaling lab — HPA on Chat API (CPU-based) + KEDA on vLLM (Prometheus metric `vllm:num_requests_waiting`); validate behavior against all 3 SERVE patterns
 - [ ] **OPS-02**: GitOps lab — ArgoCD App-of-Apps managing vLLM/KServe/Router/MinIO/Chainlit; vLLM tag promotion via Git commit; declarative model promotion demo
 - [ ] **OPS-03**: Argo Workflows training pipeline lab — DAG: data → index → train → merge (NO eval gate, NO commit-tag step; eval moved to 303-agentops)
 
