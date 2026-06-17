@@ -102,4 +102,4 @@ spec:
     volumes:
       - name: model
         emptyDir:
-          sizeLimit: 1Gi
+          sizeLimit: 2Gi  # matches initContainer ephemeral-storage limit; mc cp can transiently exceed 1Gi
