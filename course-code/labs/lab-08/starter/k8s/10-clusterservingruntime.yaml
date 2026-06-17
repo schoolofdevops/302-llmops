@@ -47,7 +47,7 @@ spec:
       resources:
         # TODO: see D-03 (match Phase 04 backends — same CPU/memory footprint)
         requests:
-          cpu: ""   # TODO: see D-03 (match Phase 04 backends)
+          cpu: "4"  # D-03: match Phase 04 backends; empty string is invalid k8s resource quantity
           memory: 4Gi
         limits:
           cpu: "4"
