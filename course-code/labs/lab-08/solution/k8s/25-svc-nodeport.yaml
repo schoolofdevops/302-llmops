@@ -1,0 +1,31 @@
+# Separate NodePort Service for KServe InferenceService smollm2
+# References: Phase 05 deviation — KServe RawDeployment mode continuously reconciles
+# the auto-generated smollm2-predictor Service back to ClusterIP.
+# Patching that managed Service does NOT persist.
+#
+# Solution: create a separate NodePort Service that selects the predictor pods
+# directly via the KServe label: serving.kserve.io/inferenceservice: smollm2
+#
+# This is the correct pattern for exposing a KServe InferenceService via NodePort
+# on a KIND cluster (or any cluster without a cloud LoadBalancer).
+#
+# Apply AFTER the InferenceService reaches READY=True:
+#   kubectl apply -f 25-svc-nodeport.yaml
+#
+# Verify:
+#   kubectl get svc smollm2-nodeport -n llm-serving
+#   curl http://localhost:30202/v1/models
+apiVersion: v1
+kind: Service
+metadata:
+  name: smollm2-nodeport
+  namespace: llm-serving
+spec:
+  type: NodePort
+  selector:
+    serving.kserve.io/inferenceservice: smollm2
+  ports:
+    - port: 80
+      targetPort: 8000
+      nodePort: 30202
+      protocol: TCP
