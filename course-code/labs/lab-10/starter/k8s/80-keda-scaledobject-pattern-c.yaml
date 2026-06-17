@@ -1,0 +1,30 @@
+# Lab 10: KEDA ScaledObject for Pattern C — KServe InferenceService predictor
+# STARTER FILE — fill in the TODO blanks before applying
+#
+# Hints:
+#   - KServe names the predictor Deployment as: <inferenceservice-name>-predictor
+#   - The InferenceService is named "smollm2" → Deployment is "smollm2-predictor"
+#   - Use the same Prometheus serverAddress as Pattern A
+#   - Use the same vllm:num_requests_waiting query as Pattern A
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: smollm2-predictor-keda
+  namespace: llm-serving
+spec:
+  scaleTargetRef:
+    # TODO: set the name of the KServe predictor Deployment
+    # Hint: KServe auto-names it as <inferenceservice-name>-predictor
+    name: "# TODO"
+  minReplicaCount: 1
+  maxReplicaCount: 3
+  pollingInterval: 15
+  cooldownPeriod: 360
+  triggers:
+    - type: prometheus
+      metadata:
+        serverAddress: "http://kps-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090"
+        # TODO: fill in the PromQL query (same as Pattern A)
+        query: "# TODO"
+        threshold: "5"
+        metricName: "vllm_requests_waiting_kserve"

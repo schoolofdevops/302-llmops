@@ -1,0 +1,49 @@
+# Lab 10: KEDA ScaledObject for Pattern C — KServe InferenceService predictor
+#
+# ONLY apply when Pattern C (KServe) is running and smollm2-predictor Deployment exists.
+# Verify: kubectl get deploy smollm2-predictor -n llm-serving
+#
+# PREREQUISITE: Disable KServe's built-in HPA before applying this ScaledObject.
+#   KServe RawDeployment mode auto-creates an HPA for the predictor. KEDA's admission
+#   webhook will reject this ScaledObject if the KServe HPA is already managing the same
+#   Deployment. Annotate the InferenceService to use the external autoscaler:
+#
+#   kubectl annotate inferenceservice smollm2 -n llm-serving \
+#     serving.kserve.io/autoscalerClass=external
+#
+#   This removes the KServe-managed HPA, allowing KEDA to manage scaling instead.
+#
+# KServe auto-names the predictor Deployment: <inferenceservice-name>-predictor
+#   InferenceService name: smollm2
+#   Predictor Deployment name: smollm2-predictor  (NOT smollm2, NOT vllm-smollm2)
+#
+# Pitfall: DO NOT set scaleTargetRef.name to "smollm2" or "vllm-smollm2"
+#   KServe creates its own Deployment with the -predictor suffix.
+#   KEDA cannot scale a non-existent Deployment — ScaledObject will error.
+#
+# Why threshold="5" (vs "1" for Pattern A)?
+#   Pattern C includes ServiceMonitor + KEDA together. Threshold=5 avoids triggering
+#   scale-up on a single slow request while Prometheus scrape interval stabilizes.
+#   For production use, tune based on observed queue depth under expected load.
+#
+# cooldownPeriod=360: KServe predictor takes longer to reload than a plain Deployment
+#   (initContainer model download adds ~90-120s). Extra cooldown prevents thrash.
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: smollm2-predictor-keda
+  namespace: llm-serving
+spec:
+  scaleTargetRef:
+    name: smollm2-predictor
+  minReplicaCount: 1
+  maxReplicaCount: 3
+  pollingInterval: 15
+  cooldownPeriod: 360
+  triggers:
+    - type: prometheus
+      metadata:
+        serverAddress: "http://kps-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090"
+        query: 'sum(vllm:num_requests_waiting{model_name="smollm2-135m-finetuned"})'
+        threshold: "5"
+        metricName: "vllm_requests_waiting_kserve"

@@ -1,0 +1,29 @@
+# Lab 10: ServiceMonitor for KServe predictor /metrics
+# STARTER FILE — fill in the TODO blank before applying
+#
+# Apply only when Pattern C (KServe) is running.
+#
+# Hints:
+#   - KServe predictor pods carry a label: serving.kserve.io/inferenceservice: smollm2
+#   - The selector.matchLabels value must match the InferenceService name
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kserve-predictor-monitor
+  namespace: monitoring
+  labels:
+    release: kps   # CRITICAL: must match kube-prometheus-stack release name
+spec:
+  namespaceSelector:
+    matchNames:
+      - llm-serving
+  selector:
+    matchLabels:
+      # TODO: fill in the KServe label key and value for the smollm2 InferenceService predictor pods
+      # Hint: serving.kserve.io/inferenceservice: <inferenceservice-name>
+      serving.kserve.io/inferenceservice: "# TODO"
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s

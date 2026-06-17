@@ -1,0 +1,33 @@
+# Lab 10: ServiceMonitor for KServe predictor /metrics
+#
+# Apply only when Pattern C (KServe) is running.
+# The smollm2 InferenceService creates a predictor Deployment named "smollm2-predictor".
+# Predictor pods carry the label: serving.kserve.io/inferenceservice: smollm2
+#
+# CRITICAL: release: kps label must match kube-prometheus-stack release name.
+#   The kube-prometheus-stack Helm chart uses serviceMonitorSelector to pick up
+#   ServiceMonitors. It selects resources with label release: kps (the release name
+#   used in install-kps.sh). Without this label, Prometheus ignores this ServiceMonitor.
+#
+# Verify scrape target appears in Prometheus after ~60s:
+#   curl http://localhost:30500/api/v1/targets | python3 -m json.tool | grep smollm2
+# (Prometheus NodePort is 30500 per install-kps.sh)
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kserve-predictor-monitor
+  namespace: monitoring
+  labels:
+    release: kps   # CRITICAL: must match kube-prometheus-stack release name
+spec:
+  namespaceSelector:
+    matchNames:
+      - llm-serving
+  selector:
+    matchLabels:
+      serving.kserve.io/inferenceservice: smollm2
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s

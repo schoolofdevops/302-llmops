@@ -1,0 +1,45 @@
+# Lab 10: hey load generator Job — Pattern C (KServe smollm2-predictor)
+#
+# Pattern C load test — targets the KServe predictor via smollm2-nodeport Service.
+# The smollm2-nodeport Service (created in Lab 08 / Phase 05) selects predictor pods
+# via label: serving.kserve.io/inferenceservice: smollm2
+#
+# Port 30202: internal service port — the hey Job accesses the service at port 30202
+#   (same port that localhost:30202 maps to externally via KIND portMapping)
+#   Service: smollm2-nodeport.llm-serving — NodePort 30202 → targetPort 8000
+#
+# Prerequisites:
+#   - Pattern C must be running: kubectl get deploy smollm2-predictor -n llm-serving
+#   - smollm2-nodeport Service must exist: kubectl get svc smollm2-nodeport -n llm-serving
+#   - ServiceMonitor applied (80-servicemonitor-kserve-predictor.yaml)
+#   - ScaledObject applied (80-keda-scaledobject-pattern-c.yaml)
+#
+# IMPORTANT: model name MUST be "smollm2-135m-finetuned"
+#   Must match --served-model-name in InferenceService containers spec.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: vllm-loadgen-pattern-c
+  namespace: llm-serving
+spec:
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: hey
+          image: williamyeh/hey:latest
+          args:
+            - "-z"
+            - "180s"
+            - "-c"
+            - "4"
+            - "-q"
+            - "2"
+            - "-m"
+            - "POST"
+            - "-H"
+            - "Content-Type: application/json"
+            - "-d"
+            - '{"model":"smollm2-135m-finetuned","prompt":"What treatments does Smile Dental offer?","max_tokens":32}'
+            - "http://smollm2-nodeport.llm-serving.svc.cluster.local:30202/v1/completions"

@@ -1,0 +1,44 @@
+# Lab 10: hey load generator Job — Pattern B (vllm-stack router)
+#
+# Pattern B load test — targets the vllm-stack router which load-balances to backend
+# Deployments scaled by the chart-created KEDA ScaledObject (keda.enabled=true in values).
+#
+# Router service hostname: lmstack-router.llm-serving.svc.cluster.local
+#   - Helm release name: lmstack
+#   - Chart creates a Service named <release>-router for the routing pod
+#   - NodePort 30201 also exposed (see 00-values-vllm-router.yaml: routerSpec.nodePort: 30201)
+#
+# NOTE: Do NOT apply a standalone ScaledObject YAML for Pattern B.
+#   The vllm-stack chart creates its own ScaledObject when keda.enabled=true.
+#   Applying a second ScaledObject targeting the same Deployment will conflict.
+#   See RESEARCH.md Pitfall 5.
+#
+# IMPORTANT: model name MUST be "smollm2-135m-finetuned"
+#   Must match --served-model-name in the servingEngineSpec.modelSpec[0].vllmConfig.extraArgs
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: vllm-loadgen-pattern-b
+  namespace: llm-serving
+spec:
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: hey
+          image: williamyeh/hey:latest
+          args:
+            - "-z"
+            - "180s"
+            - "-c"
+            - "4"
+            - "-q"
+            - "2"
+            - "-m"
+            - "POST"
+            - "-H"
+            - "Content-Type: application/json"
+            - "-d"
+            - '{"model":"smollm2-135m-finetuned","prompt":"What treatments does Smile Dental offer?","max_tokens":32}'
+            - "http://lmstack-router.llm-serving.svc.cluster.local:8000/v1/completions"
