@@ -1,0 +1,26 @@
+# Lab 11: Child Application — vLLM (Pattern A)
+# Sync wave 10: deploys after minio (wave 0) to ensure model storage is ready
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vllm
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  project: default
+  source:
+    repoURL: <ARGOCD_REPO_URL>
+    targetRevision: HEAD
+    path: course-code/labs/lab-11/gitops/bases/vllm
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: llm-serving
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

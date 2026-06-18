@@ -1,0 +1,27 @@
+# Lab 11: Root App-of-Apps Application
+# This Application watches gitops/apps/ and creates child Applications for each YAML file found.
+# Replace <ARGOCD_REPO_URL> using bootstrap-app-of-apps.sh or manually with sed substitution.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: smile-dental-apps
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: <ARGOCD_REPO_URL>
+    targetRevision: HEAD
+    path: course-code/labs/lab-11/gitops/apps
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

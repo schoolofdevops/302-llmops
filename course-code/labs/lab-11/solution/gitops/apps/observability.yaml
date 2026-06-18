@@ -1,0 +1,26 @@
+# Lab 11: Child Application — Observability (ServiceMonitor for vLLM)
+# Sync wave 0: ServiceMonitor deploys early alongside minio
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: observability
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+  source:
+    repoURL: <ARGOCD_REPO_URL>
+    targetRevision: HEAD
+    path: course-code/labs/lab-11/gitops/bases/observability
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

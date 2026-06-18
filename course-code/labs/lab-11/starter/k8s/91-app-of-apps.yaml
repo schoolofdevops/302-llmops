@@ -1,0 +1,29 @@
+# Lab 11: Root App-of-Apps Application — STARTER
+# TODO: replace with your GitHub fork URL in the repoURL field below
+# then apply: kubectl apply -f 91-app-of-apps.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: smile-dental-apps
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    # TODO: replace with your GitHub fork URL, e.g.
+    # repoURL: https://github.com/<your-fork>/302-llmops.git
+    repoURL: # TODO: replace with your GitHub fork URL
+    targetRevision: HEAD
+    path: course-code/labs/lab-11/gitops/apps
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

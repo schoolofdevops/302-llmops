@@ -1,0 +1,26 @@
+# Lab 11: Child Application — MinIO
+# Sync wave 0: MinIO deploys first as model storage dependency for vLLM
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: minio
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+  source:
+    repoURL: <ARGOCD_REPO_URL>
+    targetRevision: HEAD
+    path: course-code/labs/lab-11/gitops/bases/minio
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: minio
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
