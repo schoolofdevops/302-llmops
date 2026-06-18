@@ -34,9 +34,19 @@ for child_yaml in "${GITOPS_APPS_DIR}"/*.yaml; do
 done
 
 echo ""
-echo "==> Waiting for root Application to become Available..."
-kubectl wait --for=condition=Available application/smile-dental-apps \
-  -n argocd --timeout=300s 2>/dev/null || echo "App syncing (may take a few minutes)..."
+echo "==> Waiting for root Application to sync..."
+# ArgoCD Application resources do not support condition=Available.
+# Poll for sync.status=Synced instead (ArgoCD sets this after a successful sync).
+for i in $(seq 1 30); do
+  STATUS=$(kubectl get application smile-dental-apps -n argocd \
+    -o jsonpath='{.status.sync.status}' 2>/dev/null || echo "")
+  if [ "${STATUS}" = "Synced" ]; then
+    echo "    Application synced."
+    break
+  fi
+  echo "    Waiting for sync... (${i}/30, current: ${STATUS:-pending})"
+  sleep 10
+done
 
 echo ""
 echo "==> Current Application list:"
