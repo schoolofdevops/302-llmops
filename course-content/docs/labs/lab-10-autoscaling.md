@@ -85,7 +85,7 @@ kubectl get pods -n keda
 kubectl top nodes   # should return CPU/memory values
 ```
 
-Expected Grafana URL: [http://localhost:30090](http://localhost:30090) (admin / admin).
+Expected Grafana URL: [http://localhost:30090](http://localhost:30090) (admin / prom-operator).
 
 ---
 
