@@ -25,7 +25,11 @@ spec:
       labels:
         app: vllm
     spec:
-      nodeName: llmops-kind-worker
+      # nodeSelector (not nodeName) — allows the scheduler to generate a clear
+      # NodeSelectorMismatch event if the node name does not match, rather than
+      # leaving the pod silently Pending with no scheduling event.
+      nodeSelector:
+        kubernetes.io/hostname: llmops-kind-worker
       containers:
       - name: vllm
         image: schoolofdevops/vllm-cpu-nonuma:0.9.1
