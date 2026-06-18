@@ -96,6 +96,13 @@ spec:
         args:
           - |
             set -e
+            # ---- Guard: require GITOPS_REPO_SSH_URL to be set ----
+            if [ -z "${GITOPS_REPO_SSH_URL}" ]; then
+              echo "ERROR: GITOPS_REPO_SSH_URL is not set."
+              echo "  Edit 101-workflowtemplate-pipeline.yaml and set the value,"
+              echo "  then re-apply the WorkflowTemplate before running the pipeline."
+              exit 1
+            fi
             # ---- Configure SSH ----
             mkdir -p /root/.ssh
             # Secret volume mounted at /root/.ssh-key with mode 0600
@@ -129,9 +136,11 @@ spec:
             echo "ArgoCD will detect the annotation change and redeploy vllm-smollm2."
         env:
           - name: GITOPS_REPO_SSH_URL
-            # IMPORTANT: Replace <student-fork> with your GitHub username before applying.
-            # Example: git@github.com:myuser/302-llmops.git
-            value: "git@github.com:<student-fork>/302-llmops.git"
+            # IMPORTANT: Set this to your GitHub fork SSH URL before applying.
+            # Run: export GITOPS_REPO_SSH_URL=git@github.com:<youruser>/302-llmops.git
+            # Then apply with: envsubst < 101-workflowtemplate-pipeline.yaml | kubectl apply -f -
+            # Or edit this file and replace the empty value below with your fork URL.
+            value: ""   # Must be set — promote step will fail with an error if empty
         volumeMounts:
           # Mount the SSH key Secret read-only; the shell script copies it to /root/.ssh
           - name: ssh-key
