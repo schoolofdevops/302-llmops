@@ -126,7 +126,7 @@ Every v1.0.0 requirement is mapped to exactly one phase. SERVE-01 and PACKAGE-01
 | PACKAGE-01 | 02 | TBD | Not started (alias — delivered by SPINE-04; framed as "Pattern A" in PACKAGE-03 decision lab) |
 | PACKAGE-02 | 03 | TBD | Not started |
 | PACKAGE-03 | 03 | TBD | Not started |
-| OPS-01 | 06 | TBD | Not started |
+| OPS-01 | 06 | 06-02 | Complete (2026-06-18) |
 | OPS-02 | 06 | TBD | Not started |
 | OPS-03 | 06 | TBD | Not started |
 

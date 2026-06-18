@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0.0
 milestone_name: milestone
 status: Executing Phase 06
-stopped_at: Phase 06 Plan 01 complete — KIND cluster with 30700+30800; kps+KEDA+metrics-server installed
-last_updated: "2026-06-17T20:45:00.000Z"
-last_activity: 2026-06-17
+stopped_at: Phase 06 Plan 02 complete — KEDA ScaledObjects (Pattern A + C), HPA (rag-retriever), ServiceMonitor, hey loadgen Jobs, Grafana dashboard, run-loadgen.sh, lab-10-autoscaling.md
+last_updated: "2026-06-18T00:00:00.000Z"
+last_activity: 2026-06-18
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 24
-  completed_plans: 21
-  percent: 67
+  completed_plans: 22
+  percent: 71
 ---
 
 # Project State
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-05-07)
 ## Current Position
 
 Phase: 06 (production-operations-layer) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Phase 05 (kserve-inferenceservice-serving-decision-lab) — COMPLETE (2026-06-17)
 Plan 05-01 complete (2026-06-17): NodePort 30202 added to both kind-config.yaml files; KIND cluster recreated; prerequisites (MinIO, Pattern A, Pattern B) at replicas=0 for KServe headroom.
 Plan 05-02 complete (2026-06-17): cert-manager v1.16.5, Gateway API CRDs v1.2.1, KServe v0.18.0 (CRDs + controller) installed; RawDeployment mode; inferenceservice-config patched with disableIngressCreation=true; human checkpoint approved.
@@ -36,12 +36,15 @@ Plan 05-04 complete (2026-06-17): Lab 08 KServe guide + Lab 09 serving-decision 
 
 Phase 06 (production-operations-layer) — EXECUTING (2026-06-17)
 Plan 06-01 complete (2026-06-17): NodePorts 30700+30800 added to kind-config.yaml files; KIND cluster recreated; MinIO+vLLM+Chainlit redeployed; kube-prometheus-stack 83.4.2 (release=kps, Grafana:30090), KEDA 2.19.0, metrics-server installed; ServiceMonitors active.
-Plans: 06-02 (HPA + KEDA all 3 patterns + Lab 10), 06-03 (ArgoCD App-of-Apps + Lab 11), 06-04 (Argo Workflows DAG + E2E loop + Lab 12)
-3 waves: Wave 1 (06-01 DONE) → Wave 2 parallel (06-02, 06-03) → Wave 3 (06-04)
+Plan 06-02 complete (2026-06-18): KEDA ScaledObjects for Pattern A (vllm-smollm2) and Pattern C (smollm2-predictor-keda) READY=True; HPA for rag-retriever (CPU 60%); ServiceMonitor for KServe predictor; hey loadgen Jobs for all 3 patterns; Grafana autoscaling dashboard ConfigMap; run-loadgen.sh multi-pattern script; 529-line lab-10-autoscaling.md with 8 parts; Docusaurus build passes.
+Plans: 06-03 (ArgoCD App-of-Apps + Lab 11), 06-04 (Argo Workflows DAG + E2E loop + Lab 12)
+3 waves: Wave 1 (06-01 DONE) → Wave 2 parallel (06-02 DONE, 06-03) → Wave 3 (06-04)
 Key decision: D-12 E2E loop is fully automated via alpine/git + SSH deploy key in WorkflowTemplate promote step.
 Key decision: D-13 Lab 10 Grafana on 30090 (not 30400); KEDA ScaledObject serverAddress = kps-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
+Key decision: D-14 Pattern B ScaledObject is chart-managed (keda.enabled: true in vllm-stack values) — no standalone YAML.
+Key decision: D-15 KServe autoscalerClass=external annotation required before KEDA ScaledObject for Pattern C — disables KServe's built-in HPA.
 
-Next: Execute Phase 06 Plan 02 (HPA + KEDA autoscaling + Lab 10 lab guide)
+Next: Execute Phase 06 Plan 03 (ArgoCD App-of-Apps + Lab 11 GitOps)
 
 ## Performance Metrics
 
@@ -97,6 +100,10 @@ Decisions are logged in PROJECT.md Key Decisions table. Recent decisions affecti
 - [Phase 06-01 2026-06-17]: Lab 10 Grafana uses NodePort 30090 (not 30400 from Lab 06) — 30090 slot already in kind-config.yaml from Phase 05
 - [Phase 06-01 2026-06-17]: KEDA ScaledObject serverAddress: kps-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090 (release=kps prefix determines Service FQDN)
 - [Phase 06-01 2026-06-17]: KIND cluster creation requires absolute hostPath for Docker Desktop; relative paths in kind-config.yaml preserved for students (bootstrap script handles substitution)
+- [Phase 06-02 2026-06-18]: Pattern B ScaledObject is chart-managed (keda.enabled: true in vllm-stack values) — no standalone YAML; chart-created name: lmstack-smollm2-scaledobject
+- [Phase 06-02 2026-06-18]: KServe autoscalerClass=external annotation required before KEDA ScaledObject for Pattern C — KServe RawDeployment auto-creates HPA which blocks KEDA admission
+- [Phase 06-02 2026-06-18]: vllm:num_requests_waiting colon prefix (not underscore) confirmed for vLLM 0.9.1
+- [Phase 06-02 2026-06-18]: HPA targets rag-retriever in llm-app namespace (stateless FastAPI service from Lab 01)
 
 ### Reusable from v0.19.0
 
@@ -136,8 +143,8 @@ None. (Roadmapper flagged stale concern about phase archive; verified — `.plan
 
 ## Session Continuity
 
-Last session: 2026-06-17T20:45:00.000Z
-Last activity: 2026-06-17
-Stopped at: Phase 06 Plan 01 complete — KIND cluster with 30700+30800; kps+KEDA+metrics-server installed; ready for 06-02
+Last session: 2026-06-18T00:00:00.000Z
+Last activity: 2026-06-18
+Stopped at: Phase 06 Plan 02 complete — KEDA ScaledObjects, HPA, ServiceMonitor, hey Jobs, Grafana dashboard, lab-10-autoscaling.md; ready for 06-03
 Resume file: None
-Next command: Execute Phase 06 Plan 02 (HPA + KEDA + Lab 10)
+Next command: Execute Phase 06 Plan 03 (ArgoCD App-of-Apps + Lab 11 GitOps)
