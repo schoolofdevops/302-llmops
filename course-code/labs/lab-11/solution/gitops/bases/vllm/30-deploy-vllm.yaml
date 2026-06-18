@@ -14,7 +14,7 @@ metadata:
   labels:
     app: vllm
   annotations:
-    gitops/model-version: "initial"
+    gitops/model-version: "run-20260618-203430"
 spec:
   replicas: 1
   selector:
