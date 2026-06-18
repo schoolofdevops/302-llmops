@@ -13,8 +13,6 @@ metadata:
   namespace: llm-serving
   labels:
     app: vllm
-  annotations:
-    gitops/model-version: "run-20260618-203430"
 spec:
   replicas: 1
   selector:
@@ -24,6 +22,8 @@ spec:
     metadata:
       labels:
         app: vllm
+      annotations:
+        gitops/model-version: "run-20260618-203430"
     spec:
       # nodeSelector (not nodeName) — allows the scheduler to generate a clear
       # NodeSelectorMismatch event if the node name does not match, rather than

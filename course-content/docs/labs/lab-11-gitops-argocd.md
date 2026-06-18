@@ -292,14 +292,16 @@ Check that the managed resources are healthy:
 # Verify vLLM Deployment is running
 kubectl get deploy vllm-smollm2 -n llm-serving
 
-# Verify the gitops/model-version annotation (the promotion target)
-kubectl describe deploy vllm-smollm2 -n llm-serving | grep model-version
+# Verify the gitops/model-version annotation in the pod template (the promotion target)
+kubectl describe deploy vllm-smollm2 -n llm-serving | grep -A2 "Pod Template"
 ```
 
-Expected annotation on the initial deploy:
+Expected output (the annotation lives in the pod template so Kubernetes triggers a rollout when it changes):
 
 ```
-Annotations:  gitops/model-version: initial
+Pod Template:
+  Labels:       app=vllm
+  Annotations:  gitops/model-version: initial
 ```
 
 ## Part 5: Model Promotion Demo
@@ -312,17 +314,26 @@ annotation as the "version handle".
 
 ```
 1. Edit gitops/bases/vllm/30-deploy-vllm.yaml
+   Under spec.template.metadata.annotations:
    Change: gitops/model-version: "initial"
    To:     gitops/model-version: "run-20260618-090000"
 
 2. git commit + git push
 
-3. ArgoCD polls GitHub (every ~3 min) → detects annotation change → syncs
+3. ArgoCD polls GitHub (every ~3 min) → detects pod template annotation change → syncs
 
-4. Kubernetes applies the updated Deployment → rolling restart of vllm-smollm2
+4. Kubernetes sees the pod template changed → triggers rolling restart of vllm-smollm2
 
 5. New pod comes up with the bumped annotation
 ```
+
+:::note Why the annotation must be in spec.template.metadata.annotations
+Kubernetes only triggers a rolling restart when the **pod template** changes. An annotation on
+`metadata.annotations` (the Deployment object itself) is visible to tools and operators but does
+not change the pod template spec — so no rollout happens. Placing the annotation under
+`spec.template.metadata.annotations` ensures every annotation bump produces an observable
+rolling restart, which is the GitOps promotion signal students are watching for.
+:::
 
 **Run the demo script** (from the repo root):
 
@@ -353,16 +364,18 @@ argocd app sync vllm
 kubectl rollout status deploy/vllm-smollm2 -n llm-serving --timeout=300s
 ```
 
-**Verify the annotation was applied to the running Deployment:**
+**Verify the annotation was applied to the pod template:**
 
 ```bash
-kubectl describe deploy vllm-smollm2 -n llm-serving | grep model-version
+kubectl describe deploy vllm-smollm2 -n llm-serving | grep -A2 "Pod Template"
 ```
 
 Expected output (with your timestamp):
 
 ```
-Annotations:  gitops/model-version: run-20260618-090000
+Pod Template:
+  Labels:       app=vllm
+  Annotations:  gitops/model-version: run-20260618-090000
 ```
 
 **Verify the API is still serving:**
@@ -436,7 +449,7 @@ kubectl delete namespace argocd
 | `minio` Application (wave 0) | MinIO Helm values reference in `minio` namespace | Watches `gitops/bases/minio/` |
 | `chainlit` Application (wave 10) | `chainlit-ui` Deployment + NodePort Service in `llm-app` | Watches `gitops/bases/chainlit/` |
 | `observability` Application (wave 0) | `vllm-monitor` ServiceMonitor in `monitoring` | Watches `gitops/bases/observability/` |
-| Model promotion demo | `gitops/model-version` annotation bump triggers rolling restart | `git commit + git push` → ArgoCD poll → kubectl apply |
+| Model promotion demo | `spec.template.metadata.annotations/gitops/model-version` bump triggers rolling restart | `git commit + git push` → ArgoCD poll → kubectl apply |
 
 **Key takeaways:**
 
