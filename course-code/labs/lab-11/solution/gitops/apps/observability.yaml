@@ -14,7 +14,7 @@ spec:
   source:
     repoURL: <ARGOCD_REPO_URL>
     targetRevision: HEAD
-    path: course-code/labs/lab-11/gitops/bases/observability
+    path: course-code/labs/lab-11/solution/gitops/bases/observability
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring

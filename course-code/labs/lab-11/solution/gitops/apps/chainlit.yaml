@@ -14,7 +14,7 @@ spec:
   source:
     repoURL: <ARGOCD_REPO_URL>
     targetRevision: HEAD
-    path: course-code/labs/lab-11/gitops/bases/chainlit
+    path: course-code/labs/lab-11/solution/gitops/bases/chainlit
   destination:
     server: https://kubernetes.default.svc
     namespace: llm-app
