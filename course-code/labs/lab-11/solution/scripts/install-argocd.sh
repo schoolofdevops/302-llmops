@@ -40,15 +40,18 @@ helm install argocd argo/argo-cd \
 # Verify rollout
 kubectl rollout status deploy/argocd-server -n "${NS_ARGOCD}" --timeout=300s
 
-# KIND pitfall: default liveness probe timeout (1s) is too short for the full health check
-# on resource-constrained clusters, causing argocd-server to restart continuously.
-# Patch both probes to 5s to stabilise.
-kubectl patch deploy argocd-server -n "${NS_ARGOCD}" --type=json -p='[
-  {"op":"replace","path":"/spec/template/spec/containers/0/livenessProbe/timeoutSeconds","value":5},
-  {"op":"replace","path":"/spec/template/spec/containers/0/readinessProbe/timeoutSeconds","value":5}
-]'
-kubectl rollout status deploy/argocd-server -n "${NS_ARGOCD}" --timeout=120s
-echo "argocd-server probe timeouts patched to 5s (KIND stability fix)"
+# KIND pitfall: default probe timeout (1s) is too short for healthz?full=true on
+# resource-constrained clusters → continuous restarts. Patch to 15s / failureThreshold 5.
+for deploy in argocd-server argocd-repo-server; do
+  kubectl patch deploy "${deploy}" -n "${NS_ARGOCD}" --type=json -p='[
+    {"op":"replace","path":"/spec/template/spec/containers/0/livenessProbe/timeoutSeconds","value":15},
+    {"op":"replace","path":"/spec/template/spec/containers/0/livenessProbe/failureThreshold","value":5},
+    {"op":"replace","path":"/spec/template/spec/containers/0/readinessProbe/timeoutSeconds","value":15},
+    {"op":"replace","path":"/spec/template/spec/containers/0/readinessProbe/failureThreshold","value":5}
+  ]'
+  kubectl rollout status deploy/"${deploy}" -n "${NS_ARGOCD}" --timeout=180s
+  echo "${deploy} probe timeouts patched to 15s / failureThreshold 5 (KIND stability fix)"
+done
 
 # Print initial admin password
 PASS=$(kubectl -n "${NS_ARGOCD}" get secret argocd-initial-admin-secret \

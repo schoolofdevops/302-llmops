@@ -96,18 +96,23 @@ argocd-server-6d47fb95df-xxxxx                     1/1     Running   0          
 
 If `kubectl get pods -n argocd` shows `argocd-server` with a high RESTARTS count (> 5), the default
 liveness probe timeout (1 s) is too short for the full `/healthz?full=true` check on a
-resource-constrained KIND cluster. The install script patches the timeout to 5 s automatically, but
-if you installed manually you can apply the fix directly:
+resource-constrained KIND cluster. The install script patches both `argocd-server` and
+`argocd-repo-server` probes to 15 s / failureThreshold 5 automatically, but if you installed
+manually you can apply the fix directly:
 
 ```bash
-kubectl patch deploy argocd-server -n argocd --type=json -p='[
-  {"op":"replace","path":"/spec/template/spec/containers/0/livenessProbe/timeoutSeconds","value":5},
-  {"op":"replace","path":"/spec/template/spec/containers/0/readinessProbe/timeoutSeconds","value":5}
-]'
-kubectl rollout status deploy/argocd-server -n argocd --timeout=120s
+for deploy in argocd-server argocd-repo-server; do
+  kubectl patch deploy "${deploy}" -n argocd --type=json -p='[
+    {"op":"replace","path":"/spec/template/spec/containers/0/livenessProbe/timeoutSeconds","value":15},
+    {"op":"replace","path":"/spec/template/spec/containers/0/livenessProbe/failureThreshold","value":5},
+    {"op":"replace","path":"/spec/template/spec/containers/0/readinessProbe/timeoutSeconds","value":15},
+    {"op":"replace","path":"/spec/template/spec/containers/0/readinessProbe/failureThreshold","value":5}
+  ]'
+  kubectl rollout status deploy/"${deploy}" -n argocd --timeout=180s
+done
 ```
 
-After the rollout completes the restart counter resets and the server stays stable.
+After the rollout completes the restart counter resets and both servers stay stable.
 :::
 
 **Fetch the initial admin password:**
