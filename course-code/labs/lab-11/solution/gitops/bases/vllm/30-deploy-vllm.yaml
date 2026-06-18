@@ -23,7 +23,7 @@ spec:
       labels:
         app: vllm
       annotations:
-        gitops/model-version: "run-20260618-203430"
+        gitops/model-version: "run-20260618-204818"
     spec:
       # nodeSelector (not nodeName) — allows the scheduler to generate a clear
       # NodeSelectorMismatch event if the node name does not match, rather than
