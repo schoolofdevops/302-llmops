@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0.0
 milestone_name: milestone
-status: Executing Phase 06
-stopped_at: Phase 06 Plan 03 complete — ArgoCD 9.5.11 installed on NodePort 30700; App-of-Apps (smile-dental-apps) + 4 child Applications; gitops/ structure; model promotion demo script; lab-11-gitops-argocd.md (423 lines)
-last_updated: "2026-06-18T00:00:00.000Z"
+status: Phase 06 COMPLETE — milestone v1.0.0 COMPLETE
+stopped_at: Phase 06 Plan 04 complete — Argo Workflows 1.0.13 + 5-step WorkflowTemplate + SSH deploy key E2E loop + lab-12-argo-workflows.md (526 lines) + 06-VERIFICATION.md (127 lines, 26 checks)
+last_updated: "2026-06-18T03:30:00.000Z"
 last_activity: 2026-06-18
 progress:
   total_phases: 6
-  completed_phases: 4
+  completed_phases: 6
   total_plans: 24
-  completed_plans: 23
-  percent: 71
+  completed_plans: 24
+  percent: 100
 ---
 
 # Project State
@@ -26,8 +26,10 @@ See: .planning/PROJECT.md (updated 2026-05-07)
 
 ## Current Position
 
-Phase: 06 (production-operations-layer) — EXECUTING
-Plan: 4 of 4
+Phase: 06 (production-operations-layer) — COMPLETE (2026-06-18)
+Plan: 4 of 4 — ALL PLANS COMPLETE
+Milestone: v1.0.0 — COMPLETE
+
 Phase 05 (kserve-inferenceservice-serving-decision-lab) — COMPLETE (2026-06-17)
 Plan 05-01 complete (2026-06-17): NodePort 30202 added to both kind-config.yaml files; KIND cluster recreated; prerequisites (MinIO, Pattern A, Pattern B) at replicas=0 for KServe headroom.
 Plan 05-02 complete (2026-06-17): cert-manager v1.16.5, Gateway API CRDs v1.2.1, KServe v0.18.0 (CRDs + controller) installed; RawDeployment mode; inferenceservice-config patched with disableIngressCreation=true; human checkpoint approved.
@@ -38,14 +40,15 @@ Phase 06 (production-operations-layer) — EXECUTING (2026-06-17)
 Plan 06-01 complete (2026-06-17): NodePorts 30700+30800 added to kind-config.yaml files; KIND cluster recreated; MinIO+vLLM+Chainlit redeployed; kube-prometheus-stack 83.4.2 (release=kps, Grafana:30090), KEDA 2.19.0, metrics-server installed; ServiceMonitors active.
 Plan 06-02 complete (2026-06-18): KEDA ScaledObjects for Pattern A (vllm-smollm2) and Pattern C (smollm2-predictor-keda) READY=True; HPA for rag-retriever (CPU 60%); ServiceMonitor for KServe predictor; hey loadgen Jobs for all 3 patterns; Grafana autoscaling dashboard ConfigMap; run-loadgen.sh multi-pattern script; 529-line lab-10-autoscaling.md with 8 parts; Docusaurus build passes.
 Plan 06-03 complete (2026-06-18): ArgoCD 9.5.11 installed on NodePort 30700; 19 files created — install-argocd.sh (idempotent), argocd-login.sh, bootstrap-app-of-apps.sh, demo-promote-vllm-annotation.sh, 90-argocd-namespace.yaml, 91-app-of-apps.yaml (solution+starter), 4 child Application YAMLs (gitops/apps/), 6 base manifests (gitops/bases/), 423-line lab-11-gitops-argocd.md; Docusaurus build passes.
-Plans: 06-04 (Argo Workflows DAG + E2E loop + Lab 12)
-3 waves: Wave 1 (06-01 DONE) → Wave 2 parallel (06-02 DONE, 06-03) → Wave 3 (06-04)
+Plan 06-04 complete (2026-06-18): Argo Workflows 1.0.13 installed on NodePort 30800; 11 files created — install-argo-workflows.sh (--skip-crds workaround), setup-deploy-key.sh, trigger-pipeline.sh, 5-step WorkflowTemplate llm-pipeline (data-gen→build-index→train→merge→promote with alpine/git SSH promote step), 102-workflow-run.yaml (generateName+CreateOnly), starter files, 526-line lab-12-argo-workflows.md, 06-VERIFICATION.md (26 checks); Docusaurus build passes.
+All 4 plans complete. Phase 06 DONE. Milestone v1.0.0 COMPLETE.
+3 waves: Wave 1 (06-01 DONE) → Wave 2 parallel (06-02 DONE, 06-03 DONE) → Wave 3 (06-04 DONE)
 Key decision: D-12 E2E loop is fully automated via alpine/git + SSH deploy key in WorkflowTemplate promote step.
 Key decision: D-13 Lab 10 Grafana on 30090 (not 30400); KEDA ScaledObject serverAddress = kps-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
 Key decision: D-14 Pattern B ScaledObject is chart-managed (keda.enabled: true in vllm-stack values) — no standalone YAML.
 Key decision: D-15 KServe autoscalerClass=external annotation required before KEDA ScaledObject for Pattern C — disables KServe's built-in HPA.
 
-Next: Execute Phase 06 Plan 04 (Argo Workflows DAG + E2E loop + Lab 12)
+Next: Milestone v1.0.0 COMPLETE — all 24 plans across 6 phases delivered.
 
 ## Performance Metrics
 
@@ -108,6 +111,8 @@ Decisions are logged in PROJECT.md Key Decisions table. Recent decisions affecti
 - [Phase 06-03 2026-06-18]: gitops/ directory lives inside course-code/labs/lab-11/ (D-07); ArgoCD repoURL must be HTTPS GitHub URL — file:// cannot reach host filesystem from in-cluster pod
 - [Phase 06-03 2026-06-18]: App-of-Apps scope Pattern A only (D-08); sync waves: minio+observability wave 0, vllm+chainlit wave 10
 - [Phase 06-03 2026-06-18]: Model promotion via gitops/model-version annotation bump in 30-deploy-vllm.yaml (D-09); git commit+push → ArgoCD poll → rolling restart
+- [Phase 06-04 2026-06-18]: Helm install uses --skip-crds because argo-workflows pre-install CRD Job times out on Kubernetes API slowness; CRDs are already applied by the first (failed) attempt
+- [Phase 06-04 2026-06-18]: E2E loop is fully automated (D-12): single git push → ArgoCD applies Workflow CR (CreateOnly) → Argo DAG runs → promote step (alpine/git + SSH deploy key) bumps annotation → ArgoCD redeploys vllm-smollm2
 
 ### Reusable from v0.19.0
 
@@ -147,8 +152,8 @@ None. (Roadmapper flagged stale concern about phase archive; verified — `.plan
 
 ## Session Continuity
 
-Last session: 2026-06-18T00:00:00.000Z
+Last session: 2026-06-18T03:30:00.000Z
 Last activity: 2026-06-18
-Stopped at: Phase 06 Plan 03 complete — ArgoCD 9.5.11 + App-of-Apps gitops/ structure + Lab 11 doc; ready for 06-04
+Stopped at: Phase 06 Plan 04 complete — Argo Workflows + E2E loop + Lab 12 + 06-VERIFICATION.md. Milestone v1.0.0 COMPLETE.
 Resume file: None
-Next command: Execute Phase 06 Plan 04 (Argo Workflows DAG + E2E loop + Lab 12)
+Next command: None — milestone v1.0.0 complete. Ready for v1.1 planning.

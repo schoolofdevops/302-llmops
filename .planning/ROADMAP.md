@@ -25,7 +25,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 03: Disk-Based Model Loading (MinIO + initContainer)** (completed 2026-06-15) — Add MinIO in-cluster object store + disk-loading vLLM Deployment with sentinel + sha256 verification + sized emptyDir; publish OCI-vs-disk decision lab page
 - [ ] **Phase 04: vLLM Router Multi-Pod Serving** — Add vLLM Production Stack router (vllm-stack 0.1.11, lmcache/lmstack-router:v0.1.11) fronting two CPU backend pods with session routing default; KEDA scales backends, not router
 - [x] **Phase 05: KServe InferenceService + Serving Decision Lab** — Restore KServe `InferenceService` (v0.18.0 Standard/RawDeployment mode) with custom CPU `ClusterServingRuntime`; close out with side-by-side serving-pattern comparison/decision lab (when to use each) (completed 2026-06-17)
-- [ ] **Phase 06: Production Operations Layer** (planned 2026-06-17) — Re-validate HPA + KEDA, ArgoCD App-of-Apps, and Argo Workflows training pipeline (data → index → train → merge, no eval gate) against all three serving patterns
+- [x] **Phase 06: Production Operations Layer** (completed 2026-06-18) — Re-validate HPA + KEDA, ArgoCD App-of-Apps, and Argo Workflows training pipeline (data → index → train → merge, no eval gate) against all three serving patterns
 
 ## Phase Details
 
@@ -182,7 +182,7 @@ Plans:
 
 **Wave 3** *(blocked on Plans 02 + 03)*
 
-- [ ] 06-04-PLAN.md — Argo Workflows 1.0.13 install + 4-step DAG WorkflowTemplate + E2E loop demo + Lab 12 doc page + 06-VERIFICATION.md (OPS-03)
+- [x] 06-04-PLAN.md — Argo Workflows 1.0.13 install + 5-step DAG WorkflowTemplate (with promote step) + E2E loop demo + Lab 12 doc page + 06-VERIFICATION.md (OPS-03)
 
 ## Progress
 
@@ -196,7 +196,7 @@ Phases execute in numeric order: 01 → 02 → 03 → 04 → 05 → 06
 | 03. Disk-Based Model Loading (MinIO + initContainer) | 0/4 | Not started | - |
 | 04. vLLM Router Multi-Pod Serving | 4/4 | Complete | 2026-06-16 |
 | 05. KServe InferenceService + Serving Decision Lab | 4/4 | Complete | 2026-06-17 |
-| 06. Production Operations Layer | 3/4 | In Progress|  |
+| 06. Production Operations Layer | 4/4 | Complete | 2026-06-18 |
 
 ## Coverage
 
