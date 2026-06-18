@@ -92,6 +92,24 @@ argocd-repo-server-6c7c865bdd-xxxxx                1/1     Running   0          
 argocd-server-6d47fb95df-xxxxx                     1/1     Running   0          2m
 ```
 
+:::tip argocd-server keeps restarting on KIND?
+
+If `kubectl get pods -n argocd` shows `argocd-server` with a high RESTARTS count (> 5), the default
+liveness probe timeout (1 s) is too short for the full `/healthz?full=true` check on a
+resource-constrained KIND cluster. The install script patches the timeout to 5 s automatically, but
+if you installed manually you can apply the fix directly:
+
+```bash
+kubectl patch deploy argocd-server -n argocd --type=json -p='[
+  {"op":"replace","path":"/spec/template/spec/containers/0/livenessProbe/timeoutSeconds","value":5},
+  {"op":"replace","path":"/spec/template/spec/containers/0/readinessProbe/timeoutSeconds","value":5}
+]'
+kubectl rollout status deploy/argocd-server -n argocd --timeout=120s
+```
+
+After the rollout completes the restart counter resets and the server stays stable.
+:::
+
 **Fetch the initial admin password:**
 
 The install script prints the password at the end. You can also retrieve it any time:
@@ -107,28 +125,28 @@ password above.
 ## Part 2: Understanding the GitOps Repo Structure
 
 This lab uses a **subdirectory inside the companion course-code repository** as the GitOps source.
-ArgoCD will watch `course-code/labs/lab-11/gitops/` in your GitHub fork.
+ArgoCD will watch `course-code/labs/lab-11/solution/gitops/` in your GitHub fork.
 
 ```
 course-code/labs/lab-11/
-├── gitops/
-│   ├── apps/                          ← Root App-of-Apps watches this directory
-│   │   ├── vllm.yaml                  ← Child Application for Pattern A
-│   │   ├── minio.yaml                 ← Child Application for MinIO
-│   │   ├── chainlit.yaml              ← Child Application for Chainlit UI
-│   │   └── observability.yaml         ← Child Application for ServiceMonitor
-│   └── bases/
-│       ├── vllm/
-│       │   ├── 30-deploy-vllm.yaml    ← vLLM Deployment (has gitops/model-version annotation)
-│       │   └── 30-svc-vllm.yaml       ← vLLM NodePort Service
-│       ├── chainlit/
-│       │   ├── 40-deploy-chainlit.yaml
-│       │   └── 40-svc-chainlit.yaml
-│       ├── minio/
-│       │   └── 10-minio-values.yaml   ← MinIO Helm values (reference only)
-│       └── observability/
-│           └── 50-servicemonitor-vllm.yaml
 ├── solution/
+│   ├── gitops/
+│   │   ├── apps/                          ← Root App-of-Apps watches this directory
+│   │   │   ├── vllm.yaml                  ← Child Application for Pattern A
+│   │   │   ├── minio.yaml                 ← Child Application for MinIO
+│   │   │   ├── chainlit.yaml              ← Child Application for Chainlit UI
+│   │   │   └── observability.yaml         ← Child Application for ServiceMonitor
+│   │   └── bases/
+│   │       ├── vllm/
+│   │       │   ├── 30-deploy-vllm.yaml    ← vLLM Deployment (has gitops/model-version annotation)
+│   │       │   └── 30-svc-vllm.yaml       ← vLLM NodePort Service
+│   │       ├── chainlit/
+│   │       │   ├── 40-deploy-chainlit.yaml
+│   │       │   └── 40-svc-chainlit.yaml
+│   │       ├── minio/
+│   │       │   └── 10-minio-values.yaml   ← MinIO Helm values (reference only)
+│   │       └── observability/
+│   │           └── 50-servicemonitor-vllm.yaml
 │   ├── k8s/
 │   │   ├── 90-argocd-namespace.yaml
 │   │   └── 91-app-of-apps.yaml        ← Root Application manifest
@@ -168,7 +186,7 @@ For private forks, configure a GitHub Personal Access Token as a repository cred
 :::note App-of-Apps vs. individual Applications
 You can always apply individual Application YAMLs without the App-of-Apps root. The two-level
 structure is a best practice for managing multiple components in one place, but it is not required.
-For a quick test you can apply `gitops/apps/vllm.yaml` directly with `kubectl apply -f`.
+For a quick test you can apply `solution/gitops/apps/vllm.yaml` directly with `kubectl apply -f`.
 :::
 
 ## Part 3: Configure Repo URL and Apply App-of-Apps

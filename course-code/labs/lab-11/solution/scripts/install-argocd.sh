@@ -40,6 +40,16 @@ helm install argocd argo/argo-cd \
 # Verify rollout
 kubectl rollout status deploy/argocd-server -n "${NS_ARGOCD}" --timeout=300s
 
+# KIND pitfall: default liveness probe timeout (1s) is too short for the full health check
+# on resource-constrained clusters, causing argocd-server to restart continuously.
+# Patch both probes to 5s to stabilise.
+kubectl patch deploy argocd-server -n "${NS_ARGOCD}" --type=json -p='[
+  {"op":"replace","path":"/spec/template/spec/containers/0/livenessProbe/timeoutSeconds","value":5},
+  {"op":"replace","path":"/spec/template/spec/containers/0/readinessProbe/timeoutSeconds","value":5}
+]'
+kubectl rollout status deploy/argocd-server -n "${NS_ARGOCD}" --timeout=120s
+echo "argocd-server probe timeouts patched to 5s (KIND stability fix)"
+
 # Print initial admin password
 PASS=$(kubectl -n "${NS_ARGOCD}" get secret argocd-initial-admin-secret \
   -o jsonpath='{.data.password}' | base64 -d)
