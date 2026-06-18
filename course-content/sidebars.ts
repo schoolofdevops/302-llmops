@@ -24,6 +24,7 @@ const sidebars: SidebarsConfig = {
         'labs/lab-08-kserve-inferenceservice',
         'labs/lab-09-serving-decision',
         'labs/lab-10-autoscaling',
+        'labs/lab-11-gitops-argocd',
       ],
     },
     {
