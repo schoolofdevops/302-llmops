@@ -246,7 +246,7 @@ annotation bump, the `alpine/git` container:
 5. Pushes to `origin HEAD`
 
 ArgoCD detects the annotation diff on its next poll (≤3 minutes) and triggers a rolling
-restart of `vllm-smollm2`. The initContainer then pulls the new merged model from MinIO.
+restart of `vllm-smollm2`. The pod reloads the OCI image from the local kind registry (`kind-registry:5001/smollm2-135m-finetuned:v1.0.0`).
 
 ---
 
@@ -365,7 +365,7 @@ Student git push
   ArgoCD detects annotation change in 30-deploy-vllm.yaml
       │
       ▼ rolling restart
-  vllm-smollm2 pod restarts → initContainer downloads merged model from MinIO
+  vllm-smollm2 pod restarts → reloads OCI image from kind-registry (annotation bump triggers rolling restart)
       │
       ▼
   New model is live → curl localhost:30200/v1/models

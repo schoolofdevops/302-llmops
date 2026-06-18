@@ -164,7 +164,7 @@ Plans:
 
   1. HPA on Chat API (CPU-based) and KEDA on vLLM (Prometheus metric `vllm:num_requests_waiting`) are validated against all three SERVE patterns: plain Deployment, vLLM Router (KEDA on backends), and KServe (KEDA on predictor) — load test shows scale-up/down for each
   2. ArgoCD App-of-Apps manages vLLM (any of the three patterns), MinIO, Chainlit, and observability stack from a `gitops-repo`; a `kubectl tag` promotion via Git commit triggers automatic redeployment within 70s (matches v0.19.0 GITOPS-02 evidence)
-  3. Argo Workflows `WorkflowTemplate` runs the full DAG `data → index → train → merge` to completion as a `Workflow` and persists artifacts to MinIO — NO eval gate, NO commit-tag step (those are 303-agentops scope)
+  3. Argo Workflows `WorkflowTemplate` demonstrates the full 5-step DAG structure (`data → index → train → merge → promote`) via a `Workflow` CR submission — DAG runs with demo placeholders; production scripts from earlier labs slot in directly (NO eval gate, NO commit-tag step — those are 303-agentops scope)
   4. End-to-end run shows: a code/config change in Git → ArgoCD reconciles → Argo Workflow re-runs the training pipeline → new model artifact lands in MinIO → vLLM redeploys with the new artifact (closes the LLMOps loop)
 
 **Plans**: 4 plans
@@ -196,7 +196,7 @@ Phases execute in numeric order: 01 → 02 → 03 → 04 → 05 → 06
 | 03. Disk-Based Model Loading (MinIO + initContainer) | 0/4 | Not started | - |
 | 04. vLLM Router Multi-Pod Serving | 4/4 | Complete | 2026-06-16 |
 | 05. KServe InferenceService + Serving Decision Lab | 4/4 | Complete | 2026-06-17 |
-| 06. Production Operations Layer | 4/4 | Complete | 2026-06-18 |
+| 06. Production Operations Layer | 4/4 | Complete   | 2026-06-18 |
 
 ## Coverage
 
