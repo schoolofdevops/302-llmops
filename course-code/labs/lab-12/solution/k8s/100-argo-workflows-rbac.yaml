@@ -1,0 +1,49 @@
+# RBAC for the Argo Workflows pipeline steps.
+# ServiceAccount + Role + RoleBinding — all scoped to the argo namespace.
+# The Role grants the minimum permissions required:
+#   - Pod management (create, get, list, watch, delete, patch) for step containers
+#   - Pod exec for artifact retrieval
+#   - PVC read access for workspace validation
+#   - Secret get (git-deploy-key only) for the promote step SSH key
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argo-workflow
+  namespace: argo
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: argo-workflow-role
+  namespace: argo
+rules:
+  - apiGroups: [""]
+    resources: [pods, pods/log]
+    verbs: [create, get, list, watch, delete, patch]
+  - apiGroups: [""]
+    resources: [pods/exec]
+    verbs: [create]
+  - apiGroups: [""]
+    resources: [persistentvolumeclaims]
+    verbs: [get, list]
+  # CRITICAL: promote step needs to read the SSH deploy key Secret (T-06-11 mitigate)
+  # resourceNames scoping ensures argo-workflow SA can only read this specific Secret
+  - apiGroups: [""]
+    resources: [secrets]
+    verbs: [get]
+    resourceNames: [git-deploy-key]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: argo-workflow-rolebinding
+  namespace: argo
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: argo-workflow-role
+subjects:
+  - kind: ServiceAccount
+    name: argo-workflow
+    namespace: argo

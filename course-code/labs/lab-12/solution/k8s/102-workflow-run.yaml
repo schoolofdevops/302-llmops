@@ -1,0 +1,19 @@
+# One-shot Workflow CR — submits the llm-pipeline WorkflowTemplate.
+#
+# Submit with: kubectl create -f 102-workflow-run.yaml
+# NOT kubectl apply — generateName creates a unique name each run.
+# kubectl apply would fail because generateName resources require kubectl create.
+#
+# ArgoCD CreateOnly sync-option: prevents re-submission of completed Workflows.
+# When ArgoCD detects this file in gitops/pipeline/, it creates the Workflow once.
+# Completed Workflows are never re-applied (they are immutable records of execution).
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: llm-pipeline-
+  namespace: argo
+  annotations:
+    argocd.argoproj.io/sync-options: CreateOnly=true
+spec:
+  workflowTemplateRef:
+    name: llm-pipeline

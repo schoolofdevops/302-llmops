@@ -1,0 +1,106 @@
+# 5-step DAG LLM pipeline WorkflowTemplate (STARTER — fill in the TODOs)
+# Steps: data-gen → build-index → train → merge → promote
+# See course-code/labs/lab-12/solution/k8s/101-workflowtemplate-pipeline.yaml for the complete version.
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: llm-pipeline
+  namespace: argo
+spec:
+  entrypoint: pipeline-dag
+  serviceAccountName: argo-workflow
+
+  volumes:
+    - name: workspace
+      persistentVolumeClaim:
+        claimName: pipeline-workspace
+    - name: ssh-key
+      secret:
+        secretName: git-deploy-key
+        defaultMode: 0600
+
+  templates:
+    - name: pipeline-dag
+      dag:
+        tasks:
+          - name: data-gen
+            template: run-step
+            arguments:
+              parameters:
+                - name: cmd
+                  value: # TODO: enter python script path (e.g., "python3 /workspace/scripts/01_generate_data.py")
+
+          - name: build-index
+            template: run-step
+            dependencies: [data-gen]
+            arguments:
+              parameters:
+                - name: cmd
+                  value: # TODO: enter python script path (e.g., "python3 /workspace/scripts/02_build_index.py")
+
+          - name: train
+            template: run-step
+            dependencies: [build-index]
+            arguments:
+              parameters:
+                - name: cmd
+                  value: # TODO: enter python script path (e.g., "python3 /workspace/scripts/03_train_lora.py")
+
+          - name: merge
+            template: run-step
+            dependencies: [train]
+            arguments:
+              parameters:
+                - name: cmd
+                  value: # TODO: enter python script path (e.g., "python3 /workspace/scripts/04_merge_lora.py")
+
+          - name: promote
+            template: promote-step
+            dependencies: [merge]
+
+    - name: run-step
+      inputs:
+        parameters:
+          - name: cmd
+      nodeSelector:
+        kubernetes.io/hostname: llmops-kind-worker
+      container:
+        image: python:3.11-slim
+        command: [sh, -c]
+        args: ["{{inputs.parameters.cmd}}"]
+        volumeMounts:
+          - name: workspace
+            mountPath: /workspace
+
+    - name: promote-step
+      nodeSelector:
+        kubernetes.io/hostname: llmops-kind-worker
+      container:
+        image: alpine/git:latest
+        command: [sh, -c]
+        args:
+          - |
+            set -e
+            mkdir -p /root/.ssh
+            cp /root/.ssh-key/ssh-privatekey /root/.ssh/id_rsa
+            chmod 600 /root/.ssh/id_rsa
+            ssh-keyscan github.com >> /root/.ssh/known_hosts 2>/dev/null
+            git config --global user.email "argo-promote@llmops-lab"
+            git config --global user.name "Argo Promote Step"
+            REPO_URL="${GITOPS_REPO_SSH_URL}"
+            git clone "${REPO_URL}" /tmp/gitops-repo
+            TARGET="/tmp/gitops-repo/course-code/labs/lab-11/solution/gitops/bases/vllm/30-deploy-vllm.yaml"
+            TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+            sed -i "s|gitops/model-version:.*|gitops/model-version: \"run-${TIMESTAMP}\"|" "${TARGET}"
+            cd /tmp/gitops-repo
+            git add "${TARGET}"
+            git commit -m "ops: automated promote — model-version run-${TIMESTAMP} [skip ci]"
+            git push origin HEAD
+            echo "Promote complete. ArgoCD will redeploy vllm-smollm2."
+        env:
+          - name: GITOPS_REPO_SSH_URL
+            value: # TODO: set your GitHub fork SSH URL (e.g., git@github.com:myuser/302-llmops.git)
+        volumeMounts:
+          - name: ssh-key
+            mountPath: /root/.ssh-key
+            readOnly: true

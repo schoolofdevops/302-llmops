@@ -1,0 +1,139 @@
+# 5-step DAG LLM pipeline WorkflowTemplate
+# NO eval gate (D-11 — eval moves to 303-agentops course).
+# Promote step closes the E2E loop automatically (D-12):
+#   alpine/git pushes annotation bump to trigger ArgoCD redeploy of Pattern A vLLM.
+#
+# Steps: data-gen → build-index → train → merge → promote
+# Shared PVC workspace at /workspace (RWO, all steps pinned to llmops-kind-worker via nodeSelector)
+#
+# BEFORE APPLYING: Replace <student-fork> in the promote step GITOPS_REPO_SSH_URL with
+# your GitHub username (e.g., git@github.com:myuser/302-llmops.git).
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: llm-pipeline
+  namespace: argo
+spec:
+  entrypoint: pipeline-dag
+  serviceAccountName: argo-workflow
+
+  # ---- Shared volumes ----
+  volumes:
+    - name: workspace
+      persistentVolumeClaim:
+        claimName: pipeline-workspace
+    - name: ssh-key
+      secret:
+        secretName: git-deploy-key
+        defaultMode: 0600
+
+  templates:
+    # ---- DAG orchestrator ----
+    - name: pipeline-dag
+      dag:
+        tasks:
+          - name: data-gen
+            template: run-step
+            arguments:
+              parameters:
+                - name: cmd
+                  value: "python3 /workspace/scripts/01_generate_data.py"
+
+          - name: build-index
+            template: run-step
+            dependencies: [data-gen]
+            arguments:
+              parameters:
+                - name: cmd
+                  value: "python3 /workspace/scripts/02_build_index.py"
+
+          - name: train
+            template: run-step
+            dependencies: [build-index]
+            arguments:
+              parameters:
+                - name: cmd
+                  value: "python3 /workspace/scripts/03_train_lora.py"
+
+          - name: merge
+            template: run-step
+            dependencies: [train]
+            arguments:
+              parameters:
+                - name: cmd
+                  value: "python3 /workspace/scripts/04_merge_lora.py"
+
+          - name: promote
+            template: promote-step
+            dependencies: [merge]
+
+    # ---- Re-usable step template for python steps 1-4 ----
+    - name: run-step
+      inputs:
+        parameters:
+          - name: cmd
+      # CRITICAL (Pitfall 7): pin all steps to the same worker node so the RWO PVC
+      # can be mounted on all steps without multi-node access conflicts.
+      nodeSelector:
+        kubernetes.io/hostname: llmops-kind-worker
+      container:
+        image: python:3.11-slim
+        command: [sh, -c]
+        args: ["{{inputs.parameters.cmd}}"]
+        volumeMounts:
+          - name: workspace
+            mountPath: /workspace
+
+    # ---- Promote step — fully automated git push (D-12) ----
+    # Uses alpine/git:latest which includes git, openssh-client, and ssh-keyscan.
+    # Reads SSH deploy key from the git-deploy-key Secret (mounted read-only via volume).
+    - name: promote-step
+      nodeSelector:
+        kubernetes.io/hostname: llmops-kind-worker
+      container:
+        image: alpine/git:latest
+        command: [sh, -c]
+        args:
+          - |
+            set -e
+            # ---- Configure SSH ----
+            mkdir -p /root/.ssh
+            # Secret volume mounted at /root/.ssh-key with mode 0600
+            cp /root/.ssh-key/ssh-privatekey /root/.ssh/id_rsa
+            chmod 600 /root/.ssh/id_rsa
+            # Trust github.com host key — suppress noisy stderr
+            ssh-keyscan github.com >> /root/.ssh/known_hosts 2>/dev/null
+
+            # ---- Configure git identity ----
+            git config --global user.email "argo-promote@llmops-lab"
+            git config --global user.name "Argo Promote Step"
+
+            # ---- Clone gitops repo via SSH ----
+            REPO_URL="${GITOPS_REPO_SSH_URL}"
+            echo "Cloning ${REPO_URL} ..."
+            git clone "${REPO_URL}" /tmp/gitops-repo
+
+            # ---- Bump annotation in vLLM deployment manifest ----
+            TARGET="/tmp/gitops-repo/course-code/labs/lab-11/solution/gitops/bases/vllm/30-deploy-vllm.yaml"
+            TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+            sed -i "s|gitops/model-version:.*|gitops/model-version: \"run-${TIMESTAMP}\"|" "${TARGET}"
+
+            # ---- Commit and push ----
+            cd /tmp/gitops-repo
+            git add "${TARGET}"
+            git commit -m "ops: automated promote — model-version run-${TIMESTAMP} [skip ci]"
+            git push origin HEAD
+
+            echo ""
+            echo "Promote step complete. Annotation bumped to run-${TIMESTAMP}."
+            echo "ArgoCD will detect the annotation change and redeploy vllm-smollm2."
+        env:
+          - name: GITOPS_REPO_SSH_URL
+            # IMPORTANT: Replace <student-fork> with your GitHub username before applying.
+            # Example: git@github.com:myuser/302-llmops.git
+            value: "git@github.com:<student-fork>/302-llmops.git"
+        volumeMounts:
+          # Mount the SSH key Secret read-only; the shell script copies it to /root/.ssh
+          - name: ssh-key
+            mountPath: /root/.ssh-key
+            readOnly: true

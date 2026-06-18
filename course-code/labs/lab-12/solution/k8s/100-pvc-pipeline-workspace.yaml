@@ -1,0 +1,14 @@
+# Shared workspace PVC for inter-step artifact passing in the 5-step LLM pipeline.
+# RWO is fine on KIND when all steps use nodeSelector to pin to the same worker node (Pitfall 7).
+# The PVC is mounted at /workspace in every DAG step container.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pipeline-workspace
+  namespace: argo
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
