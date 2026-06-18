@@ -178,7 +178,7 @@ Plans:
 **Wave 2** *(blocked on Wave 1 completion; Plans 02 and 03 can run in parallel)*
 
 - [x] 06-02-PLAN.md — HPA on rag-retriever (CPU) + KEDA ScaledObjects for Patterns A and C + hey load test + Lab 10 autoscaling doc page (OPS-01)
-- [ ] 06-03-PLAN.md — ArgoCD 9.5.11 install + gitops/ App-of-Apps structure (Pattern A + MinIO + Chainlit + observability) + model promotion demo + Lab 11 GitOps doc page (OPS-02)
+- [x] 06-03-PLAN.md — ArgoCD 9.5.11 install + gitops/ App-of-Apps structure (Pattern A + MinIO + Chainlit + observability) + model promotion demo + Lab 11 GitOps doc page (OPS-02)
 
 **Wave 3** *(blocked on Plans 02 + 03)*
 
@@ -196,7 +196,7 @@ Phases execute in numeric order: 01 → 02 → 03 → 04 → 05 → 06
 | 03. Disk-Based Model Loading (MinIO + initContainer) | 0/4 | Not started | - |
 | 04. vLLM Router Multi-Pod Serving | 4/4 | Complete | 2026-06-16 |
 | 05. KServe InferenceService + Serving Decision Lab | 4/4 | Complete | 2026-06-17 |
-| 06. Production Operations Layer | 2/4 | In Progress| - |
+| 06. Production Operations Layer | 3/4 | In Progress|  |
 
 ## Coverage
 
