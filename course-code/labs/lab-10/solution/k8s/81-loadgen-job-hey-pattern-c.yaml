@@ -4,9 +4,9 @@
 # The smollm2-nodeport Service (created in Lab 08 / Phase 05) selects predictor pods
 # via label: serving.kserve.io/inferenceservice: smollm2
 #
-# Port 30202: internal service port — the hey Job accesses the service at port 30202
-#   (same port that localhost:30202 maps to externally via KIND portMapping)
-#   Service: smollm2-nodeport.llm-serving — NodePort 30202 → targetPort 8000
+# Port 80: in-cluster service port — the hey Job accesses the service at port 80
+#   (NodePort 30202 is only reachable on the node's external IP, not via cluster DNS)
+#   Service: smollm2-nodeport.llm-serving — port 80 → targetPort 8000
 #
 # Prerequisites:
 #   - Pattern C must be running: kubectl get deploy smollm2-predictor -n llm-serving
@@ -42,4 +42,4 @@ spec:
             - "Content-Type: application/json"
             - "-d"
             - '{"model":"smollm2-135m-finetuned","prompt":"What treatments does Smile Dental offer?","max_tokens":32}'
-            - "http://smollm2-nodeport.llm-serving.svc.cluster.local:30202/v1/completions"
+            - "http://smollm2-nodeport.llm-serving.svc.cluster.local:80/v1/completions"
