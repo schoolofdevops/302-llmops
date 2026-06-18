@@ -51,8 +51,8 @@ OCI image (existing) + disk-based loading (new). Decision tree.
 Re-validate v0.19.0 ops against all 3 serving patterns; drop eval gate.
 
 - [x] **OPS-01**: Autoscaling lab — HPA on Chat API (CPU-based) + KEDA on vLLM (Prometheus metric `vllm:num_requests_waiting`); validate behavior against all 3 SERVE patterns
-- [ ] **OPS-02**: GitOps lab — ArgoCD App-of-Apps managing vLLM/KServe/Router/MinIO/Chainlit; vLLM tag promotion via Git commit; declarative model promotion demo
-- [ ] **OPS-03**: Argo Workflows training pipeline lab — DAG: data → index → train → merge (NO eval gate, NO commit-tag step; eval moved to 303-agentops)
+- [x] **OPS-02**: GitOps lab — ArgoCD App-of-Apps managing vLLM/KServe/Router/MinIO/Chainlit; vLLM tag promotion via Git commit; declarative model promotion demo
+- [x] **OPS-03**: Argo Workflows training pipeline lab — DAG: data → index → train → merge (NO eval gate, NO commit-tag step; eval moved to 303-agentops)
 
 ---
 
@@ -127,8 +127,8 @@ Every v1.0.0 requirement is mapped to exactly one phase. SERVE-01 and PACKAGE-01
 | PACKAGE-02 | 03 | TBD | Not started |
 | PACKAGE-03 | 03 | TBD | Not started |
 | OPS-01 | 06 | 06-02 | Complete (2026-06-18) |
-| OPS-02 | 06 | TBD | Not started |
-| OPS-03 | 06 | TBD | Not started |
+| OPS-02 | 06 | 06-03 | Complete (2026-06-18) |
+| OPS-03 | 06 | 06-04 | Complete (2026-06-18) |
 
 **Coverage check:** 21/21 v1.0.0 requirements mapped (100%). No orphans. No duplicates (aliases noted).
 
