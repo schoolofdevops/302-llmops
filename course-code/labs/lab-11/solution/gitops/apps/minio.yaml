@@ -1,5 +1,9 @@
 # Lab 11: Child Application — MinIO
 # Sync wave 0: MinIO deploys first as model storage dependency for vLLM
+#
+# Uses a multi-source Application: Helm chart from minio-official + values file
+# from this Git repo. The $values reference (source index 0) resolves the
+# valueFiles path relative to the Git repo root.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -11,10 +15,18 @@ metadata:
     argocd.argoproj.io/sync-wave: "0"
 spec:
   project: default
-  source:
-    repoURL: <ARGOCD_REPO_URL>
-    targetRevision: HEAD
-    path: course-code/labs/lab-11/solution/gitops/bases/minio
+  sources:
+    # Source 0: Git repo — provides the values file ($values reference below)
+    - repoURL: <ARGOCD_REPO_URL>
+      targetRevision: HEAD
+      ref: values
+    # Source 1: MinIO Helm chart with values from source 0
+    - chart: minio
+      repoURL: https://charts.min.io
+      targetRevision: "5.4.0"
+      helm:
+        valueFiles:
+          - $values/course-code/labs/lab-11/solution/gitops/bases/minio/10-minio-values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: minio
