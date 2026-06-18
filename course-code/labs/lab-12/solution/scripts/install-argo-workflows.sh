@@ -6,7 +6,8 @@
 #
 # NOTE: Uses --skip-crds because the Helm chart's pre-install CRD Job
 # (argo-workflows-crd-install) times out on some machines when CRDs already exist
-# from a prior install attempt. CRDs are applied separately via kubectl before Helm.
+# from a prior install attempt. CRDs are applied separately via kubectl before Helm
+# (see "Apply CRDs" step below) — this is safe and idempotent on re-runs.
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)"
@@ -14,9 +15,28 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)"
 # ---- Variables (override via env vars) ----
 NS_ARGO="${NS_ARGO:-argo}"
 ARGO_WORKFLOWS_CHART_VERSION="${ARGO_WORKFLOWS_CHART_VERSION:-1.0.13}"
+ARGO_WORKFLOWS_APP_VERSION="${ARGO_WORKFLOWS_APP_VERSION:-v4.0.5}"
 NODEPORT_ARGO_WORKFLOWS="${NODEPORT_ARGO_WORKFLOWS:-30800}"
 
 echo "==> Installing Argo Workflows ${ARGO_WORKFLOWS_CHART_VERSION} in namespace ${NS_ARGO} ..."
+
+# ---- Apply CRDs first (idempotent via server-side apply) ----
+# This must run before helm install --skip-crds so the CRDs exist on a fresh cluster.
+# On re-runs, server-side apply is a no-op if CRDs are unchanged.
+echo "==> Applying Argo Workflows CRDs (${ARGO_WORKFLOWS_APP_VERSION}) ..."
+kubectl apply --server-side \
+  -f "https://raw.githubusercontent.com/argoproj/argo-workflows/${ARGO_WORKFLOWS_APP_VERSION}/manifests/crds/workflow-crd.yaml" \
+  2>/dev/null || true
+kubectl apply --server-side \
+  -f "https://raw.githubusercontent.com/argoproj/argo-workflows/${ARGO_WORKFLOWS_APP_VERSION}/manifests/crds/workflowtemplate-crd.yaml" \
+  2>/dev/null || true
+kubectl apply --server-side \
+  -f "https://raw.githubusercontent.com/argoproj/argo-workflows/${ARGO_WORKFLOWS_APP_VERSION}/manifests/crds/cronworkflow-crd.yaml" \
+  2>/dev/null || true
+kubectl apply --server-side \
+  -f "https://raw.githubusercontent.com/argoproj/argo-workflows/${ARGO_WORKFLOWS_APP_VERSION}/manifests/crds/clusterworkflowtemplate-crd.yaml" \
+  2>/dev/null || true
+echo "    CRDs applied."
 
 # ---- Idempotency guard ----
 if helm status argo-workflows -n "${NS_ARGO}" >/dev/null 2>&1; then
@@ -26,9 +46,9 @@ else
   helm repo add argo https://argoproj.github.io/argo-helm >/dev/null 2>&1 || true
   helm repo update argo >/dev/null
 
-  # --skip-crds: Helm chart has a pre-install CRD Job that can time out if CRDs
-  # already exist (server-side apply conflict). The CRDs are created by the first
-  # install attempt regardless; subsequent runs can safely skip CRD installation.
+  # --skip-crds: CRDs were applied above via kubectl (server-side apply).
+  # This avoids the Helm chart's pre-install CRD Job which can time out if
+  # CRDs already exist from a prior attempt.
   helm install argo-workflows argo/argo-workflows \
     --version "${ARGO_WORKFLOWS_CHART_VERSION}" \
     --namespace "${NS_ARGO}" \
