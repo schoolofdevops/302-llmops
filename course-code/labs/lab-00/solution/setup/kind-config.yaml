@@ -4,8 +4,14 @@
 # The bootstrap script handles path substitution automatically.
 # See Lab 00 instructions for full setup steps.
 #
-# If running the bootstrap script manually, replace the hostPath below
-# with the absolute path to your project directory.
+# WARNING: The hostPath values below are RELATIVE paths. KIND resolves them
+# relative to the working directory at the time `kind create cluster` is run,
+# NOT relative to this YAML file. If you run `kind create cluster` from any
+# directory other than course-code/labs/lab-00/setup/, the mount will resolve
+# to a wrong or non-existent path and /mnt/project will be empty inside the cluster.
+#
+# RECOMMENDED: Use the bootstrap script which substitutes absolute paths automatically.
+# Or replace the relative hostPath values below with your absolute project directory:
 # Example (macOS):  /Users/yourname/llmops-project
 # Example (Linux):  /home/yourname/llmops-project
 # Example (Windows Git Bash):  /c/Users/yourname/llmops-project
