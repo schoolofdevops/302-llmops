@@ -11,8 +11,8 @@ const config: Config = {
     v4: true,
   },
 
-  url: 'https://llmops.schoolofdevops.com',
-  baseUrl: '/',
+  url: 'https://schoolofdevops.github.io',
+  baseUrl: '/302-llmops/',
 
   organizationName: 'schoolofdevops',
   projectName: '302-llmops',
