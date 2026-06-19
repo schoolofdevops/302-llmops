@@ -1,34 +1,34 @@
 ---
 gsd_state_version: 1.0
 milestone: v1.0.0
-milestone_name: milestone
-status: Milestone complete
-stopped_at: context exhaustion at 75% (2026-06-18)
-last_updated: "2026-06-18T10:46:53.525Z"
-last_activity: 2026-06-18
+milestone_name: LLMOps with Kubernetes
+status: Released
+stopped_at: milestone archived 2026-06-19
+last_updated: "2026-06-19T00:00:00.000Z"
+last_activity: 2026-06-19
 progress:
   total_phases: 6
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 24
   completed_plans: 24
-  percent: 83
+  percent: 100
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-05-07)
+See: .planning/PROJECT.md (updated 2026-06-19)
 
 **Core value:** Teach practitioners how to deploy and operate LLM serving infrastructure on Kubernetes — full LLMOps lifecycle (data → fine-tune → package → serve → observe → scale → GitOps) with three serving patterns (plain vLLM, vLLM Router, KServe) and two model-packaging patterns (OCI ImageVolume, disk-based) on CPU-only KIND.
 
-**Current focus:** Phase 06 — production-operations-layer
+**Current focus:** v1.0.0 released. Next: `/gsd:new-milestone` for v1.1.
 
 ## Current Position
 
-Phase: 06
-Plan: Not started
-Milestone: v1.0.0 — COMPLETE
+Phase: —
+Plan: —
+Milestone: v1.0.0 — RELEASED 2026-06-19
 
 Phase 05 (kserve-inferenceservice-serving-decision-lab) — COMPLETE (2026-06-17)
 Plan 05-01 complete (2026-06-17): NodePort 30202 added to both kind-config.yaml files; KIND cluster recreated; prerequisites (MinIO, Pattern A, Pattern B) at replicas=0 for KServe headroom.
@@ -48,7 +48,7 @@ Key decision: D-13 Lab 10 Grafana on 30090 (not 30400); KEDA ScaledObject server
 Key decision: D-14 Pattern B ScaledObject is chart-managed (keda.enabled: true in vllm-stack values) — no standalone YAML.
 Key decision: D-15 KServe autoscalerClass=external annotation required before KEDA ScaledObject for Pattern C — disables KServe's built-in HPA.
 
-Next: Milestone v1.0.0 COMPLETE — all 24 plans across 6 phases delivered.
+Milestone v1.0.0 RELEASED 2026-06-19 — all 24 plans across 6 phases delivered. Archive: .planning/milestones/v1.0.0-ROADMAP.md and v1.0.0-REQUIREMENTS.md.
 
 ## Performance Metrics
 
@@ -152,8 +152,16 @@ None. (Roadmapper flagged stale concern about phase archive; verified — `.plan
 
 ## Session Continuity
 
-Last session: 2026-06-18T10:46:53.515Z
-Last activity: 2026-06-18
-Stopped at: context exhaustion at 75% (2026-06-18)
+Last session: 2026-06-19
+Last activity: 2026-06-19
+Stopped at: milestone v1.0.0 archived and tagged
 Resume file: None
-Next command: None — milestone v1.0.0 complete. Ready for v1.1 planning.
+Next command: `/gsd:new-milestone` to start v1.1 planning
+
+## Deferred Items (v1.1 backlog)
+
+1. **SPINE-01..06 live UAT** — spine labs executed by plan on live cluster; end-to-end re-run on fresh KIND cluster not completed before v1.0.0 tag
+2. **OPS-01 KEDA scale-up UAT** — manifests correct; 24h cluster exhaustion prevented live KEDA scale-up observation
+3. **OPS-02 ArgoCD rolling restart UAT** — annotation location bug fixed (commit 8fcd5c6: move to spec.template.metadata.annotations); rolling restart not observed due to kube-controller-manager crash-loop on exhausted cluster
+4. **Lab 10 Pattern B KEDA** — chart-managed ScaledObject (keda.enabled=true in vllm-stack values) not UAT-verified on fresh cluster
+5. **Grafana autoscaling ConfigMap** — dashboard ConfigMap not verified on live Grafana after cluster recovery

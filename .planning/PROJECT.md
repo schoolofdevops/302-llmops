@@ -10,44 +10,28 @@ A comprehensive, hands-on course on **LLMOps** — bringing DevOps practices to 
 
 Teach practitioners LLMOps — applying DevOps discipline (CI/CD, GitOps, observability, autoscaling, IaC, automation) to the full LLM/GenAI lifecycle on Kubernetes. The only course that covers data → fine-tune → package → serve → observe → scale → GitOps with multiple serving patterns (plain vLLM, KServe, vLLM Router, optional AI API), and bridges the CPU-laptop / GPU-production gap with instructor-led GPU demos covering right-sizing, cost economics, and training workflows.
 
-## Current Milestone: v1.0.0 LLMOps with Kubernetes
+## Shipped: v1.0.0 LLMOps with Kubernetes (2026-06-19)
 
-**Goal:** Rebuild 302-llmops as a comprehensive LLMOps course — drop AgentOps content (split to 303-agentops), restore + modernize the original lab guide curriculum (which already used KServe RawDeployment), add new serving + packaging patterns, and add GPU instructor demos.
+**Goal:** Rebuild 302-llmops as a comprehensive LLMOps course — drop AgentOps content (split to 303-agentops), restore + modernize the original lab guide curriculum, add new serving + packaging patterns, add production operations layer.
 
-**Target features:**
+**Delivered (all 24 plans across 6 phases):**
 
-*Curriculum split:*
-- Drop AgentOps content (Hermes, MCP, Agent Sandbox, guardrails, eval gate, capstone) — moves to 303-agentops
-- Migrate AgentOps content to 303-agentops with thorough README + planning context (PROJECT.md equivalent) so future sessions on that repo have full context (not just code-move)
+- v0.19.0 tagged + frozen; 303-agentops bootstrapped with full AgentOps content and migration context
+- Labs 00–05 (KIND cluster → synthetic data + RAG → CPU LoRA fine-tune → OCI packaging → plain vLLM + Chainlit → Prometheus/Grafana)
+- Lab 06: disk-based model loading (MinIO initContainer + emptyDir) + OCI vs disk decision tree
+- Lab 07: vLLM Production Stack router (2 CPU backends) + KEDA scale-up demo
+- Lab 08: KServe InferenceService (RawDeployment, no Knative) + separate NodePort Service
+- Lab 09: Serving decision page — side-by-side comparison of all 3 patterns + decision tree
+- Lab 10: HPA (rag-retriever) + KEDA ScaledObjects for Pattern A and C + Grafana autoscaling dashboard
+- Lab 11: ArgoCD 9.5.11 App-of-Apps + model promotion via pod-template annotation bump
+- Lab 12: Argo Workflows 1.0.13 — 5-step DAG (data→index→train→merge→promote) with SSH deploy-key automation
 
-*Restore + modernize original LLMOps spine:*
-- Modernize original lab guide curriculum (llmops-labuide Labs 00-08) for 2026 stack
-- Restore KServe InferenceService (RawDeployment mode) as the original Lab 4 approach used — v0.19.0 had dropped this for plain Deployment
-
-*Add new serving patterns (multiple ways to serve LLMs in production):*
-- Plain vLLM Deployment (baseline — already in v0.19.0)
-- KServe InferenceService RawDeployment (managed serving abstraction — original approach)
-- vLLM Router + multi-pod horizontal serving (production scale-out pattern)
-- (Optional) AI API service alternative — show how to integrate Groq/Gemini if free quota available, and when API is the right choice vs self-hosted vLLM
-
-*Add new model packaging patterns:*
-- OCI image + ImageVolume (existing in v0.19.0)
-- Disk-based loading via initContainer download (PVC or emptyDir, MinIO-backed) — production pattern for large models
-- Decision tree: when to use OCI vs disk-based
-
-*Production operations:*
-- Argo Workflows training pipeline (data→index→train→merge), no eval gate (eval is in 303-agentops)
-- HPA + KEDA autoscaling (existing in v0.19.0)
-- ArgoCD GitOps App-of-Apps (existing in v0.19.0)
-
-*Constraints preserved:*
-- All hands-on labs CPU-only, KIND, 16GB RAM
-- Cross-platform (macOS + Windows + Linux)
-
-*Deferred to v1.1 (next milestone):*
+**Deferred to v1.1:**
 - GOVERN: model registry, inference-layer guardrails, distributed tracing, token-cost tracking, audit trails
-- GPU instructor demos (right-sizing, cost economics, training, serving) — uses instructor's GCP credits
-- API: optional AI API alternative (Groq/Gemini) for build-vs-buy comparison
+- GPU instructor demos (right-sizing, cost economics, training, serving) — instructor's GCP credits
+- AI API alternative (Groq/Gemini) for build-vs-buy comparison
+- SPINE-01..06 live UAT on fresh cluster (plans executed and validated; end-to-end re-run deferred)
+- OPS-01 KEDA scale-up UAT + OPS-02 ArgoCD rolling restart UAT (code correct; cluster-exhaustion blocked)
 
 ## Requirements
 
@@ -104,7 +88,7 @@ Teach practitioners LLMOps — applying DevOps discipline (CI/CD, GitOps, observ
 
 ### Active
 
-(SPINE/SERVE/PACKAGE/OPS — to be validated in Phases 02-06; see REQUIREMENTS.md)
+(No active requirements — v1.0.0 complete. Fresh requirements start with `/gsd:new-milestone` for v1.1.)
 
 ### Out of Scope
 
@@ -118,20 +102,18 @@ Teach practitioners LLMOps — applying DevOps discipline (CI/CD, GitOps, observ
 
 ## Context
 
-**Current state (post v0.19.0):** v0.19.0 shipped a combined LLMOps + AgentOps 3-day workshop. Strategic decision: split into two focused courses. This repo (302-llmops) becomes LLMOps-only. AgentOps work moves to 303-agentops.
+**Current state (v1.0.0 shipped 2026-06-19):** 302-llmops is now a focused LLMOps course. AgentOps split to 303-agentops at v0.19.0→v1.0.0. v1.0.0 delivered 24 plans across 6 phases: spine (Labs 00-05) + three serving patterns + two packaging patterns + full production operations layer (autoscaling, GitOps, Argo Workflows). 12 lab pages in Docusaurus. All labs CPU-only, KIND cluster, 16 GB RAM.
 
-**Why split:** Combining LLMOps + AgentOps in one 3-day course diluted both. LLMOps deserves deep coverage (data→fine-tune→serve→scale→GitOps with multiple serving patterns). AgentOps deserves its own course (agent architecture, MCP tools, sandbox, guardrails, evals). Splitting allows justice to each topic.
+**For v1.1:** Start with `/gsd:new-milestone`. Candidate scope: GOVERN (model registry, guardrails, distributed tracing, cost tracking, audit), GPU instructor demos (GCP credits), AI API build-vs-buy comparison, SPINE UAT on fresh cluster, OPS-01/02 live UAT.
 
-**Brownfield context:**
-- `llmops-labuide/` (NOT in repo, separate dir) — original MkDocs lab guide (Labs 00-08) — reference for original curriculum coverage
-- v0.19.0 phases archived to `.planning/milestones/v0.19.0-phases/`
-- Existing `course-content/docs/labs/` and `course-code/labs/` from v0.19.0 — most LLMOps content (Labs 0-6 in current numbering) is reusable; agent labs (07-13) need to be removed and migrated to 303-agentops
-
-**What's new for v1.0.0:**
-- vLLM Router pattern for multi-pod horizontal serving (production-grade alternative to single vLLM Deployment)
-- KServe InferenceService as managed serving abstraction (compare/contrast with raw Deployment)
-- Disk-based model loading (download-on-startup) alongside OCI ImageVolume — image approach doesn't scale to large models, disk pattern matches real-world deployments
-- Argo Workflows kept as training pipeline orchestrator (no eval gate — that belongs in 303-agentops)
+**Architecture decisions locked in v1.0.0:**
+- Three serving patterns: Pattern A (plain vLLM Deployment), Pattern B (KServe InferenceService RawDeployment), Pattern C (vLLM Router multi-pod)
+- Two packaging patterns: OCI ImageVolume vs disk-based (MinIO + initContainer)
+- KServe RawDeployment (no Knative/Istio) — saves ~1.5 GB RAM on 16 GB laptops
+- ArgoCD GitOps: annotation bump must be in `spec.template.metadata.annotations` (pod template), NOT Deployment metadata
+- KEDA serverAddress: `kps-kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090`
+- Argo Workflows: `--skip-crds` workaround (CRD pre-install Job times out on KIND)
+- Argo Workflows E2E: alpine/git + SSH deploy key in promote step for fully-automated LLMOps loop
 
 **Target audience:** DevOps/SRE engineers, ML engineers, platform engineers. Bridges Kubernetes operational expertise and LLM serving operations.
 
@@ -195,4 +177,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-07 — Phase 01 (Curriculum Migration to 303-agentops) complete; v0.19.0 frozen, 303-agentops bootstrapped, 302-llmops main is LLMOps-only*
+*Last updated: 2026-06-19 — v1.0.0 shipped; all 24 plans across 6 phases complete; 303-agentops bootstrapped; 12 lab pages delivered; production operations layer complete*
